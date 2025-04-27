@@ -2,6 +2,7 @@ library(tidyverse)
 library(quantmod)
 
 
+
 ### Do it yourself! - Value-at-Risk ###
 
 
@@ -57,7 +58,8 @@ SMI_tbl %>% ggplot() +
 
 SMI_tbl <- SMI_tbl %>%
   mutate(SSMI_log = log(SSMI)) %>% 
-  mutate(Log_Return = c(NA, diff(SSMI_log))) %>% # 1 NA at beginning to fit tibble length
+  # mutate(Log_Return = c(NA, diff(SSMI_log))) %>%    # 1 NA at beginning to fit tibble length
+  mutate(Log_Return = SSMI_log - lag(SSMI_log)) %>%   # dplyr takes care of NA
   filter(!is.na(Log_Return))
 
 # head(SMI_tbl)
@@ -81,7 +83,7 @@ SMI_tbl %>% ggplot() +
 # Setting Parameters
 
 inv_volume <- 1000       # Investment volume
-hp <- 1                  # Holding period (in months)
+hp <- 1                  # Holding period (in months, i.e. 1 row per month)
 alpha <- .05             # Confidence level of 95%
 
 # Calculating historical Value-at-Risk
@@ -97,21 +99,21 @@ alpha <- .05             # Confidence level of 95%
 
 
 # Much better version:
-# Calculating hist VaR based on tibble
+# Calculating hist VaR using quantile() function
 
 # Calculate quantile once and then use it to compute VaR and alph_quantil
 
 results <- SMI_tbl %>%
-  summarize(alph_quantil = quantile(Log_Return, probs = alpha, type = 1)) %>%
-  mutate(VaR = alph_quantil * inv_volume)
+  summarize(alpha_return = quantile(Log_Return, probs = alpha, type = 1)) %>%
+  mutate(VaR = alpha_return * inv_volume)
 
-# Extract alph_quantil and historical VaR
-alph_quantil <- results$alph_quantil
+# Extract alpha_return and historical VaR
+alpha_return <- results$alpha_return
 hist_VaR <- results$VaR
 
 # Print the results
-print(alph_quantil)
-print(hist_VaR)
+print(alpha_return)  # with 5% probability the return will be -6.75% or less
+print(hist_VaR)  # with 5% probability the absolute loss will be 67.5 or more
 
 
 
@@ -127,17 +129,19 @@ print(hist_VaR)
 
 # ggplot has a ecdf function implemented AND no need to sort the log return
 
-SMI_tbl %>% ggplot(aes(x = Log_Return)) +
-  # stat_ecdf(geom = "step")
-  # stat_ecdf(geom = "point")
-  stat_ecdf(geom = "smooth", se = FALSE, color = "darkgrey") +
+SMI_tbl %>%
+  ggplot(aes(x = Log_Return)) +
+  geom_smooth(stat = "ecdf", se = FALSE, color = "darkgrey") +
+  # geom_step(stat = "ecdf") +
+  # geom_point(stat = "ecdf", shape = 1) +
   labs(
     title = "ECDF of SMI Log Returns",
     x = "SMI Log Returns",
     y = "ECDF"
   ) +
-  geom_vline(xintercept = alph_quantil, color = "red") +
+  geom_vline(xintercept = alpha_return, color = "red") +
   theme_minimal()
+
 
 
 # -----------------------------------------------
@@ -179,6 +183,7 @@ par_VaR <- SMI_tbl %>%
 # Print result
 print(par_VaR)
 
+
 # Print with ggplot:
 
 SMI_tbl <- SMI_tbl %>%
@@ -207,7 +212,7 @@ abs(hist_VaR)-abs(par_VaR)
 
 
 #Interpretation (based on data until 23/04/2025): The historical (parametric) Value-at-Risk 
-# indicates that there is a 5% chance of having losses that exceed CHF 68.92 (CHF 61.15) 
+# indicates that there is a 5% chance of having losses that exceed CHF 67.48 (CHF 61.01) 
 # over a monthly period. Since the absolute historical VaR is larger than the parametric, it can 
 # be interpreted as a more conservative measure of risk, as it indicates that with a 5% probability, 
-# we will lose CHF 68.92 or more when holding the investment for one month rather than just only 61.15.
+# we will lose CHF 67.48 or more when holding the investment for one month rather than just only 61.15.
