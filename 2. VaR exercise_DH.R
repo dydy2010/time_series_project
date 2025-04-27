@@ -2,6 +2,9 @@ library(tidyverse)
 library(quantmod)
 
 
+### My solutions of the Week 2 Do it yourself.
+### Many proposed solutions our out-commented for reference
+
 
 ### Do it yourself! - Value-at-Risk ###
 
