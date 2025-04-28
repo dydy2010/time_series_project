@@ -25,6 +25,7 @@ Add further data, e. g.:
 - Swiss economy (gross domestic product GDP)
 - Exchange rates (CHF-USD or CHF-EUR).
 
+<<<<<<< HEAD
 ### Project_Structure
 time_series_project/
 │
@@ -59,4 +60,6 @@ Build VAR models, analyze lag structures, impulse response functions.
 Create clean final plots, tables for presentation/report.
 
 
+=======
+>>>>>>> d360e084bb52df73fc626089542d20a9dc00c87a
 
