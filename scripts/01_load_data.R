@@ -1,24 +1,60 @@
-###install.packages("readxl")
-###install.packages("dplyr")
+###install.packages("tidyverse")
+library(tidyverse)
 library(readxl)
-library(lubridate)
-library(dplyr)
+library(zoo)
 
 
 # Load data
-inflation_data <- read_excel("data/snb-data-plkoprinfla-en-all-20250422_0900.xlsx",skip=14) #skipping the first 14 rows
+
 policy_rate_data <- read_excel("data/snb-data-snbgwdzid-en-all-20250414_1000.xlsx",skip=21)
-policy_rate_data<-policy_rate_data[,c("Overview","SNB policy rate","SARON fixing at the close of the trading day")]
+inflation_data <- read_excel("data/snb-data-plkoprinfla-en-all-20250422_0900.xlsx",skip=14) #skipping the first 14 rows
 
-# Inspect data
-head(inflation_data)
-tail(inflation_data)
-head(policy_rate_data)
-tail(policy_rate_data)
+# Prepare data
 
-# rename the columns
-colnames(inflation_data)<-c("Date","SNB_Core","SFSO_Core1", "SFSO_Core2", "SFSO_CPI")
-colnames(policy_rate_data)<-c("Date","SNB_Policy_Rate","Saron")
+pr <- policy_rate_data %>% 
+  as_tibble() %>%  # like a dataframe but more 'tidy'
+  select(Overview,`SNB policy rate`) %>%  # Only date and policy rates are relevant
+  slice(-1) %>%                           # remove sub-header in the first line
+  rename(date = Overview, pr = `SNB policy rate`) %>%
+  mutate(date = ymd(date),
+         pr = as.numeric(pr),
+         pr = round(pr, 2)) %>%
+  filter(!is.na(pr))                      # remove rows with NA in pr
+
+pr <- pr %>%                      # Group by year-month and keep the first (oldest) row in each group
+  group_by(year_month = floor_date(date, "month")) %>%     # Group by month
+  slice_min(date) %>%             # Keep oldest date in each month
+  ungroup() %>%
+  mutate(date = year_month) %>%   # Overwrite 'date' with YYYY-MM-01
+  select(-year_month)             # Remove temporary column
+# view(pr)
+
+infl <- inflation_data %>% 
+  as_tibble() %>% 
+  select(Overview, `SFSO - Inflation according to the national consumer price index`) %>% 
+  slice(-1) %>% 
+  rename(date = Overview, infl = `SFSO - Inflation according to the national consumer price index`) %>% 
+  mutate(date = ymd(str_c(date, "-01")),   # add a '-01' to the date string before making it a date
+         infl = as.numeric(infl),
+         infl = round(infl, 1))
+# view(infl)
+
+df <- inner_join(pr, infl, by = "date")  # merge the two tibbles
+view(df)
+
+# convert df to a zoo time series object
+
+df_ts <- zoo(
+  df %>% select(-date),
+  order.by = df$date
+)
+view(df_ts)
+
+
+
+# Former code not taking into account missing data:
+
+"""
 
 # convert to data column
 # str(inflation_data$Date)
@@ -62,4 +98,7 @@ policy_rate_for_merge <- policy_rate_data %>%
 
 # forgot to deal with missing data,for the rates, date, YearMonth on both tables, maybe need to check that fist
 # next step is merge(left join right join..)
+
+"""
+
 
