@@ -4,6 +4,9 @@ library(readxl)
 library(zoo)
 
 
+## Data preparation
+
+
 # Load data
 
 policy_rate_data <- read_excel("data/snb-data-snbgwdzid-en-all-20250414_1000.xlsx",skip=21)
@@ -42,6 +45,7 @@ infl <- inflation_data %>%
 df <- inner_join(pr, infl, by = "date")  # merge the two tibbles
 view(df)
 
+
 # convert df to a zoo time series object
 
 df_ts <- zoo(
@@ -49,6 +53,23 @@ df_ts <- zoo(
   order.by = df$date
 )
 view(df_ts)
+
+
+
+## Visualize data
+
+
+ggplot(df, aes(x = date)) +
+  geom_line(aes(y = pr, color = "Policy Rate")) +
+  geom_line(aes(y = infl, color = "Inflation Rate")) +
+  scale_color_manual(values = c("Policy Rate" = "blue", "Inflation Rate" = "red")) +
+  labs(title = "Swiss Policy Rates and Inflation Rates 2019-2025",
+       color = "Legend",
+       y = "(Inflation- / Policy-) Rates") +
+  theme_minimal() +
+  theme(legend.position = "bottom", legend.direction = "horizontal")
+
+
 
 
 
