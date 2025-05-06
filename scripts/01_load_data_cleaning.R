@@ -61,10 +61,18 @@ policy_rate_for_merge <- policy_rate_data %>%
          Saron)
 
 #Data cleaning ideas:
-# 1 forgot to deal with missing data,for the rates, date, YearMonth on both tables, maybe need to check that fist
-# 2 row 16 and row 23 for each table need to be dealt with
+"""1 for policy rate data: see miro for latest logic
+  1.1 Standardize policy‐rate table so it always has the same columns, 
+   even when the source file only contains some of them.
+	1.2.	Reconstruct a single “policy rate” series that covers the entire 2004–2025 span, by
+		1.2.1 using the official SNB policy rate from 13 June 2019 onward,
+	  1.2.2 computing the midpoint of the deposit‐and‐special rates between 21 Jan 2015 and 12 June 2019,
+		1.2.3 and back-casting before 21 Jan 2015 by taking the special-facility rate minus 50 bp (since that facility was always policy + 50 bp)."""
+""""""
+# 3 after filling, deal with missing data,for the rates, date, YearMonth on both tables, maybe need to check that fist
 
-# 3 need to deal with the inconsistent measurement
+
+# 2 need to deal with the inconsistent measurement
 # (policy rate data only special rate before 2009-08-24, both data have missing data)
 
 # next step is merge(left join right join..)
