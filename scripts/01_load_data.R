@@ -12,13 +12,46 @@ library(zoo)
 policy_rate_data <- read_excel("data/snb-data-snbgwdzid-en-all-20250414_1000.xlsx",skip=21)
 inflation_data <- read_excel("data/snb-data-plkoprinfla-en-all-20250422_0900.xlsx",skip=14) #skipping the first 14 rows
 
+# Look at differnt colours in policy rate data:
+
+pr_full <- policy_rate_data %>% 
+  as_tibble() %>% 
+  select(date = Overview,
+         policy = `SNB policy rate`,
+         ir_above = `Interest rate on sight deposits above threshold`,
+         sar_fix = `SARON fixing at the close of the trading day`,
+         special = `Special rate  (Liquidity-shortage financing facility)`) %>% 
+  slice(-1) %>%
+  mutate(date = ymd(date),
+         (across(c(policy, ir_above, sar_fix, special),
+                 ~ round(as.numeric(.), 2)))
+  )
+# view(pr_full)  
+
+ggplot(pr_full, aes(x = date)) +
+  geom_line(aes(y = policy, color = "Policy Rate")) +
+  geom_line(aes(y = ir_above, color = "Interest rate above threshold")) +
+  geom_line(aes(y = sar_fix, color = "SARON fixing")) +
+  geom_line(aes(y = special, color = "Special rate")) +
+  scale_color_manual(values = c("Policy Rate" = "blue",
+                                "Interest rate above threshold" = "green",
+                                "SARON fixing" = "brown",
+                                "Special rate" = "red")) +
+  labs(title = "Swiss Policy Rates: Available data",
+       color = "Legend",
+       y = "(Policy-Rates") +
+  theme_minimal() +
+  theme(legend.position = "bottom", legend.direction = "horizontal") 
+
+
+
 # Prepare data
 
 pr <- policy_rate_data %>% 
   as_tibble() %>%  # like a dataframe but more 'tidy'
-  select(Overview,`SNB policy rate`) %>%  # Only date and policy rates are relevant
+  # select(date = Overview, pr = `SNB policy rate`) %>%  # Only date and policy rates are relevant
+  select(date = Overview, pr = `Interest rate on sight deposits above threshold`) %>%  # Only date and policy rates are relevant
   slice(-1) %>%                           # remove sub-header in the first line
-  rename(date = Overview, pr = `SNB policy rate`) %>%
   mutate(date = ymd(date),
          pr = as.numeric(pr),
          pr = round(pr, 2)) %>%
@@ -34,9 +67,9 @@ pr <- pr %>%                      # Group by year-month and keep the first (olde
 
 infl <- inflation_data %>% 
   as_tibble() %>% 
-  select(Overview, `SFSO - Inflation according to the national consumer price index`) %>% 
+  # select(date = Overview, infl = `SFSO - Inflation according to the national consumer price index`) %>% 
+  select(date = Overview, infl = `SNB - Core inflation, trimmed mean`) %>% 
   slice(-1) %>% 
-  rename(date = Overview, infl = `SFSO - Inflation according to the national consumer price index`) %>% 
   mutate(date = ymd(str_c(date, "-01")),   # add a '-01' to the date string before making it a date
          infl = as.numeric(infl),
          infl = round(infl, 1))
