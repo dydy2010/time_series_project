@@ -99,7 +99,7 @@ ggplot(df, aes(x = date)) +
   scale_color_manual(values = c("Interest rate on sight deposits above threshold" = "blue",
                                 "Special rate Liquidity-shortage financing facility" = "darkgreen",
                                 "SNB - Core inflation, trimmed mean" = "red")) +
-  labs(title = "Swiss Policy Rates and Inflation Rates 2019-2025",
+  labs(title = "Swiss Policy Rates and Inflation Rates 2004-2025",
        color = "Legend",
        y = "(Inflation- / Policy-) Rates") +
   theme_minimal() +
