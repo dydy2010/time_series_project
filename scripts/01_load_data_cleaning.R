@@ -7,8 +7,8 @@ library(dplyr)
 
 # Load data
 inflation_data <- read_excel("data/snb-data-plkoprinfla-en-all-20250422_0900.xlsx",skip=14) #skipping the first 14 rows
-policy_rate_data <- read_excel("data/snb-data-snbgwdzid-en-all-20250414_1000.xlsx",skip=21)
-policy_rate_data<-policy_rate_data[,c("Overview","SNB policy rate","SARON fixing at the close of the trading day")]
+policy_rate_data <- read_excel("snb-target rate-policy rate-2000-2025.xlsx",skip=21)
+
 
 # Inspect data
 head(inflation_data)
