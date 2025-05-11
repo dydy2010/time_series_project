@@ -20,7 +20,7 @@ adf.test(merged_data$SNB_Core,      k = 12)
 
 # interpretation:
 # PolicyRate is already stationary in levels (ADF p≈0.036 < 0.05) , no need to difference it for stationarity.
-# SNB_Core is non-stationary (ADF p≈0.455 > 0.05), must difference it once.
+# SNB_Core is non-stationary (ADF p≈0.455 > 0.05), must difference it.
 
 
 # Difference SNB_Core and re-test
