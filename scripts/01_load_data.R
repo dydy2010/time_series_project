@@ -88,9 +88,7 @@ df_ts <- zoo(
 view(df_ts)
 
 
-
 ## Visualize data
-
 
 ggplot(df, aes(x = date)) +
   geom_line(aes(y = ir_above, color = "Interest rate on sight deposits above threshold")) +
@@ -104,7 +102,3 @@ ggplot(df, aes(x = date)) +
        y = "(Inflation- / Policy-) Rates") +
   theme_minimal() +
   theme(legend.position = "bottom", legend.direction = "horizontal")
-
-
-
-
