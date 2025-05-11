@@ -7,7 +7,7 @@ library(dplyr)
 
 # Load data
 inflation_data <- read_excel("data/snb-data-plkoprinfla-en-all-20250422_0900.xlsx",skip=14) #skipping the first 14 rows
-policy_rate_data <- read_excel("snb-target rate-policy rate-2000-2025.xlsx",skip=21)
+policy_rate_data <- read_excel("data/snb-target rate-policy rate-2000-2025.xlsx",skip=16)
 
 
 # Inspect data
@@ -17,63 +17,88 @@ head(policy_rate_data)
 tail(policy_rate_data)
 
 # rename the columns
-colnames(inflation_data)<-c("Date","SNB_Core","SFSO_Core1", "SFSO_Core2", "SFSO_CPI")
-colnames(policy_rate_data)<-c("Date","SNB_Policy_Rate","Saron")
+policy_rate_data <- policy_rate_data %>%
+  rename(
+    Date = Overview
+  )
+inflation_data <- inflation_data %>%
+  rename(
+    Date = Overview
+  )
 
 # convert to data column
 # str(inflation_data$Date)
 # typeof(policy_rate_data$Date)
 # it says chr (character) or factor, then convert it:
-inflation_data$Date <- as.Date(inflation_data$Date, format ="%Y-%m-%d")
-policy_rate_data$Date <- as.Date(policy_rate_data$Date)
+inflation_data  <- inflation_data  %>% mutate(Date = ym(Date))
+policy_rate_data<- policy_rate_data%>% mutate(Date = ym(Date))
 #check again type, if double is okay
-# typeof(inflation_data$Date)
+typeof(inflation_data$Date)
+typeof(policy_rate_data$Date)
 
-#inflation_data$Date <- ym(inflation_data$Date) ### maybe Dropping this — it forces all dates to first-of-month and loses original Date
-tail(inflation_data)
+# add a monthly key to both tables
+# floor_date(Date, "month") takes any date (e.g. “2004-07-15” or “2000-07-01”) and “rounds it down” to the first of that month (e.g. “2004-07-01” or “2000-07-01”).
+inflation_data    <- inflation_data    %>% mutate(YearMonth = floor_date(Date, "month"))
+policy_rate_data  <- policy_rate_data  %>% mutate(YearMonth = floor_date(Date, "month"))
 
-# keeping original date column on each table
-# summarize daily inflation into monthly values or(not trying this one direction)
-# fill in the policy rate for every day in each month(trying this one first)
+head(inflation_data)
 
-# Monthly inflation add to YearMonth column (first of month)
-inflation_data <- inflation_data %>%
-  mutate(YearMonth = floor_date(Date, "month")) ### floor_date() is a convenience function from lubridate that “rounds down” a date
-# Daily policy rate add to YearMonth column (first of month)
-policy_rate_data <- policy_rate_data %>%
-  mutate(YearMonth = floor_date(Date, "month"))
-
-# rename the Date in inflation and date in policy rate, so that both columns are kept and doesnt cause confusion, as they are all "Date"
+# Prepare the 2 tables for merging
 inflation_for_merge <- inflation_data %>%
-  rename(Date_Inflation = Date) %>%
+  rename(Inflation_Date = Date) %>% # keep the original daily date under a new name
   select(YearMonth,
-         Date_Inflation,
-         SNB_Core,
-         SFSO_Core1,
-         SFSO_Core2,
-         SFSO_CPI)
+         Inflation_Date,
+         `SNB - Core inflation, trimmed mean`,
+         `SFSO - Core inflation 1`,
+         `SFSO - Core inflation 2`,
+         `SFSO - Inflation according to the national consumer price index`) %>%
+  # rename long column names to short ones:
+  rename(
+    SNB_Core   = `SNB - Core inflation, trimmed mean`,
+    Core1      = `SFSO - Core inflation 1`,
+    Core2      = `SFSO - Core inflation 2`,
+    CPI        = `SFSO - Inflation according to the national consumer price index`
+  )%>%
+  # ensure every month in range appears
+  complete(YearMonth = seq(min(YearMonth), max(YearMonth), by = "month")) %>%
+  # carry SNB_Core (and others) forward through any NA gaps
+  fill(SNB_Core, Core1, Core2, CPI, .direction = "down")
 
 policy_rate_for_merge <- policy_rate_data %>%
-  rename(Date_Policy = Date) %>%
+  rename(Policy_Date = Date) %>% # keep the original daily date under a new name
   select(YearMonth,
-         Date_Policy,
-         SNB_Policy_Rate,
-         Saron)
-
-#Data cleaning ideas:
-"""1 for policy rate data: see miro for latest logic
-  1.1 Standardize policy‐rate table so it always has the same columns, 
-   even when the source file only contains some of them.
-	1.2.	Reconstruct a single “policy rate” series that covers the entire 2004–2025 span, by
-		1.2.1 using the official SNB policy rate from 13 June 2019 onward,
-	  1.2.2 computing the midpoint of the deposit‐and‐special rates between 21 Jan 2015 and 12 June 2019,
-		1.2.3 and back-casting before 21 Jan 2015 by taking the special-facility rate minus 50 bp (since that facility was always policy + 50 bp)."""
-""""""
-# 3 after filling, deal with missing data,for the rates, date, YearMonth on both tables, maybe need to check that fist
+         Policy_Date,
+         `Switzerland - SNB policy rate`,
+         `Switzerland - SNB target range for the 3-month Libor rate in CHF - Lower limit`,
+         `Switzerland - SNB target range for the 3-month Libor rate in CHF - Upper limit`) %>%
+  # rename for convenience:
+  rename(
+    OfficialPR   = `Switzerland - SNB policy rate`,
+    Range_Lower  = `Switzerland - SNB target range for the 3-month Libor rate in CHF - Lower limit`,
+    Range_Upper  = `Switzerland - SNB target range for the 3-month Libor rate in CHF - Upper limit`
+  )
 
 
-# 2 need to deal with the inconsistent measurement
-# (policy rate data only special rate before 2009-08-24, both data have missing data)
+policy_rate_for_merge <- policy_rate_for_merge %>%
+  arrange(YearMonth) %>%
+  mutate(
+    PolicyRate = if_else(
+      YearMonth < as.Date("2019-06-13"),
+      (Range_Lower + Range_Upper) / 2,    # midpoint of the Libor target range
+      OfficialPR                          # official policy rate from mid-2019
+    )
+  )%>%
+  complete(YearMonth = seq(min(YearMonth), max(YearMonth), by = "month")) %>%
+  fill(PolicyRate, Range_Lower, Range_Upper, OfficialPR, .direction = "down")      # carry the last known PolicyRate and others forward
+#  Quick check for any remaining NAs
+merged_data <- policy_rate_for_merge %>%
+  left_join(inflation_for_merge, by = "YearMonth")
 
-# next step is merge(left join right join..)
+sum(is.na(merged_data$PolicyRate))  # should be 0
+sum(is.na(merged_data$SNB_Core))    # should be 0
+
+glimpse(merged_data)
+head(merged_data, 10)
+
+
 
