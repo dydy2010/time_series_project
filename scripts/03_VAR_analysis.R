@@ -59,3 +59,7 @@ irf_core_PR <- irf(var_mod,
                    n.ahead  = 12,
                    boot     = TRUE)
 plot(irf_core_PR, main = "IRF: ΔSNB_Core → PolicyRate")
+
+# Interpretation:
+# Granger causality H0: PolicyRate do not Granger-cause dSNB_Core
+# Granger causality H0: dSNB_Core do not Granger-cause PolicyRate
