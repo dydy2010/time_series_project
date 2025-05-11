@@ -10,10 +10,10 @@ library(zoo)
 # Load data
 
 policy_rate_data <- read_excel("data/snb-data-snbgwdzid-en-all-20250414_1000.xlsx",
-                            col_types = c("text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"),
-                            skip = 21)
+                               col_types = c("text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"),
+                               skip = 21)
 inflation_data <- read_excel("data/snb-data-plkoprinfla-en-all-20250422_0900.xlsx",
-                            skip = 14) #skipping the first 14 rows
+                             skip = 14) #skipping the first 14 rows
 
 
 # Look at different available columns in the policy rate data:
