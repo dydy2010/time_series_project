@@ -1,3 +1,12 @@
+library(tidyverse)
+library(readxl)
+library(zoo)
+library(tseries)
+library(forecast)
+library(lmtest)
+library(quantmod)
+
+
 ## Check stationarity
 
 adf.test(na.omit(df_ts$ir_above))
