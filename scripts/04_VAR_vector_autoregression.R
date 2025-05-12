@@ -19,7 +19,7 @@ causality(VAR_model, cause="df_differenced.infl")["Granger"]
 # Interpretation: The Granger-causality test states that neither does Granger-cause the other.
 
 
-# Estimating vector autoregression and Granger causality: 'special' with 'infl'
+# Estimating vector autoregression and Granger causality: 2 'events' with 'infl'
 
 VAR_df <- cbind(df_differenced$event_2020_01, df_differenced$event_2022_10, df_differenced$infl)
 colnames(VAR_df) <- c("event_2020_01", "event_2022_10", "infl")
@@ -29,8 +29,8 @@ VAR_model <- VAR(VAR_df , ic="AIC", lag.max = 12)
 coeftest(VAR_model)
 causality(VAR_model, cause="event_2020_01")["Granger"]
 causality(VAR_model, cause="event_2022_10")["Granger"]
-causality(VAR_model, cause="df_differenced.infl")["Granger"]
-# Interpretation: TBD.
+causality(VAR_model, cause="infl")["Granger"]
+# Interpretation: There is Granger-causality, but we need to separate the dependencies.
 
 # Get the number of lags used
 p <- VAR_model$p
