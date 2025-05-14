@@ -6,11 +6,17 @@ library(forecast)
 library(lmtest)
 library(quantmod)
 
+# tail(df_differenced)
+# view(df_differenced)
 
 ## Autocorrelations
-
 acf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
-# The series shows weak to moderate positive autocorrelation at lags 2, 4, and 6, and a negative autocorrelation at lag 12
+# The series shows weak to moderate positive autocorrelation at lags 2, 4, and 6, and a negative autocorrelation at lag 12.
+
+
+# The inflation changes (infl) today are somewhat positively related to those 2, 4, and 6 months ago.
+# But inflation 12 months ago tends to move in the opposite direction from today’s.
+
 
 # Direct correlation between a time series and lag k, controlling for all shorter lags (1 to k−1).
 pacf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
@@ -36,7 +42,7 @@ colnames(arima_aic) <- c(0:max.order) # Order of MA(q) in columns
 # Calculating and storing the AICs for different model specifications
 for(i in 0:max.order){
   for(j in 0:max.order){
-    arima_aic[i+1,j+1]<-Arima(y=df$infl, order=c(i,d,j), include.constant =  TRUE)$aic
+    arima_aic[i+1,j+1]<-Arima(y=df_differenced$infl, order=c(i,d,j), include.constant =  FALSE)$aic
   }
 }
 arima_aic
@@ -47,9 +53,10 @@ c(ar, ma)
 arima_aic[ar+1, ma+1]
 ## Interpretation: The optimal ARIMA-model is ARIMA(4,1,4) with an AIC of -356.6178.
 
-
+# Convert to ts object from zoo
+infl_diff_ts <- ts(coredata(df_differenced$infl), start = c(2004, 7), frequency = 12)
 # Estimating the optimal ARIMA-model and testing for significance of the coefficients
-arima <- Arima(y=df$infl, order=c(ar,d,ma), include.constant = TRUE)
+arima <- Arima(y=infl_diff_ts, order=c(ar,d,ma), include.constant = FALSE)
 coeftest(arima)
 ## Interpretation: ar2, ar4, ma2, ma4 are significant at the 95% confidence interval.
 
@@ -58,3 +65,59 @@ coeftest(arima)
 ## The negative value of the ma2-coefficient reveals that a positive residual in the previous
 ## period has a negative effect on the time series in the subsequent period.
 
+## ar2, ar4, ma2, and ma4 are significant at the 95% confidence level because their p-values (Pr(>|t|)) are less than 0.05.
+## ar2 and ar4: The 2nd and 4th past inflation changes (lags) have a statistically significant effect on today’s change in inflation.
+
+
+# forecast inflation change
+library(forecast)
+# Forecast the next 12 periods (e.g., months)
+forecast_arima <- forecast(arima, h = 12)
+print(forecast_arima)
+
+forecast_arima$mean        # Point forecasts
+forecast_arima$lower       # Lower bounds (80% and 95%)
+forecast_arima$upper       # Upper bounds (80% and 95%)
+
+autoplot(forecast_arima) + 
+  ggtitle("ARIMA Forecast for Inflation") +
+  xlab("Time") + ylab("Inflation Change")
+
+
+# forecast inflation rate
+# Get the last known inflation level
+last_infl <- tail(na.omit(df$infl), 1)
+# Calculate forecasted inflation levels
+forecast_changes <- forecast_arima$mean
+forecast_inflation <- cumsum(forecast_changes) + last_infl
+forecast_upper <- cumsum(forecast_arima$upper[,2]) + last_infl
+forecast_lower <- cumsum(forecast_arima$lower[,2]) + last_infl
+
+# Get the last date from the indexed zoo object
+library(lubridate)
+last_date <- tail(index(df_differenced), 1)
+# Generate 12 monthly forecast dates
+forecast_dates <- seq(from = as.Date(last_date) %m+% months(1), by = "month", length.out = 12)
+
+
+# forecast table
+forecast_table <- data.frame(
+  Date = forecast_dates,
+  Forecast_Inflation = round(as.numeric(forecast_inflation), 3),
+  Forecast_Change = round(as.numeric(forecast_arima$mean), 3),
+  Lower_95 = round(forecast_arima$lower[,2], 3),
+  Upper_95 = round(forecast_arima$upper[,2], 3)
+)
+
+print(forecast_table)
+
+# Plot
+ggplot(forecast_table, aes(x = Date, y = Forecast_Inflation)) +
+  geom_line(color = "blue", linewidth = 1) +
+  geom_point(color = "blue") +
+  labs(
+    title = "Forecasted Inflation Levels",
+    x = "Date",
+    y = "Inflation Rate (%)"
+  ) +
+  theme_minimal()
