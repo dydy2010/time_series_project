@@ -17,12 +17,19 @@ VAR_model <- VAR(cbind(df_differenced$special, df_differenced$infl) , ic="AIC", 
 coeftest(VAR_model)
 causality(VAR_model, cause="df_differenced.special")["Granger"]
 causality(VAR_model, cause="df_differenced.infl")["Granger"]
-# Interpretation: The Granger-causality test states that neither does Granger-cause the other.
+
+"""granger Causality Test (VAR)
+	•	The Granger causality test found that past values of special (lags 1 to 12 as a group) do not significantly improve forecasts of inflation.
+	•	In other words, knowing the past values of special does not help predict future inflation beyond what past values of inflation already tell us.
+
+Interpretation: As a whole, the variable special does not Granger-cause inflation — meaning it lacks systematic predictive power over time."""
 
 
 # Estimating vector autoregression and Granger causality: 2 'events' with 'infl'
+df_differenced$event_2020_01 <- ifelse(index(df_differenced) >= as.Date("2020-07-01"), 1, 0)
+df_differenced$event_2022_10 <- ifelse(index(df_differenced) >= as.Date("2022-10-01"), 1, 0)
 
-VAR_df <- cbind(df_differenced$event_2020_01, df_differenced$event_2022_10, df_differenced$infl)
+VAR_df <- na.omit(cbind(df_differenced$event_2020_01, df_differenced$event_2022_10, df_differenced$infl))
 colnames(VAR_df) <- c("event_2020_01", "event_2022_10", "infl")
 
 
@@ -32,11 +39,7 @@ causality(VAR_model, cause="event_2020_01")["Granger"]
 causality(VAR_model, cause="event_2022_10")["Granger"]
 causality(VAR_model, cause="infl")["Granger"]
 
-"""granger Causality Test (VAR)
-	•	The Granger causality test found that past values of special (lags 1 to 12 as a group) do not significantly improve forecasts of inflation.
-	•	In other words, knowing the past values of special does not help predict future inflation beyond what past values of inflation already tell us.
 
-Interpretation: As a whole, the variable special does not Granger-cause inflation — meaning it lacks systematic predictive power over time."""
 
 # Get the number of lags used
 p <- VAR_model$p
