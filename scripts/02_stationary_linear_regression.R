@@ -68,7 +68,7 @@ df_differenced$special_lag4 <- stats::lag(df_differenced$special, k = 4)
 view(df_differenced)
 
 # Fit the linear model, removing rows with NA due to lagging
-lin_reg_lagged <- lm(infl ~ special_lag1 + special_lag1 + special_lag3 + special_lag4, data = na.omit(df_differenced))
+lin_reg_lagged <- lm(infl ~ special_lag1 + special_lag2 + special_lag3 + special_lag4, data = na.omit(df_differenced))
 summary(lin_reg_lagged)
 # Again no significant coefficients, R squared is very low.
 # But special_lag3 is close with p-value of 0.06.
