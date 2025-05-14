@@ -10,6 +10,7 @@ library(car)
 
 
 
+
 # Estimating vector autoregression and Granger causality: 'special' with 'infl'
 
 VAR_model <- VAR(cbind(df_differenced$special, df_differenced$infl) , ic="AIC", lag.max = 12)
@@ -30,7 +31,12 @@ coeftest(VAR_model)
 causality(VAR_model, cause="event_2020_01")["Granger"]
 causality(VAR_model, cause="event_2022_10")["Granger"]
 causality(VAR_model, cause="infl")["Granger"]
-# Interpretation: There is Granger-causality, but we need to separate the dependencies.
+
+"""granger Causality Test (VAR)
+	•	The Granger causality test found that past values of special (lags 1 to 12 as a group) do not significantly improve forecasts of inflation.
+	•	In other words, knowing the past values of special does not help predict future inflation beyond what past values of inflation already tell us.
+
+Interpretation: As a whole, the variable special does not Granger-cause inflation — meaning it lacks systematic predictive power over time."""
 
 # Get the number of lags used
 p <- VAR_model$p
