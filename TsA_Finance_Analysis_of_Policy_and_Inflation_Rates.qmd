@@ -1,7 +1,10 @@
 ---
 title: "SNB_policy_rate_and_inflation"
 author: "Daniel Huber / Dongyuan Gao"
-format: html
+format:
+  html:
+    page-layout: full
+    self-contained: false
 editor: visual
 ---
 
@@ -9,9 +12,7 @@ editor: visual
 
 ## Data evaluation & preparation
 
-### Load data
-
-libraries
+### libraries
 
 ```{r}
 library(tidyverse)
@@ -26,6 +27,8 @@ library(vars)
 library(car)
 ```
 
+### Load data
+
 ```{r}
 policy_rate_data <- read_excel("data/snb-data-snbgwdzid-en-all-20250414_1000.xlsx",
                                col_types = c("text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"),
@@ -36,7 +39,9 @@ inflation_data <- read_excel("data/snb-data-plkoprinfla-en-all-20250422_0900.xls
 
 ```
 
-Looking at different available columns in the policy rate data we see that XXX
+### Evaluation of appropriate policy rate data
+
+Looking at different available columns in the policy rate data from SNB website.
 
 ```{r}
 pr_full <- policy_rate_data %>% 
@@ -67,7 +72,7 @@ ggplot(pr_full, aes(x = date)) +
   theme(legend.position = "bottom", legend.direction = "horizontal") 
 ```
 
-Looking at libor data we see that the average of the 3 Month Libor lower and upper limits is a good proxy for the SNB policy rate before 2020.
+### Average of 3 month Libor upper/lower limits as proxy for missing SNB policy rate data before 2020.
 
 ```{r}
 libor_data <- suppressWarnings(
@@ -99,7 +104,7 @@ ggplot(libor_data, aes(x = date)) +
 
 ```
 
-We do more data preparation so we can merge the two datasets together, the policy rates and the inflation rates. Then we create a timeseries object.
+### Further data preparation, data merge and timeseries object
 
 ```{r}
 pr <- libor_data %>%
@@ -132,7 +137,7 @@ df_ts <- zoo(
 
 ```
 
-Final look at the data we use for analysis
+### Final look at the data we use for analysis
 
 ```{r}
 ggplot(df, aes(x = date)) +
@@ -147,5 +152,3 @@ ggplot(df, aes(x = date)) +
   theme(legend.position = "bottom", legend.direction = "horizontal")
 
 ```
-
-
