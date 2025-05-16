@@ -9,12 +9,11 @@ library(quantmod)
 # tail(df_differenced)
 # view(df_differenced)
 
-## Autocorrelations
+## Autocorrelations: The series shows weak to moderate positive autocorrelation at lags 4 and 6, and a negative autocorrelation at lag 12.
 acf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
-# The series shows weak to moderate positive autocorrelation at lags 2, 4, and 6, and a negative autocorrelation at lag 12.
 
 
-# The inflation changes (infl) today are somewhat positively related to those 2, 4, and 6 months ago.
+# The inflation changes (infl) today are somewhat positively related to those 4, and 6 months ago.
 # But inflation 12 months ago tends to move in the opposite direction from today’s.
 
 
@@ -22,8 +21,8 @@ acf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
 pacf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
 
 # Rule of Thumb:
-  # Use acf() to choose the q in MA(q) models.
-  # Use pacf() to choose the p in AR(p) models.
+  # Use acf() to choose the q in MA(q) models.  -> q = 4 or 6
+  # Use pacf() to choose the p in AR(p) models. -> p = 4 or 6
 
 # The ACF and PACF plots suggest that the series may be modeled as an AR(2) or AR(4) process.
 
@@ -31,8 +30,8 @@ pacf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
 ##  AIC: Akaike information criterion
 
 # Identifying the orders p and q of the ARIMA(p,1,q)-model by testing different model specifications
-max.order <- 4 # We only allow a maximum of two AR- and/or MA-terms 
-d <- 1 # The order of integration d is set to 1 since the SMI is non-sationary in levels but stationary in first differences
+max.order <- 6 # We only allow a maximum of two AR- and/or MA-terms 
+d <- 0 # The order of integration d is set to 0 since the we have the diff of inflation rates in the data
 
 # Defining the matrix in which the values of the AICs for different model specifications are stored
 arima_aic <- matrix(NA, ncol=max.order+1, nrow=max.order+1)
@@ -51,27 +50,21 @@ ar <- as.numeric(rownames(arima_aic)[index[1]])
 ma <- as.numeric(colnames(arima_aic)[index[2]])
 c(ar, ma)
 arima_aic[ar+1, ma+1]
-## Interpretation: The optimal ARIMA-model is ARIMA(4,1,4) with an AIC of -356.6178.
+## Interpretation: The optimal ARIMA-model is ARIMA(6,0,0) with an AIC of -398.5921. (d=0 as we have diff(infl))
 
-# Convert to ts object from zoo
-infl_diff_ts <- ts(coredata(df_differenced$infl), start = c(2004, 7), frequency = 12)
+# Convert to ts object from zoo and estimate the optimal ARIMA-model (incl. testing for significance of the coefficients)
+infl_diff_ts <- ts(coredata(df_differenced$infl), frequency = 12)  # , start = c(2004, 7)
 # Estimating the optimal ARIMA-model and testing for significance of the coefficients
 arima <- Arima(y=infl_diff_ts, order=c(ar,d,ma), include.constant = FALSE)
 coeftest(arima)
-## Interpretation: ar2, ar4, ma2, ma4 are significant at the 95% confidence interval.
 
-## The negative value of the ar4-coefficient reveals that a positive change in the time series
-## in the previous period leads to a negative change in the subsequent period.
-## The negative value of the ma2-coefficient reveals that a positive residual in the previous
-## period has a negative effect on the time series in the subsequent period.
-
-## ar2, ar4, ma2, and ma4 are significant at the 95% confidence level because their p-values (Pr(>|t|)) are less than 0.05.
-## ar2 and ar4: The 2nd and 4th past inflation changes (lags) have a statistically significant effect on today’s change in inflation.
+# Interpretation: ar4 and ar6 are significant at the 95% confidence interval.
+# The positive value of the ar4- and ar6-coefficient reveals that a positive change in
+# the time series in the previous period leads to a positive change in the subsequent period.
 
 
-# forecast inflation change
-library(forecast)
 # Forecast the next 12 periods (e.g., months)
+
 forecast_arima <- forecast(arima, h = 12)
 print(forecast_arima)
 
