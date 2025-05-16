@@ -11,45 +11,34 @@ library(car)
 
 
 
-# Estimating vector autoregression and Granger causality: 'special' with 'infl'
+# Estimating vector autoregression and Granger causality: 'policy_rate' with 'infl'
 
-VAR_model <- VAR(cbind(df_differenced$special, df_differenced$infl) , ic="AIC", lag.max = 12)
-coeftest(VAR_model)
-causality(VAR_model, cause="df_differenced.special")["Granger"]
+VAR_model <- VAR(cbind(df_differenced$policy_rate, df_differenced$infl) , ic="AIC", lag.max = 12)
+# coeftest(VAR_model)
+# summary(VAR_model)
+causality(VAR_model, cause="df_differenced.policy_rate")["Granger"]
+
+# Granger Causality Test (VAR)
+# The test examines whether past values of df_differenced.policy_rate help predict current values of
+# inflation beyond what's already explained by past values of inflation itself.
+# There is statistically significant evidence that past values of policy_rate Granger-cause infl,
+# i.e., policy rates have predictive power for inflation in our model.
+# Granger causality ≠ true causation (it only indicates predictive ability).
+
 causality(VAR_model, cause="df_differenced.infl")["Granger"]
-
-"""granger Causality Test (VAR)
-	•	The Granger causality test found that past values of special (lags 1 to 12 as a group) do not significantly improve forecasts of inflation.
-	•	In other words, knowing the past values of special does not help predict future inflation beyond what past values of inflation already tell us.
-
-Interpretation: As a whole, the variable special does not Granger-cause inflation — meaning it lacks systematic predictive power over time."""
+# Inflation does not Granger-cause the policy rates.
 
 
-# Estimating vector autoregression and Granger causality: 2 'events' with 'infl'
-df_differenced$event_2020_01 <- ifelse(index(df_differenced) >= as.Date("2020-07-01"), 1, 0)
-df_differenced$event_2022_10 <- ifelse(index(df_differenced) >= as.Date("2022-10-01"), 1, 0)
+# # Estimating vector autoregression and Granger causality: "SNB event in October 2022" with inflation rates.
 
-VAR_df <- na.omit(cbind(df_differenced$event_2020_01, df_differenced$event_2022_10, df_differenced$infl))
-colnames(VAR_df) <- c("event_2020_01", "event_2022_10", "infl")
+VAR_df <- na.omit(cbind(df_differenced$event_2022_10, df_differenced$infl))
+colnames(VAR_df) <- c("event_2022_10", "infl")
 
 
 VAR_model <- VAR(VAR_df , ic="AIC", lag.max = 12)
 coeftest(VAR_model)
-causality(VAR_model, cause="event_2020_01")["Granger"]
 causality(VAR_model, cause="event_2022_10")["Granger"]
+# Interpretation: There is strong evidence that event_2020_01 and event_2022_10 Granger-cause infl (at lag 5 and lag6).
+
 causality(VAR_model, cause="infl")["Granger"]
-
-
-
-# Get the number of lags used
-p <- VAR_model$p
-
-# Build hypothesis string: are all lags of event_2020_01 zero in the infl equation?
-hypothesis1 <- paste0("event_2020_01.l", 1:p, " = 0", collapse = " & ")
-hypothesis2 <- paste0("event_2022_10.l", 1:p, " = 0", collapse = " & ")
-
-
-# Run the test on the 3rd equation (infl)
-linearHypothesis(VAR_model$varresult$infl, hypothesis1)
-linearHypothesis(VAR_model$varresult$infl, hypothesis2)
-# Interpretation: There is strong evidence that event_2020_01 and event_2022_10 Granger-cause infl (at lag 1).
+# Interpretation: There is no evidence that inflation Granger-causes the policy rate.

@@ -21,15 +21,16 @@ inflation_data <- read_excel("data/snb-data-plkoprinfla-en-all-20250422_0900.xls
 
 pr_full <- policy_rate_data %>% 
   as_tibble() %>% 
-  select(date = Overview,
-         policy = `SNB policy rate`,
-         ir_above = `Interest rate on sight deposits above threshold`,
-         sar_fix = `SARON fixing at the close of the trading day`,
-         special = `Special rate  (Liquidity-shortage financing facility)`) %>%
+  dplyr::select(date = "Overview",
+         policy = "SNB policy rate",
+         ir_above = "Interest rate on sight deposits above threshold",
+         sar_fix = "SARON fixing at the close of the trading day",
+         special = "Special rate  (Liquidity-shortage financing facility)") %>%
   mutate(date = ymd(date),
          (across(c(policy, ir_above, sar_fix, special),
                  ~ round(as.numeric(.), 2)))
   )
+
 # view(pr_full)  
 
 ggplot(pr_full, aes(x = date)) +
@@ -88,25 +89,14 @@ pr <- libor_data %>%
     date < as.Date("2019-06-01"),
     libor_3m_avg,       
     policy_rate)) %>% 
-    select(date, policy_rate)
+    dplyr::select(date, policy_rate)
 
 infl <- inflation_data %>% 
   as_tibble() %>%
-  select(date = Overview, infl = `SNB - Core inflation, trimmed mean`) %>% 
+  dplyr::select(date = Overview, infl = `SNB - Core inflation, trimmed mean`) %>% 
   mutate(date = ymd(str_c(date, "-01")),   # add a '-01' to the date string before making it a date
          infl = as.numeric(infl),
          infl = round(infl, 1))
-
-
-# Group by year-month and keep the first (oldest) row in each group
-
-# pr <- pr %>%
-#   group_by(year_month = floor_date(date, "month")) %>%     # Group by month
-#   slice_min(date) %>%             # Keep oldest date in each month
-#   ungroup() %>%
-#   mutate(date = year_month) %>%   # Overwrite 'date' with YYYY-MM-01
-#   select(-year_month)             # Remove temporary column
-# view(pr)
 
 
 # merge data
@@ -117,7 +107,7 @@ df <- inner_join(pr, infl, by = "date")  # merge the two tibbles
 # convert df to a zoo time series object
 
 df_ts <- zoo(
-  df %>% select(-date),
+  df %>% dplyr::select(-date),
   order.by = df$date
 )
 

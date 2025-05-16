@@ -33,8 +33,8 @@ summary(lin_reg)
 
 # Plot the regression residuals. The plot shows large residuals, confirming the low R squared.
 resid <- lin_reg$residuals
-plot(y=resid, x=as.Date(time(df_differenced)), ylab="Residuals", xlab="Year", type="l", main="Regression Residuals") +
-  grid()
+plot(y=resid, x=as.Date(time(df_differenced)), ylab="Residuals", xlab="Year", type="l", main="Regression Residuals")
+grid()
 
 
 ## Alternative approaches:

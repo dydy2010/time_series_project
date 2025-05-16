@@ -31,7 +31,7 @@ pacf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
 
 # Identifying the orders p and q of the ARIMA(p,1,q)-model by testing different model specifications
 max.order <- 6 # We only allow a maximum of two AR- and/or MA-terms 
-d <- 0 # The order of integration d is set to 0 since the we have the diff of inflation rates in the data
+d <- 1 # The order of integration d is set to 1
 
 # Defining the matrix in which the values of the AICs for different model specifications are stored
 arima_aic <- matrix(NA, ncol=max.order+1, nrow=max.order+1)
@@ -53,14 +53,14 @@ arima_aic[ar+1, ma+1]
 ## Interpretation: The optimal ARIMA-model is ARIMA(6,0,0) with an AIC of -398.5921. (d=0 as we have diff(infl))
 
 # Convert to ts object from zoo and estimate the optimal ARIMA-model (incl. testing for significance of the coefficients)
-infl_diff_ts <- ts(coredata(df_differenced$infl), frequency = 12)  # , start = c(2004, 7)
+infl_diff_ts <- ts(coredata(df_differenced$infl), frequency = 12)
 # Estimating the optimal ARIMA-model and testing for significance of the coefficients
 arima <- Arima(y=infl_diff_ts, order=c(ar,d,ma), include.constant = FALSE)
 coeftest(arima)
 
-# Interpretation: ar4 and ar6 are significant at the 95% confidence interval.
-# The positive value of the ar4- and ar6-coefficient reveals that a positive change in
-# the time series in the previous period leads to a positive change in the subsequent period.
+# Interpretation: ar1 to ar5 are highly significant at the 95% confidence interval.
+# The negative values of the coefficients reveals that a positive change in the time
+# series in the previous period leads to a negative change in the subsequent period.
 
 
 # Forecast the next 12 periods (e.g., months)
