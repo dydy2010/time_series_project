@@ -4,6 +4,7 @@ library(zoo)
 library(tseries)
 library(forecast)
 library(lmtest)
+library(stats)
 library(quantmod)
 
 
@@ -35,6 +36,27 @@ summary(lin_reg)
 resid <- lin_reg$residuals
 plot(y=resid, x=as.Date(time(df_differenced)), ylab="Residuals", xlab="Year", type="l", main="Regression Residuals")
 grid()
+
+# Breusch-Pagan test for Constant variance, null hypothesis = Residuals are homoscedastic
+# Perform Breusch-Pagan test
+# There is no significant evidence of heteroskedasticity in the linear regression model.
+bptest(lin_reg)
+
+# Shapiro test for normality, null hypothesis = Residuals are normally distributed
+# Strong rejection of the null hypothesis: The residuals of the model are NOT normally distributed.
+shapiro.test(resid)
+
+# Check for Outliers & Influential Points
+plot(lin_reg, which = 1)  # Residuals vs Fitted
+plot(lin_reg, which = 2)  # Q-Q plot
+plot(lin_reg, which = 4)  # Cook's distance
+
+# Durbin-Watson test for serial correlation, null hypothesis = Residuals are not autocorrelated
+# The Durbin-Watson test statistic is very close to 2, which is the expected value under the
+# null hypothesis of no autocorrelationhypothesis of no autocorrelationnull hypothesis of
+# no autocorrelation
+# p > 0.05: There is no statistically significant evidence of positive autocorrelation in the residuals.
+dwtest(lin_reg) 
 
 
 ## Alternative approaches:
