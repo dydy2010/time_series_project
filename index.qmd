@@ -1,0 +1,7 @@
+---
+title: "Project: Time series analysis in Finance"
+---
+
+# How do the policy rates of the Swiss National Bank and the Swiss inflation rates interact?
+
+This is the project report by Dongyuan Gao and Daniel Huber, master students at the HSLU University, in the module "Time Series Analysis in Finance" in spring 2025.

@@ -1,0 +1,23 @@
+project:
+  type: book
+
+book:
+  title: "SNB_policy_rate_and_inflation"
+  author: "Daniel Huber / Dongyuan Gao"
+  chapters:
+    - index.qmd
+    - sections/Chapter_1_to_5.qmd
+    - sections/R_analysis.qmd
+    - sections/Chapter_6_to_8.qmd
+
+format:
+  html:
+    toc: true
+    theme: cosmo
+  pdf:
+    documentclass: report
+
+execute:
+  echo: true
+  warning: false
+  message: false
