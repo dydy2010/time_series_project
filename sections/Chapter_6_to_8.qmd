@@ -1,6 +1,63 @@
 # findings/discussion/limitations
 
+## lag leading effect and VAR
 
+Lagged leading model shows that special_lag11 (11 months ago) has a statistically significant and positive effect on current inflation.This suggests a delayed association: changes in the special variable may be linked to inflation nearly a year later. However, the overall model fit is modest (Adjusted R² ~8.4%), and no other lags were significant.
+The Granger causality test (VAR) found that past values of special (lags 1 to 12 as a group) do not significantly improve forecasts of inflation. In other words, knowing the past values of special does not help predict future inflation beyond what past values of inflation already tell us. We have tested this with both datasets and got the same result, which also gives the result more credibility.
+Overall, there is weak evidence of a specific delayed effect (lag 11) of special on inflation, but no broader or systematic predictive relationship. The effect might be real but isolated, or due to noise in the data. The Granger test confirms that special is not a reliable predictor of inflation when considering its full lag history.
+ 
+## ARIMA 
+ 
+ar2, ar4, ma2, and ma4 are significant at the 95% confidence level because their p-values (Pr(>|t|)) are less than 0.05.
+ar2 and ar4: The 2nd and 4th past inflation changes (lags) have a statistically significant effect on today’s change in inflation.
+ma2 and ma4: The forecast errors from 2 and 4 months ago are also significant predictors.
+Inflation today is significantly influenced by the change in inflation 2 and 4 months ago, and by past prediction errors from 2 and 4 months ago.
+ 
+**ARIMA prediction**
+ 
+        Date         Forecast_Inflation   Forecast_Change   Lower_95     Upper_95
+1    2025-04-01              0.900               0        -0.237       0.238
+2    2025-05-01              0.901               0      -0.237    0.238
+3    2025-06-01              0.901               0      -0.237    0.238
+4    2025-07-01              0.902               0      -0.237    0.238
+5    2025-08-01              0.902               0      -0.237    0.238
+6    2025-09-01              0.902               0      -0.237    0.238
+7    2025-10-01              0.903               0      -0.237    0.238
+8    2025-11-01              0.903               0      -0.237    0.238
+9    2025-12-01              0.904               0      -0.237    0.238
+10   2026-01-01             0.904               0     -0.237    0.238
+11   2026-02-01             0.904               0     -0.237    0.238
+12   2026-03-01             0.905               0     -0.237    0.238
+ 
+Predicted change each month is 0.04. This is very close to zero, suggesting that your model expects almost no change in inflation month-to-month during the forecast horizon.
+These symmetric intervals around zero mean the model has low confidence in predicting a strong directional trend. Inflation might:
+- Increase slightly
+- Decrease slightly
+- Or stay flat
+The forecast suggests inflation will remain stable over the next 12 months, hovering around 0.90%–0.91%. Forecast Change = 0 each month → the model expects no significant monthly change in inflation.
+The 95% confidence interval ranges from −0.237% to +0.238%, showing moderate uncertainty around a flat trend.
+**Overall**: Inflation is forecasted to stay steady, with small possible fluctuations up or down.
+
+
+# Discussion
+
+Are the results consistent?
+
+**ARIMA Result**:
+Univariate model: It uses only past values of inflation to forecast future inflation.
+The ARIMA (4,1,4) model shows inflation is nearly constant going forward, with very small changes predicted.
+It does not include other variables (e.g., policy events).
+
+**Granger Causality Result**:
+Multivariate test: It checks if another variable (like an event or interest rate change) helps predict inflation.
+You found no Granger causality, meaning those events do not add predictive power beyond inflation’s own past.
+
+**The results are actually consistent, without contradiction**:
+
+Granger says: “Other variables don’t help predict inflation.”
+ARIMA says: “Inflation doesn’t change much — its own past barely predicts anything new either.”
+
+So, both point to a weakly moving inflation series, not driven by recent shocks or clear autocorrelation.
 
 
 # Conclusion
@@ -9,4 +66,13 @@
 
 
 
-# bibliography
+# Bibliography
+
+[Inte00] 	Interest rates and threshold factor. URL: https://data.snb.ch/en/topics/snb/cube/snbgwdzid - retrieved: 2025-05-14. — Interest rates and threshold factor
+
+[Mark23] 	Marking 30 years of the Taylor rule | Stanford Institute for Economic Policy Research (SIEPR). URL: https://siepr.stanford.edu/news/marking-30-years-taylor-rule - retrieved: 2025-05-14
+
+[Schi00] 	SCHINDLER, JOHN: The Swiss National Bank’s Three-month Libor Target (2000)
+
+[Snbd00] 	SNB data portal. URL: https://data.snb.ch/en/topics/snb/cube/snbgwdzid - retrieved: 2025-05-15. — SNB data portal
+
