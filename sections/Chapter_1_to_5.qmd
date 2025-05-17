@@ -4,7 +4,7 @@ editor:
     wrap: 72
 ---
 
-# introduction
+# Introduction
 
 ## Contextual Background
 
@@ -16,10 +16,10 @@ inflation. Brief introduction to the role of the Swiss National Bank
 ## Problem Statement
 
 Explanation of the specific problem: understanding how SNB policy rates
-and Swiss core inflation rates interact dynamically. Brief justification
+and Swiss core inflation rates interact dynamically. Brief justifiction
 why this relationship is economically relevant or timely.
 
-# motivation/objective,
+# Motivation and Objective
 
 ## Project Objectives
 
@@ -41,12 +41,12 @@ policymakers, investors, and researchers.
 
 ## Research Questions
 
-for example: Does SNB policy rate significantly influence core
+For example: Does SNB policy rate significantly influence core
 inflation? Is there evidence of bidirectional causality between policy
 rates and core inflation? How quickly and how strongly do core inflation
 rates respond to policy changes?
 
-# theory/literature/methodology,
+# Theory, literature and methodology,
 
 To answer our research questions, we first needed to clarify what the
 basis for modern monetary policy is. Why do central banks raise and
@@ -61,25 +61,25 @@ its potential, plus one.” \[Mark23\]
 
 Then the next clarification is: how does Switzerland evaluate and
 implement monetary policy to foster economic prosperity? After trying
-out some datasets, we discovered the following statement: “Since the
+out some datasets, we discovered the following statements: “Since the
 beginning of 2000, the Swiss National Bank (SNB) has used a range for
 the three-month Swiss franc Libor as its announced target for monetary
 policy.” “Before 2000, the Swiss National Bank officially targeted
 monetary aggregates, using a medium-term target for the
 seasonally-adjusted monetary base.”\[Schi00\]
 
-Then for the analysis, we have adopted the theory and practice that we
+Then for the analysis, we have adopted the theory and practice what we
 have learned in TSA classes. For example, VAR modeling, stationarity
 testing, Granger causality, lag-lead effect, and ARIMA.
 
-# data selection
+# Data selection
 
 First, after some research, we started the analysis with a dataset from
 SNB, “Interest rates and threshold factor” \[Inte00a\], afterwards is
 called Dataset 1. It includes policy rate, interest rate on sight
 deposits above threshold, special rate, SARON fix etc. For inflation
 data, we have used core inflation, trimmed mean from “Consumer prices –
-SNB and SFSO core inflation rates” \[Cons00b\]. In dataset 1, The
+SNB and SFSO core inflation rates” \[Cons00b\]. In Dataset 1, the
 threshold is optimal to be used as the interest rate policy target, and
 because before 2009 there is no threshold data in Dataset 1, we have
 used the special rate. From 13 June 2019, the special rate was based on
@@ -94,34 +94,34 @@ and conclusions applying ARIMA, VAR, and linear regression. However, we
 were not satisfied with the different rate types; it seemed puzzling
 that we had to convert and “compromise” to the seemingly complicated
 data. So, we researched more, and we did find a second dataset
-(afterwards called Dataset 2), it only contains 2 types of data to be
+(afterwards called Dataset 2). It only contains 2 types of data to be
 considered official interest rate, which is more consistent and more
 appropriate to take as the policy rate. “From 13 June 2019, the SNB
 policy rate is applied. From 3 January 2000 until 13 June 2019, the SNB
-set a target range for the three-month Swiss franc Libor”\[Snbd00\].
+set a target range for the three-month Swiss franc Libor” \[Snbd00\].
 With the second dataset, we’ve also done a VAR to evaluate if there is
 causality between policy rate/target to inflation, or inflation to the
 policy decisions, which with both datasets, no causality was proven.
 This also gives us more confidence that both datasets represent the
 reality well, even though the dataset 2 seemed more consistent.
 
-# team collaboration and toolset
+# Team collaboration and tool set
 
-## Team Organization and Meetings
+## Team organization and meetings
 
-Team Structure: For our team of 2, we both shared responsibility for all
+Team structure: For our team of 2, we both shared responsibility for all
 aspects of the project; however, with a focus on different aspects. For
 example, Daniel presented the initial idea, Dongyuan focused more on
 methodology and research, Daniel focused more on coding diverse models,
 and Dongyuan delved into finding more data options during the project.
 We reached team consensus through weekly meetings and follow-ups. The
 tasks were also interest-based according to both team members. Meeting
-Schedule: Weekly meetings were set up on Monday/Tuesday at 14:00, and
+schedule: weekly meetings were set up on Monday/Tuesday at 14:00, and
 frequent follow-ups took place.
 
-## Collaborative Tools
+## Collaborative tools
 
-### Brainstorming and Ideation:
+### Brainstorming and ideation:
 
 Miro Board - Initial concept visualization - Real-time collaboration on
 ideas and analysis structure - Organizing literature and conceptual
@@ -134,26 +134,27 @@ Visualization of milestones and status
 
 ### Coding and Version Control
 
-RStudio GitHub - Coding environment - Collaborative script development -
-Version control - Merging and conflict resolution workflow -
-Documentation of code changes and version tracking
+RStudio GitHub - coding environment - collaborative script development -
+version control - merging and conflict resolution workflow -
+documentation of code changes and version tracking
 
 ### Documentation and Presentation
 
 Quarto - Unified document format (code, analysis, interpretation) -
 Integration of R code and results - Final report preparation (paper and
-presentation) - Consistent style and format across deliverables
+presentation) - Consistent style and format across deliverables.
 
-## Reflection on Toolset Effectiveness
+## Reflection on tool set effectiveness
 
 -   Miro is a great tool for visualization and brainstorming. With
-    downside that, could be information-intensive for new users.
--   RStudio code Collab has its learning curve, it was challenging for
-    the first 2 weeks for us to get used to save, commit, pull and push.
-    But in the end, after getting used to it, we think it is a great
-    tool for R collaboration in team.
--   Recommendations for future projects: collaboration toolset and team
-    structure take time to form, for short projects, it takes time to
+    downside that it can be information-intensive for new users.
+-   RStudio code collaboration has its learning curve. It was
+    challenging for the first 2 weeks for us to get used to save,
+    commit, pull and push. But in the end, after getting used to it, we
+    think it is a great tool for R collaboration in team. Although it
+    does not allow to work at the same document at the same time.
+-   Recommendations for future projects: collaboration tool set and team
+    structure take time to form. For short projects, it takes time to
     getting used to them. However, we are happy that we tried out these
-    tools, it presents us a chance to learn some essential and popular
+    tools: It gave us a chance to learn some essential and popular
     options in the data science world.

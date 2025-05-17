@@ -1,8 +1,8 @@
-# findings/discussion/limitations
+# Findings, discussion and limitations
 
-## lag leading effect and VAR
+## Lead-lag effect and VAR
 
-Lagged leading model shows that special_lag11 (11 months ago) has a statistically significant and positive effect on current inflation.This suggests a delayed association: changes in the special variable may be linked to inflation nearly a year later. However, the overall model fit is modest (Adjusted R² \~8.4%), and no other lags were significant. The Granger causality test (VAR) found that past values of special (lags 1 to 12 as a group) do not significantly improve forecasts of inflation. In other words, knowing the past values of special does not help predict future inflation beyond what past values of inflation already tell us. We have tested this with both datasets and got the same result, which also gives the result more credibility. Overall, there is weak evidence of a specific delayed effect (lag 11) of special on inflation, but no broader or systematic predictive relationship. The effect might be real but isolated, or due to noise in the data. The Granger test confirms that special is not a reliable predictor of inflation when considering its full lag history.
+Lead-lag models shows that special_lag11 (11 months ago) has a statistically significant and positive effect on current inflation.This suggests a delayed association: changes in the special variable may be linked to inflation nearly a year later. However, the overall model fit is modest (Adjusted R² \~8.4%), and no other lags were significant. The Granger causality test (VAR) found that past values of special (lags 1 to 12 as a group) do not significantly improve forecasts of inflation. In other words, knowing the past values of special does not help predict future inflation beyond what past values of inflation already tell us. We have tested this with both datasets and got the same result, which also gives the result more credibility. Overall, there is weak evidence of a specific delayed effect (lag 11) of special on inflation, but no broader or systematic predictive relationship. The effect might be real but isolated, or due to noise in the data. The Granger test confirms that special is not a reliable predictor of inflation when considering its full lag history.
 
 ## ARIMA
 
