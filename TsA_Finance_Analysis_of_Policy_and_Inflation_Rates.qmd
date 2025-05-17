@@ -16,6 +16,7 @@ editor: visual
 
 ```{r}
 library(tidyverse)
+library(lubridate)
 library(readxl)
 library(zoo)
 library(tseries)
@@ -152,3 +153,304 @@ ggplot(df, aes(x = date)) +
   theme(legend.position = "bottom", legend.direction = "horizontal")
 
 ```
+
+## Stationarity & linear regression models
+
+### Stationarity
+
+Both series are not stationary.
+
+```{r}
+adf.test(na.omit(df_ts$policy_rate))
+adf.test(na.omit(df_ts$infl))
+```
+
+Take first differences of the series and check again
+
+```{r}
+df_differenced <- diff(df_ts)
+adf.test(na.omit(df_differenced$policy_rate))
+adf.test(na.omit(df_differenced$infl))
+```
+
+Both series are stationary now.
+
+### Correlations
+
+Very week positive correlation.
+
+```{r}
+cor(df_differenced$policy_rate, df_differenced$infl, use = "pairwise.complete.obs")
+```
+
+### Basic Linear regression model
+
+Linear regression of policy_rate on inflation shows no significant coefficients and R squared is very low.
+
+```{r}
+lin_reg <- lm(infl ~ policy_rate, data = df_differenced)
+summary(lin_reg)
+```
+
+### Residual analysis
+
+#### Residual plot
+
+The plot shows large residuals, confirming the low R squared.
+
+```{r}
+resid <- lin_reg$residuals
+plot(y=resid, x=as.Date(time(df_differenced)), ylab="Residuals", xlab="Year", type="l", main="Regression Residuals")
+grid()
+```
+
+#### Breusch-Pagan test
+
+Breusch-Pagan test for Constant variance, with null hypothesis that Residuals are homoscedastic shows, that there is no significant evidence of heteroskedasticity in the linear regression model.
+
+```{r}
+bptest(lin_reg)
+```
+
+#### Shapiro test for normality
+
+Shapiro test for normality with null hypothesis that Residuals are normally distributed shows a strong rejection of the null hypothesis: The residuals of the model are NOT normally distributed. With n = 302 we might disregard non-normality.
+
+```{r}
+shapiro.test(resid)
+```
+
+#### Visual check for outliers and influencial points
+
+```{r}
+plot(lin_reg, which = 1)  # Residuals vs Fitted
+plot(lin_reg, which = 2)  # Q-Q plot
+plot(lin_reg, which = 4)  # Cook's distance
+```
+
+#### Durbin-Watson test for serial correlation
+
+Durbin-Watson test for serial correlation with null hypothesis that Residuals are not autocorrelated results in a test statistic that is very close to 2, which is the expected value under the null hypothesis of no autocorrelation: p \> 0.05: There is no statistically significant evidence of positive autocorrelation in the residuals.
+
+```{r}
+dwtest(lin_reg) 
+```
+
+### Alternatives to the basic linear model
+
+#### Alternative 1: Lead-lag relation: infl(t) = a + b \* policy_rate(t-1) + e(t)
+
+Create lagged variables
+
+```{r}
+df_differenced$policy_rate_lag1 <- stats::lag(df_differenced$policy_rate, k = 1)
+df_differenced$policy_rate_lag2 <- stats::lag(df_differenced$policy_rate, k = 2)
+df_differenced$policy_rate_lag3 <- stats::lag(df_differenced$policy_rate, k = 3)
+df_differenced$policy_rate_lag4 <- stats::lag(df_differenced$policy_rate, k = 4)
+df_differenced$policy_rate_lag5 <- stats::lag(df_differenced$policy_rate, k = 5)
+df_differenced$policy_rate_lag6 <- stats::lag(df_differenced$policy_rate, k = 6)
+df_differenced$policy_rate_lag7 <- stats::lag(df_differenced$policy_rate, k = 7)
+df_differenced$policy_rate_lag8 <- stats::lag(df_differenced$policy_rate, k = 8)
+df_differenced$policy_rate_lag9 <- stats::lag(df_differenced$policy_rate, k = 9)
+df_differenced$policy_rate_lag10 <- stats::lag(df_differenced$policy_rate, k = 10)
+df_differenced$policy_rate_lag11 <- stats::lag(df_differenced$policy_rate, k = 11)
+df_differenced$policy_rate_lag12 <- stats::lag(df_differenced$policy_rate, k = 12)
+```
+
+Fit the linear model, removing rows with NA due to lagging.
+
+```{r}
+lin_reg_lagged <- lm(infl ~ policy_rate_lag1 + policy_rate_lag2 + policy_rate_lag3 +
+                       policy_rate_lag4 + policy_rate_lag5 + policy_rate_lag6 +
+                       policy_rate_lag7 + policy_rate_lag8 + policy_rate_lag9 +
+                       policy_rate_lag10 + policy_rate_lag11 + policy_rate_lag12,
+                     data = na.omit(df_differenced))
+summary(lin_reg_lagged)
+```
+
+Lag 1 and lag 10 are significant (p-value \< 0.05), but R squared (0.06249, adjusted 002187) is very low.
+
+We are not sure if a lag of 10 months makes sense from a logical point of view.
+
+Lag 1 would make sense and the model shows that it is statistically significant.
+
+But the direction of lag 1 is not as expected: higher policy rate goes with higher inflation.
+
+Overall we are not convinced by this model.
+
+#### Alternative 2: Treat SNB actions as events
+
+```{r}
+df_differenced$event_2008_10 <- ifelse(index(df_differenced) >= as.Date("2008-10-01"), 1, 0)
+df_differenced$event_2014_11 <- ifelse(index(df_differenced) >= as.Date("2014-11-01"), 1, 0)
+df_differenced$event_2020_01 <- ifelse(index(df_differenced) >= as.Date("2020-07-01"), 1, 0)
+df_differenced$event_2022_05 <- ifelse(index(df_differenced) >= as.Date("2022-05-01"), 1, 0)
+df_differenced$event_2022_10 <- ifelse(index(df_differenced) >= as.Date("2022-10-01"), 1, 0)
+
+lin_reg_events <- lm(infl ~ event_2008_10 + event_2014_11 + event_2020_01 + event_2022_05 + event_2022_10, data = na.omit(df_differenced))
+summary(lin_reg_events)
+```
+
+The last event 2022_10 is significant. This was a month after the SNB had increased their policy rate from negative (-0.25) to positive (+0.50). But R squared is very low. 
+
+## Excursus: Closer look at inflation only (auto/direct correlations and an ARIMA model)
+
+### Correlations
+
+#### Autocorrelations
+
+The series shows weak to moderate positive autocorrelation at lags 4 and 6, and a negative autocorrelation at lag 12. The inflation changes (infl) today are somewhat positively related to those 4, and 6 months ago. But inflation 12 months ago tends to move in the opposite direction from today’s.
+
+```{r}
+acf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
+```
+
+#### Direct correlations
+
+Direct correlation between a time series and lag k, controlling for all shorter lags (1 to k−1).
+
+```{r}
+pacf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
+```
+
+#### Rule of thumb regarding ARIMA parameters q and p
+
+Use acf() to choose the q in MA(q) models. -\> q = 4 or 6 Use pacf() to choose the p in AR(p) models. -\> p = 4 or 6
+
+The ACF and PACF plots suggest that the series may be modeled as an ARMA(4,4) or AR(6,6).
+
+## Akaike information criterion: AIC
+
+Identifying the orders p and q of the ARIMA(p,1,q)-model by testing different model specifications. We only allow a maximum of six AR- and MA-terms and set the order of integration d to 1.
+
+```{r}
+max.order <- 6
+d <- 1
+```
+
+Defining the matrix in which the values of the AICs for different model specifications are stored. Then calculating and storing the AICs for different model specifications.
+
+```{r}
+arima_aic <- matrix(NA, ncol=max.order+1, nrow=max.order+1)
+row.names(arima_aic) <- c(0:max.order) # Order of AR(p) in rows
+colnames(arima_aic) <- c(0:max.order) # Order of MA(q) in columns
+
+for(i in 0:max.order){
+  for(j in 0:max.order){
+    arima_aic[i+1,j+1]<-Arima(y=df_differenced$infl, order=c(i,d,j), include.constant =  FALSE)$aic
+  }
+}
+arima_aic
+index <- which(arima_aic == min(arima_aic), arr.ind = TRUE)
+ar <- as.numeric(rownames(arima_aic)[index[1]])
+ma <- as.numeric(colnames(arima_aic)[index[2]])
+c(ar, ma)
+arima_aic[ar+1, ma+1]
+```
+
+**Interpretation**: The optimal ARMA-model is ARMA(6,0) with an AIC of -398.5921. (d according to order of integration.
+
+## ARIMA model
+
+Convert to ts object from zoo and estimate the optimal ARIMA-model (incl. testing for significance of the coefficients)
+
+```{r}
+infl_diff_ts <- ts(coredata(df_differenced$infl), frequency = 12)
+arima <- Arima(y=infl_diff_ts, order=c(ar,d,ma), include.constant = FALSE)
+coeftest(arima)
+```
+Interpretation: ar1 to ar5 are highly significant at the 95% confidence interval. The negative values of the coefficients reveals that a positive change in the time
+series in the previous period leads to a negative change in the subsequent period.
+
+### Forecast the next 12 months of inflation
+
+```{r}
+forecast_arima <- forecast(arima, h = 12)
+print(forecast_arima)
+
+forecast_arima$mean        # Point forecasts
+forecast_arima$lower       # Lower bounds (80% and 95%)
+forecast_arima$upper       # Upper bounds (80% and 95%)
+
+autoplot(forecast_arima) + 
+  ggtitle("ARIMA Forecast for Inflation") +
+  xlab("Time") + ylab("Inflation Change")
+```
+
+#### Last known and forecasted inflation levels
+
+```{r}
+last_infl <- tail(na.omit(df$infl), 1)
+forecast_changes <- forecast_arima$mean
+forecast_inflation <- cumsum(forecast_changes) + last_infl
+forecast_upper <- cumsum(forecast_arima$upper[,2]) + last_infl
+forecast_lower <- cumsum(forecast_arima$lower[,2]) + last_infl
+```
+
+Get the last date from indexed too object and generate 12 monthly forecast dates
+
+```{r}
+last_date <- tail(index(df_differenced), 1)
+forecast_dates <- seq(from = as.Date(last_date) %m+% months(1), by = "month", length.out = 12)
+```
+
+Forecast table and plot.
+
+```{r}
+forecast_table <- data.frame(
+  Date = forecast_dates,
+  Forecast_Inflation = round(as.numeric(forecast_inflation), 3),
+  Forecast_Change = round(as.numeric(forecast_arima$mean), 3),
+  Lower_95 = round(forecast_arima$lower[,2], 3),
+  Upper_95 = round(forecast_arima$upper[,2], 3)
+)
+
+print(forecast_table)
+
+ggplot(forecast_table, aes(x = Date, y = Forecast_Inflation)) +
+  geom_line(color = "blue", linewidth = 1) +
+  geom_point(color = "blue") +
+  labs(
+    title = "Forecasted Inflation Levels",
+    x = "Date",
+    y = "Inflation Rate (%)"
+  ) +
+  theme_minimal()
+
+```
+
+## Vector autoregression and Granger causality
+
+### Do policy rates explain inflation rates?
+
+```{r}
+VAR_model <- VAR(cbind(df_differenced$policy_rate, df_differenced$infl) , ic="AIC", lag.max = 12)
+# coeftest(VAR_model)
+# summary(VAR_model)
+causality(VAR_model, cause="df_differenced.policy_rate")["Granger"]
+```
+The Granger Causality Test (VAR) examines whether past policy rates help predict current values of inflation beyond what's already explained by past values of inflation itself.
+
+There is statistically significant evidence that past policy rates Granger-cause inflation, i.e., policy rates have predictive power for inflation in our model.
+
+But: Granger causality is not proof of true causation, it only indicates predictive ability.
+
+
+### Do inflation rates explain policy rates?
+
+```{r}
+causality(VAR_model, cause="df_differenced.infl")["Granger"]
+```
+
+No: Inflation rates do not Granger-cause the policy rates.
+
+### Does the "SNB event in September 2022" explain inflation rates.
+
+```{r}
+VAR_df <- na.omit(cbind(df_differenced$event_2022_10, df_differenced$infl))
+colnames(VAR_df) <- c("event_2022_10", "infl")
+VAR_model <- VAR(VAR_df , ic="AIC", lag.max = 12)
+coeftest(VAR_model)
+causality(VAR_model, cause="event_2022_10")["Granger"]
+```
+There is strong evidence that event_2020_01 and event_2022_10 Granger-cause infl (at lag 5 and lag6).

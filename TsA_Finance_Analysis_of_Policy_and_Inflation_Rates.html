@@ -125,8 +125,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ✖ dplyr::lag()    masks stats::lag()
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(zoo)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>
 Attache Paket: 'zoo'
@@ -377,6 +378,633 @@ Removed 70 rows containing missing values or values outside the scale range
 </div>
 </div>
 </div>
+</section>
+</section>
+<section id="stationarity-linear-regression-models" class="level2">
+<h2 class="anchored" data-anchor-id="stationarity-linear-regression-models">Stationarity &amp; linear regression models</h2>
+<section id="stationarity" class="level3">
+<h3 class="anchored" data-anchor-id="stationarity">Stationarity</h3>
+<p>Both series are not stationary.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(<span class="fu">na.omit</span>(df_ts<span class="sc">$</span>policy_rate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Augmented Dickey-Fuller Test
+
+data:  na.omit(df_ts$policy_rate)
+Dickey-Fuller = -3.0722, Lag order = 6, p-value = 0.1244
+alternative hypothesis: stationary</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(<span class="fu">na.omit</span>(df_ts<span class="sc">$</span>infl))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Augmented Dickey-Fuller Test
+
+data:  na.omit(df_ts$infl)
+Dickey-Fuller = -2.8432, Lag order = 6, p-value = 0.2209
+alternative hypothesis: stationary</code></pre>
+</div>
+</div>
+<p>Take first differences of the series and check again</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>df_differenced <span class="ot">&lt;-</span> <span class="fu">diff</span>(df_ts)</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(<span class="fu">na.omit</span>(df_differenced<span class="sc">$</span>policy_rate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in adf.test(na.omit(df_differenced$policy_rate)): p-value smaller than
+printed p-value</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Augmented Dickey-Fuller Test
+
+data:  na.omit(df_differenced$policy_rate)
+Dickey-Fuller = -5.1719, Lag order = 6, p-value = 0.01
+alternative hypothesis: stationary</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(<span class="fu">na.omit</span>(df_differenced<span class="sc">$</span>infl))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in adf.test(na.omit(df_differenced$infl)): p-value smaller than printed
+p-value</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Augmented Dickey-Fuller Test
+
+data:  na.omit(df_differenced$infl)
+Dickey-Fuller = -4.9773, Lag order = 6, p-value = 0.01
+alternative hypothesis: stationary</code></pre>
+</div>
+</div>
+<p>Both series are stationary now.</p>
+</section>
+<section id="correlations" class="level3">
+<h3 class="anchored" data-anchor-id="correlations">Correlations</h3>
+<p>Very week positive correlation.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(df_differenced<span class="sc">$</span>policy_rate, df_differenced<span class="sc">$</span>infl, <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.0635118</code></pre>
+</div>
+</div>
+</section>
+<section id="basic-linear-regression-model" class="level3">
+<h3 class="anchored" data-anchor-id="basic-linear-regression-model">Basic Linear regression model</h3>
+<p>Linear regression of policy_rate on inflation shows no significant coefficients and R squared is very low.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>lin_reg <span class="ot">&lt;-</span> <span class="fu">lm</span>(infl <span class="sc">~</span> policy_rate, <span class="at">data =</span> df_differenced)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lin_reg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = infl ~ policy_rate, data = df_differenced)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.52421 -0.09991  0.00009  0.10009  0.60009 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)
+(Intercept) -8.974e-05  7.395e-03  -0.012    0.990
+policy_rate  4.860e-02  4.409e-02   1.102    0.271
+
+Residual standard error: 0.1285 on 300 degrees of freedom
+Multiple R-squared:  0.004034,  Adjusted R-squared:  0.0007139 
+F-statistic: 1.215 on 1 and 300 DF,  p-value: 0.2712</code></pre>
+</div>
+</div>
+</section>
+<section id="residual-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="residual-analysis">Residual analysis</h3>
+<section id="residual-plot" class="level4">
+<h4 class="anchored" data-anchor-id="residual-plot">Residual plot</h4>
+<p>The plot shows large residuals, confirming the low R squared.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>resid <span class="ot">&lt;-</span> lin_reg<span class="sc">$</span>residuals</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">y=</span>resid, <span class="at">x=</span><span class="fu">as.Date</span>(<span class="fu">time</span>(df_differenced)), <span class="at">ylab=</span><span class="st">"Residuals"</span>, <span class="at">xlab=</span><span class="st">"Year"</span>, <span class="at">type=</span><span class="st">"l"</span>, <span class="at">main=</span><span class="st">"Regression Residuals"</span>)</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grid</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TsA_Finance_Analysis_of_Policy_and_Inflation_Rates_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="breusch-pagan-test" class="level4">
+<h4 class="anchored" data-anchor-id="breusch-pagan-test">Breusch-Pagan test</h4>
+<p>Breusch-Pagan test for Constant variance, with null hypothesis that Residuals are homoscedastic shows, that there is no significant evidence of heteroskedasticity in the linear regression model.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(lin_reg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    studentized Breusch-Pagan test
+
+data:  lin_reg
+BP = 0.20106, df = 1, p-value = 0.6539</code></pre>
+</div>
+</div>
+</section>
+<section id="shapiro-test-for-normality" class="level4">
+<h4 class="anchored" data-anchor-id="shapiro-test-for-normality">Shapiro test for normality</h4>
+<p>Shapiro test for normality with null hypothesis that Residuals are normally distributed shows a strong rejection of the null hypothesis: The residuals of the model are NOT normally distributed. With n = 302 we might disregard non-normality.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  resid
+W = 0.93868, p-value = 7.332e-10</code></pre>
+</div>
+</div>
+</section>
+<section id="visual-check-for-outliers-and-influencial-points" class="level4">
+<h4 class="anchored" data-anchor-id="visual-check-for-outliers-and-influencial-points">Visual check for outliers and influencial points</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lin_reg, <span class="at">which =</span> <span class="dv">1</span>)  <span class="co"># Residuals vs Fitted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TsA_Finance_Analysis_of_Policy_and_Inflation_Rates_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lin_reg, <span class="at">which =</span> <span class="dv">2</span>)  <span class="co"># Q-Q plot</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TsA_Finance_Analysis_of_Policy_and_Inflation_Rates_files/figure-html/unnamed-chunk-14-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lin_reg, <span class="at">which =</span> <span class="dv">4</span>)  <span class="co"># Cook's distance</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TsA_Finance_Analysis_of_Policy_and_Inflation_Rates_files/figure-html/unnamed-chunk-14-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="durbin-watson-test-for-serial-correlation" class="level4">
+<h4 class="anchored" data-anchor-id="durbin-watson-test-for-serial-correlation">Durbin-Watson test for serial correlation</h4>
+<p>Durbin-Watson test for serial correlation with null hypothesis that Residuals are not autocorrelated results in a test statistic that is very close to 2, which is the expected value under the null hypothesis of no autocorrelation: p &gt; 0.05: There is no statistically significant evidence of positive autocorrelation in the residuals.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dwtest</span>(lin_reg) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Durbin-Watson test
+
+data:  lin_reg
+DW = 2.0417, p-value = 0.6373
+alternative hypothesis: true autocorrelation is greater than 0</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="alternatives-to-the-basic-linear-model" class="level3">
+<h3 class="anchored" data-anchor-id="alternatives-to-the-basic-linear-model">Alternatives to the basic linear model</h3>
+<section id="alternative-1-lead-lag-relation-inflt-a-b-policy_ratet-1-et" class="level4">
+<h4 class="anchored" data-anchor-id="alternative-1-lead-lag-relation-inflt-a-b-policy_ratet-1-et">Alternative 1: Lead-lag relation: infl(t) = a + b * policy_rate(t-1) + e(t)</h4>
+<p>Create lagged variables</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag1 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">1</span>)</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag2 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">2</span>)</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag3 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">3</span>)</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag4 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">4</span>)</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag5 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">5</span>)</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag6 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">6</span>)</span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag7 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">7</span>)</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag8 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">8</span>)</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag9 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">9</span>)</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag10 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">10</span>)</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag11 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">11</span>)</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag12 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Fit the linear model, removing rows with NA due to lagging.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb49"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>lin_reg_lagged <span class="ot">&lt;-</span> <span class="fu">lm</span>(infl <span class="sc">~</span> policy_rate_lag1 <span class="sc">+</span> policy_rate_lag2 <span class="sc">+</span> policy_rate_lag3 <span class="sc">+</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                       policy_rate_lag4 <span class="sc">+</span> policy_rate_lag5 <span class="sc">+</span> policy_rate_lag6 <span class="sc">+</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>                       policy_rate_lag7 <span class="sc">+</span> policy_rate_lag8 <span class="sc">+</span> policy_rate_lag9 <span class="sc">+</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>                       policy_rate_lag10 <span class="sc">+</span> policy_rate_lag11 <span class="sc">+</span> policy_rate_lag12,</span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> <span class="fu">na.omit</span>(df_differenced))</span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lin_reg_lagged)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = infl ~ policy_rate_lag1 + policy_rate_lag2 + policy_rate_lag3 + 
+    policy_rate_lag4 + policy_rate_lag5 + policy_rate_lag6 + 
+    policy_rate_lag7 + policy_rate_lag8 + policy_rate_lag9 + 
+    policy_rate_lag10 + policy_rate_lag11 + policy_rate_lag12, 
+    data = na.omit(df_differenced))
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.48931 -0.09963 -0.00025  0.08991  0.48523 
+
+Coefficients:
+                    Estimate Std. Error t value Pr(&gt;|t|)  
+(Intercept)        0.0002487  0.0075422   0.033   0.9737  
+policy_rate_lag1   0.1118330  0.0505080   2.214   0.0276 *
+policy_rate_lag2   0.0617822  0.0527645   1.171   0.2426  
+policy_rate_lag3  -0.1021098  0.0524807  -1.946   0.0527 .
+policy_rate_lag4   0.0095258  0.0554855   0.172   0.8638  
+policy_rate_lag5  -0.0091973  0.0558748  -0.165   0.8694  
+policy_rate_lag6   0.0851385  0.0557948   1.526   0.1282  
+policy_rate_lag7   0.0284712  0.0556422   0.512   0.6093  
+policy_rate_lag8  -0.0275253  0.0558752  -0.493   0.6227  
+policy_rate_lag9   0.0230595  0.0553549   0.417   0.6773  
+policy_rate_lag10 -0.1169032  0.0526436  -2.221   0.0272 *
+policy_rate_lag11  0.0447757  0.0528974   0.846   0.3980  
+policy_rate_lag12 -0.0583718  0.0520051  -1.122   0.2627  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1275 on 277 degrees of freedom
+Multiple R-squared:  0.06249,   Adjusted R-squared:  0.02187 
+F-statistic: 1.539 on 12 and 277 DF,  p-value: 0.11</code></pre>
+</div>
+</div>
+<p>Lag 1 and lag 10 are significant (p-value &lt; 0.05), but R squared (0.06249, adjusted 002187) is very low.</p>
+<p>We are not sure if a lag of 10 months makes sense from a logical point of view.</p>
+<p>Lag 1 would make sense and the model shows that it is statistically significant.</p>
+<p>But the direction of lag 1 is not as expected: higher policy rate goes with higher inflation.</p>
+<p>Overall we are not convinced by this model.</p>
+</section>
+<section id="alternative-2-treat-snb-actions-as-events" class="level4">
+<h4 class="anchored" data-anchor-id="alternative-2-treat-snb-actions-as-events">Alternative 2: Treat SNB actions as events</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>event_2008_10 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">index</span>(df_differenced) <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2008-10-01"</span>), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>event_2014_11 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">index</span>(df_differenced) <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2014-11-01"</span>), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>event_2020_01 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">index</span>(df_differenced) <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2020-07-01"</span>), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>event_2022_05 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">index</span>(df_differenced) <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2022-05-01"</span>), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>event_2022_10 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">index</span>(df_differenced) <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2022-10-01"</span>), <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a>lin_reg_events <span class="ot">&lt;-</span> <span class="fu">lm</span>(infl <span class="sc">~</span> event_2008_10 <span class="sc">+</span> event_2014_11 <span class="sc">+</span> event_2020_01 <span class="sc">+</span> event_2022_05 <span class="sc">+</span> event_2022_10, <span class="at">data =</span> <span class="fu">na.omit</span>(df_differenced))</span>
+<span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(lin_reg_events)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = infl ~ event_2008_10 + event_2014_11 + event_2020_01 + 
+    event_2022_05 + event_2022_10, data = na.omit(df_differenced))
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.46667 -0.07671  0.00441  0.08942  0.58942 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)    0.01058    0.01246   0.849  0.39659   
+event_2008_10 -0.03386    0.01940  -1.746  0.08194 . 
+event_2014_11  0.01888    0.02141   0.882  0.37876   
+event_2020_01  0.04987    0.03116   1.600  0.11065   
+event_2022_05  0.09455    0.06294   1.502  0.13419   
+event_2022_10 -0.17333    0.06423  -2.699  0.00738 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.127 on 284 degrees of freedom
+Multiple R-squared:  0.04497,   Adjusted R-squared:  0.02816 
+F-statistic: 2.675 on 5 and 284 DF,  p-value: 0.02213</code></pre>
+</div>
+</div>
+<p>The last event 2022_10 is significant. This was a month after the SNB had increased their policy rate from negative (-0.25) to positive (+0.50). But R squared is very low.</p>
+</section>
+</section>
+</section>
+<section id="excursus-closer-look-at-inflation-only-autodirect-correlations-and-an-arima-model" class="level2">
+<h2 class="anchored" data-anchor-id="excursus-closer-look-at-inflation-only-autodirect-correlations-and-an-arima-model">Excursus: Closer look at inflation only (auto/direct correlations and an ARIMA model)</h2>
+<section id="correlations-1" class="level3">
+<h3 class="anchored" data-anchor-id="correlations-1">Correlations</h3>
+<section id="autocorrelations" class="level4">
+<h4 class="anchored" data-anchor-id="autocorrelations">Autocorrelations</h4>
+<p>The series shows weak to moderate positive autocorrelation at lags 4 and 6, and a negative autocorrelation at lag 12. The inflation changes (infl) today are somewhat positively related to those 4, and 6 months ago. But inflation 12 months ago tends to move in the opposite direction from today’s.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="fu">coredata</span>(<span class="fu">na.omit</span>(df_differenced<span class="sc">$</span>infl)), <span class="at">lag.max =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TsA_Finance_Analysis_of_Policy_and_Inflation_Rates_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="direct-correlations" class="level4">
+<h4 class="anchored" data-anchor-id="direct-correlations">Direct correlations</h4>
+<p>Direct correlation between a time series and lag k, controlling for all shorter lags (1 to k−1).</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="fu">coredata</span>(<span class="fu">na.omit</span>(df_differenced<span class="sc">$</span>infl)), <span class="at">lag.max =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TsA_Finance_Analysis_of_Policy_and_Inflation_Rates_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="rule-of-thumb-regarding-arima-parameters-q-and-p" class="level4">
+<h4 class="anchored" data-anchor-id="rule-of-thumb-regarding-arima-parameters-q-and-p">Rule of thumb regarding ARIMA parameters q and p</h4>
+<p>Use acf() to choose the q in MA(q) models. -&gt; q = 4 or 6 Use pacf() to choose the p in AR(p) models. -&gt; p = 4 or 6</p>
+<p>The ACF and PACF plots suggest that the series may be modeled as an ARMA(4,4) or AR(6,6).</p>
+</section>
+</section>
+</section>
+<section id="akaike-information-criterion-aic" class="level2">
+<h2 class="anchored" data-anchor-id="akaike-information-criterion-aic">Akaike information criterion: AIC</h2>
+<p>Identifying the orders p and q of the ARIMA(p,1,q)-model by testing different model specifications. We only allow a maximum of six AR- and MA-terms and set the order of integration d to 1.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>max.order <span class="ot">&lt;-</span> <span class="dv">6</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Defining the matrix in which the values of the AICs for different model specifications are stored. Then calculating and storing the AICs for different model specifications.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>arima_aic <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol=</span>max.order<span class="sc">+</span><span class="dv">1</span>, <span class="at">nrow=</span>max.order<span class="sc">+</span><span class="dv">1</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">row.names</span>(arima_aic) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span><span class="sc">:</span>max.order) <span class="co"># Order of AR(p) in rows</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(arima_aic) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span><span class="sc">:</span>max.order) <span class="co"># Order of MA(q) in columns</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>max.order){</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">0</span><span class="sc">:</span>max.order){</span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>    arima_aic[i<span class="sc">+</span><span class="dv">1</span>,j<span class="sc">+</span><span class="dv">1</span>]<span class="ot">&lt;-</span><span class="fu">Arima</span>(<span class="at">y=</span>df_differenced<span class="sc">$</span>infl, <span class="at">order=</span><span class="fu">c</span>(i,d,j), <span class="at">include.constant =</span>  <span class="cn">FALSE</span>)<span class="sc">$</span>aic</span>
+<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb56-9"><a href="#cb56-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb56-10"><a href="#cb56-10" aria-hidden="true" tabindex="-1"></a>arima_aic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          0         1         2         3         4         5         6
+0 -168.6189 -371.3014 -369.3014 -367.3014 -365.3014 -363.3014 -361.3014
+1 -247.5208 -369.3014 -367.3014 -365.3014 -363.3014 -361.3014 -359.3014
+2 -359.4566 -368.0223 -365.3015 -363.3014 -361.3014 -359.3014 -357.3014
+3 -365.0392 -365.8290 -363.2961 -361.3014 -359.3013 -357.3014 -355.3014
+4 -358.5969 -364.3533 -361.7275 -359.6208 -357.3013 -355.3014 -353.3016
+5 -348.3162 -366.2311 -359.6077 -357.3880 -355.4800 -353.3025 -351.4714
+6 -398.5921 -391.1260 -362.9382 -355.4723 -353.3884 -351.3918 -349.3954</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>index <span class="ot">&lt;-</span> <span class="fu">which</span>(arima_aic <span class="sc">==</span> <span class="fu">min</span>(arima_aic), <span class="at">arr.ind =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>ar <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">rownames</span>(arima_aic)[index[<span class="dv">1</span>]])</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>ma <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">colnames</span>(arima_aic)[index[<span class="dv">2</span>]])</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="fu">c</span>(ar, ma)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 6 0</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>arima_aic[ar<span class="sc">+</span><span class="dv">1</span>, ma<span class="sc">+</span><span class="dv">1</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -398.5921</code></pre>
+</div>
+</div>
+<p><strong>Interpretation</strong>: The optimal ARMA-model is ARMA(6,0) with an AIC of -398.5921. (d according to order of integration.</p>
+</section>
+<section id="arima-model" class="level2">
+<h2 class="anchored" data-anchor-id="arima-model">ARIMA model</h2>
+<p>Convert to ts object from zoo and estimate the optimal ARIMA-model (incl.&nbsp;testing for significance of the coefficients)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>infl_diff_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="fu">coredata</span>(df_differenced<span class="sc">$</span>infl), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>arima <span class="ot">&lt;-</span> <span class="fu">Arima</span>(<span class="at">y=</span>infl_diff_ts, <span class="at">order=</span><span class="fu">c</span>(ar,d,ma), <span class="at">include.constant =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(arima)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+z test of coefficients:
+
+     Estimate Std. Error  z value  Pr(&gt;|z|)    
+ar1 -0.925475   0.057449 -16.1095 &lt; 2.2e-16 ***
+ar2 -0.792221   0.076102 -10.4100 &lt; 2.2e-16 ***
+ar3 -0.675997   0.085097  -7.9438 1.960e-15 ***
+ar4 -0.453496   0.085392  -5.3107 1.092e-07 ***
+ar5 -0.332307   0.076583  -4.3392 1.430e-05 ***
+ar6 -0.086676   0.058142  -1.4908     0.136    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>Interpretation: ar1 to ar5 are highly significant at the 95% confidence interval. The negative values of the coefficients reveals that a positive change in the time series in the previous period leads to a negative change in the subsequent period.</p>
+<section id="forecast-the-next-12-months-of-inflation" class="level3">
+<h3 class="anchored" data-anchor-id="forecast-the-next-12-months-of-inflation">Forecast the next 12 months of inflation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>forecast_arima <span class="ot">&lt;-</span> <span class="fu">forecast</span>(arima, <span class="at">h =</span> <span class="dv">12</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(forecast_arima)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>       Point Forecast      Lo 80      Hi 80      Lo 95     Hi 95
+Mar 26   -0.082003868 -0.2519280 0.08792025 -0.3418804 0.1778726
+Apr 26   -0.025434411 -0.1958298 0.14496093 -0.2860316 0.2351628
+May 26   -0.049830049 -0.2218501 0.12219005 -0.3129121 0.2132520
+Jun 26   -0.009405729 -0.1829825 0.16417105 -0.2748685 0.2560570
+Jul 26   -0.019875432 -0.1989795 0.15922863 -0.2937915 0.2540406
+Aug 26   -0.024123203 -0.2061580 0.15791162 -0.3025214 0.2542750
+Sep 26   -0.039851711 -0.2313717 0.15166829 -0.3327563 0.2530529
+Oct 26   -0.029981369 -0.2255852 0.16562243 -0.3291316 0.2691688
+Nov 26   -0.030354979 -0.2289265 0.16821653 -0.3340439 0.2733339
+Dec 26   -0.025294592 -0.2269438 0.17635464 -0.3336905 0.2831013
+Jan 27   -0.026902338 -0.2328458 0.17904117 -0.3418658 0.2880611
+Feb 27   -0.028052091 -0.2377775 0.18167328 -0.3487994 0.2926952</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a>forecast_arima<span class="sc">$</span>mean        <span class="co"># Point forecasts</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Jan          Feb          Mar          Apr          May
+26                           -0.082003868 -0.025434411 -0.049830049
+27 -0.026902338 -0.028052091                                       
+            Jun          Jul          Aug          Sep          Oct
+26 -0.009405729 -0.019875432 -0.024123203 -0.039851711 -0.029981369
+27                                                                 
+            Nov          Dec
+26 -0.030354979 -0.025294592
+27                          </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>forecast_arima<span class="sc">$</span>lower       <span class="co"># Lower bounds (80% and 95%)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              80%        95%
+Mar 26 -0.2519280 -0.3418804
+Apr 26 -0.1958298 -0.2860316
+May 26 -0.2218501 -0.3129121
+Jun 26 -0.1829825 -0.2748685
+Jul 26 -0.1989795 -0.2937915
+Aug 26 -0.2061580 -0.3025214
+Sep 26 -0.2313717 -0.3327563
+Oct 26 -0.2255852 -0.3291316
+Nov 26 -0.2289265 -0.3340439
+Dec 26 -0.2269438 -0.3336905
+Jan 27 -0.2328458 -0.3418658
+Feb 27 -0.2377775 -0.3487994</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a>forecast_arima<span class="sc">$</span>upper       <span class="co"># Upper bounds (80% and 95%)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              80%       95%
+Mar 26 0.08792025 0.1778726
+Apr 26 0.14496093 0.2351628
+May 26 0.12219005 0.2132520
+Jun 26 0.16417105 0.2560570
+Jul 26 0.15922863 0.2540406
+Aug 26 0.15791162 0.2542750
+Sep 26 0.15166829 0.2530529
+Oct 26 0.16562243 0.2691688
+Nov 26 0.16821653 0.2733339
+Dec 26 0.17635464 0.2831013
+Jan 27 0.17904117 0.2880611
+Feb 27 0.18167328 0.2926952</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(forecast_arima) <span class="sc">+</span> </span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggtitle</span>(<span class="st">"ARIMA Forecast for Inflation"</span>) <span class="sc">+</span></span>
+<span id="cb72-3"><a href="#cb72-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Time"</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">"Inflation Change"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TsA_Finance_Analysis_of_Policy_and_Inflation_Rates_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="last-known-and-forecasted-inflation-levels" class="level4">
+<h4 class="anchored" data-anchor-id="last-known-and-forecasted-inflation-levels">Last known and forecasted inflation levels</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a>last_infl <span class="ot">&lt;-</span> <span class="fu">tail</span>(<span class="fu">na.omit</span>(df<span class="sc">$</span>infl), <span class="dv">1</span>)</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a>forecast_changes <span class="ot">&lt;-</span> forecast_arima<span class="sc">$</span>mean</span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>forecast_inflation <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(forecast_changes) <span class="sc">+</span> last_infl</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>forecast_upper <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(forecast_arima<span class="sc">$</span>upper[,<span class="dv">2</span>]) <span class="sc">+</span> last_infl</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>forecast_lower <span class="ot">&lt;-</span> <span class="fu">cumsum</span>(forecast_arima<span class="sc">$</span>lower[,<span class="dv">2</span>]) <span class="sc">+</span> last_infl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Get the last date from indexed too object and generate 12 monthly forecast dates</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>last_date <span class="ot">&lt;-</span> <span class="fu">tail</span>(<span class="fu">index</span>(df_differenced), <span class="dv">1</span>)</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>forecast_dates <span class="ot">&lt;-</span> <span class="fu">seq</span>(<span class="at">from =</span> <span class="fu">as.Date</span>(last_date) <span class="sc">%m+%</span> <span class="fu">months</span>(<span class="dv">1</span>), <span class="at">by =</span> <span class="st">"month"</span>, <span class="at">length.out =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Forecast table and plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>forecast_table <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">Date =</span> forecast_dates,</span>
+<span id="cb75-3"><a href="#cb75-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Forecast_Inflation =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(forecast_inflation), <span class="dv">3</span>),</span>
+<span id="cb75-4"><a href="#cb75-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Forecast_Change =</span> <span class="fu">round</span>(<span class="fu">as.numeric</span>(forecast_arima<span class="sc">$</span>mean), <span class="dv">3</span>),</span>
+<span id="cb75-5"><a href="#cb75-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">Lower_95 =</span> <span class="fu">round</span>(forecast_arima<span class="sc">$</span>lower[,<span class="dv">2</span>], <span class="dv">3</span>),</span>
+<span id="cb75-6"><a href="#cb75-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Upper_95 =</span> <span class="fu">round</span>(forecast_arima<span class="sc">$</span>upper[,<span class="dv">2</span>], <span class="dv">3</span>)</span>
+<span id="cb75-7"><a href="#cb75-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb75-8"><a href="#cb75-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb75-9"><a href="#cb75-9" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(forecast_table)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>         Date Forecast_Inflation Forecast_Change Lower_95 Upper_95
+1  2025-04-01              0.818          -0.082   -0.342    0.178
+2  2025-05-01              0.793          -0.025   -0.286    0.235
+3  2025-06-01              0.743          -0.050   -0.313    0.213
+4  2025-07-01              0.733          -0.009   -0.275    0.256
+5  2025-08-01              0.713          -0.020   -0.294    0.254
+6  2025-09-01              0.689          -0.024   -0.303    0.254
+7  2025-10-01              0.649          -0.040   -0.333    0.253
+8  2025-11-01              0.619          -0.030   -0.329    0.269
+9  2025-12-01              0.589          -0.030   -0.334    0.273
+10 2026-01-01              0.564          -0.025   -0.334    0.283
+11 2026-02-01              0.537          -0.027   -0.342    0.288
+12 2026-03-01              0.509          -0.028   -0.349    0.293</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(forecast_table, <span class="fu">aes</span>(<span class="at">x =</span> Date, <span class="at">y =</span> Forecast_Inflation)) <span class="sc">+</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Forecasted Inflation Levels"</span>,</span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Date"</span>,</span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Inflation Rate (%)"</span></span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="TsA_Finance_Analysis_of_Policy_and_Inflation_Rates_files/figure-html/unnamed-chunk-27-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="vector-autoregression-and-granger-causality" class="level2">
+<h2 class="anchored" data-anchor-id="vector-autoregression-and-granger-causality">Vector autoregression and Granger causality</h2>
+<section id="do-policy-rates-explain-inflation-rates" class="level3">
+<h3 class="anchored" data-anchor-id="do-policy-rates-explain-inflation-rates">Do policy rates explain inflation rates?</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>VAR_model <span class="ot">&lt;-</span> <span class="fu">VAR</span>(<span class="fu">cbind</span>(df_differenced<span class="sc">$</span>policy_rate, df_differenced<span class="sc">$</span>infl) , <span class="at">ic=</span><span class="st">"AIC"</span>, <span class="at">lag.max =</span> <span class="dv">12</span>)</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="co"># coeftest(VAR_model)</span></span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a><span class="co"># summary(VAR_model)</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a><span class="fu">causality</span>(VAR_model, <span class="at">cause=</span><span class="st">"df_differenced.policy_rate"</span>)[<span class="st">"Granger"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$Granger
+
+    Granger causality H0: df_differenced.policy_rate do not Granger-cause
+    df_differenced.infl
+
+data:  VAR object VAR_model
+F-Test = 2.8265, df1 = 4, df2 = 578, p-value = 0.02424</code></pre>
+</div>
+</div>
+<p>The Granger Causality Test (VAR) examines whether past policy rates help predict current values of inflation beyond what’s already explained by past values of inflation itself.</p>
+<p>There is statistically significant evidence that past policy rates Granger-cause inflation, i.e., policy rates have predictive power for inflation in our model.</p>
+<p>But: Granger causality is not proof of true causation, it only indicates predictive ability.</p>
+</section>
+<section id="do-inflation-rates-explain-policy-rates" class="level3">
+<h3 class="anchored" data-anchor-id="do-inflation-rates-explain-policy-rates">Do inflation rates explain policy rates?</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">causality</span>(VAR_model, <span class="at">cause=</span><span class="st">"df_differenced.infl"</span>)[<span class="st">"Granger"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$Granger
+
+    Granger causality H0: df_differenced.infl do not Granger-cause
+    df_differenced.policy_rate
+
+data:  VAR object VAR_model
+F-Test = 1.2403, df1 = 4, df2 = 578, p-value = 0.2926</code></pre>
+</div>
+</div>
+<p>No: Inflation rates do not Granger-cause the policy rates.</p>
+</section>
+<section id="does-the-snb-event-in-september-2022-explain-inflation-rates." class="level3">
+<h3 class="anchored" data-anchor-id="does-the-snb-event-in-september-2022-explain-inflation-rates.">Does the “SNB event in September 2022” explain inflation rates.</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>VAR_df <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(<span class="fu">cbind</span>(df_differenced<span class="sc">$</span>event_2022_10, df_differenced<span class="sc">$</span>infl))</span>
+<span id="cb82-2"><a href="#cb82-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(VAR_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"event_2022_10"</span>, <span class="st">"infl"</span>)</span>
+<span id="cb82-3"><a href="#cb82-3" aria-hidden="true" tabindex="-1"></a>VAR_model <span class="ot">&lt;-</span> <span class="fu">VAR</span>(VAR_df , <span class="at">ic=</span><span class="st">"AIC"</span>, <span class="at">lag.max =</span> <span class="dv">12</span>)</span>
+<span id="cb82-4"><a href="#cb82-4" aria-hidden="true" tabindex="-1"></a><span class="fu">coeftest</span>(VAR_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+t test of coefficients:
+
+                                 Estimate Std. Error t value  Pr(&gt;|t|)    
+event_2022_10:(Intercept)       0.0034847  0.0035938  0.9696 0.3330589    
+event_2022_10:event_2022_10.l1  0.9835028  0.0594264 16.5499 &lt; 2.2e-16 ***
+event_2022_10:infl.l1           0.0166767  0.0271886  0.6134 0.5401252    
+event_2022_10:event_2022_10.l2  0.0020321  0.0832146  0.0244 0.9805350    
+event_2022_10:infl.l2           0.0421153  0.0271638  1.5504 0.1221586    
+event_2022_10:event_2022_10.l3 -0.0024969  0.0832247 -0.0300 0.9760864    
+event_2022_10:infl.l3           0.0192806  0.0267348  0.7212 0.4713950    
+event_2022_10:event_2022_10.l4  0.0035873  0.0836355  0.0429 0.9658179    
+event_2022_10:infl.l4           0.0198585  0.0268170  0.7405 0.4596005    
+event_2022_10:event_2022_10.l5 -0.0059441  0.0837218 -0.0710 0.9434495    
+event_2022_10:infl.l5           0.0386697  0.0269170  1.4366 0.1519277    
+event_2022_10:event_2022_10.l6  0.0218920  0.0609708  0.3591 0.7198196    
+event_2022_10:infl.l6          -0.0045400  0.0270938 -0.1676 0.8670456    
+infl:(Intercept)                0.0022383  0.0075788  0.2953 0.7679574    
+infl:event_2022_10.l1           0.0503928  0.1253204  0.4021 0.6879055    
+infl:infl.l1                   -0.0126927  0.0573363 -0.2214 0.8249624    
+infl:event_2022_10.l2          -0.0897124  0.1754857 -0.5112 0.6095930    
+infl:infl.l2                    0.0554753  0.0572840  0.9684 0.3336588    
+infl:event_2022_10.l3           0.3052153  0.1755070  1.7390 0.0831136 .  
+infl:infl.l3                    0.0087977  0.0563792  0.1560 0.8761085    
+infl:event_2022_10.l4          -0.1937597  0.1763734 -1.0986 0.2728864    
+infl:infl.l4                    0.1150805  0.0565527  2.0349 0.0427903 *  
+infl:event_2022_10.l5          -0.6153546  0.1765553 -3.4853 0.0005695 ***
+infl:infl.l5                    0.0035575  0.0567634  0.0627 0.9500713    
+infl:event_2022_10.l6           0.5141070  0.1285772  3.9984 8.143e-05 ***
+infl:infl.l6                    0.1409905  0.0571364  2.4676 0.0141935 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb84"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a><span class="fu">causality</span>(VAR_model, <span class="at">cause=</span><span class="st">"event_2022_10"</span>)[<span class="st">"Granger"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>$Granger
+
+    Granger causality H0: event_2022_10 do not Granger-cause infl
+
+data:  VAR object VAR_model
+F-Test = 4.232, df1 = 6, df2 = 566, p-value = 0.0003524</code></pre>
+</div>
+</div>
+<p>There is strong evidence that event_2020_01 and event_2022_10 Granger-cause infl (at lag 5 and lag6).</p>
 </section>
 </section>
 </section>
