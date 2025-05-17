@@ -31,11 +31,11 @@ library(car)
 ### Load data
 
 ```{r}
-policy_rate_data <- read_excel("data/snb-data-snbgwdzid-en-all-20250414_1000.xlsx",
+policy_rate_data <- read_excel("../data/snb-data-snbgwdzid-en-all-20250414_1000.xlsx",
                                col_types = c("text", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric", "numeric"),
                                skip = 21)
 
-inflation_data <- read_excel("data/snb-data-plkoprinfla-en-all-20250422_0900.xlsx",
+inflation_data <- read_excel("../data/snb-data-plkoprinfla-en-all-20250422_0900.xlsx",
                              skip = 14) #skipping the first 14 rows
 
 ```
@@ -77,7 +77,7 @@ ggplot(pr_full, aes(x = date)) +
 
 ```{r}
 libor_data <- suppressWarnings(
-  read_excel("data/snb-target rate-policy rate-2000-2025.xlsx",
+  read_excel("../data/snb-target rate-policy rate-2000-2025.xlsx",
                          range = cell_limits(c(18, 1), c(NA, 4)),
                          col_names = c("date", "policy_rate", "libor_3m_low", "libor_3m_high"),
                          col_types = c("text", "numeric", "numeric", "numeric")) %>%
@@ -291,7 +291,7 @@ lin_reg_events <- lm(infl ~ event_2008_10 + event_2014_11 + event_2020_01 + even
 summary(lin_reg_events)
 ```
 
-The last event 2022_10 is significant. This was a month after the SNB had increased their policy rate from negative (-0.25) to positive (+0.50). But R squared is very low. 
+The last event 2022_10 is significant. This was a month after the SNB had increased their policy rate from negative (-0.25) to positive (+0.50). But R squared is very low.
 
 ## Excursus: Closer look at inflation only (auto/direct correlations and an ARIMA model)
 
@@ -359,8 +359,8 @@ infl_diff_ts <- ts(coredata(df_differenced$infl), frequency = 12)
 arima <- Arima(y=infl_diff_ts, order=c(ar,d,ma), include.constant = FALSE)
 coeftest(arima)
 ```
-Interpretation: ar1 to ar5 are highly significant at the 95% confidence interval. The negative values of the coefficients reveals that a positive change in the time
-series in the previous period leads to a negative change in the subsequent period.
+
+Interpretation: ar1 to ar5 are highly significant at the 95% confidence interval. The negative values of the coefficients reveals that a positive change in the time series in the previous period leads to a negative change in the subsequent period.
 
 ### Forecast the next 12 months of inflation
 
@@ -429,12 +429,12 @@ VAR_model <- VAR(cbind(df_differenced$policy_rate, df_differenced$infl) , ic="AI
 # summary(VAR_model)
 causality(VAR_model, cause="df_differenced.policy_rate")["Granger"]
 ```
+
 The Granger Causality Test (VAR) examines whether past policy rates help predict current values of inflation beyond what's already explained by past values of inflation itself.
 
 There is statistically significant evidence that past policy rates Granger-cause inflation, i.e., policy rates have predictive power for inflation in our model.
 
 But: Granger causality is not proof of true causation, it only indicates predictive ability.
-
 
 ### Do inflation rates explain policy rates?
 
@@ -453,4 +453,5 @@ VAR_model <- VAR(VAR_df , ic="AIC", lag.max = 12)
 coeftest(VAR_model)
 causality(VAR_model, cause="event_2022_10")["Granger"]
 ```
+
 There is strong evidence that event_2020_01 and event_2022_10 Granger-cause infl (at lag 5 and lag6).
