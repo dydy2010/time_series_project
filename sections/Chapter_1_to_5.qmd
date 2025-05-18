@@ -8,28 +8,50 @@ editor:
 
 ## Project Objectives
 
-For example: Investigate the dynamic relationship between SNB’s policy
-interest rates and Swiss core inflation. Determine directional causality
-between these two variables. Analyze the impact and timing of policy
-rate adjustments on inflation.
+The project aims to
+
+-   investigate the dynamic relationship between SNB’s policy interest
+    rates and Swiss core inflation.
+
+-   determine if there is causality between these two variables.
+
+-   analyze the impact and timing of policy rate adjustments on
+    inflation.
+
+-   help team members learn about Time Series Analysis by doing,
+    including models, theory, tools that we explored in class
 
 ## Motivation
 
-Personal/team motivation: We share an academic interest in exploring the
-world of financial analysis, and it is also great that we can add
-practical relevance in a Swiss context. Additionally, it is applicable
-to career interests (finance/trading). Real-world relevance: In today’s
-volatile economic landscape, it is beneficial for individuals and
-institutions to understand inflation dynamics. Such insights can
-contribute to better financial or policy decisions. It is relevant for
-policymakers, investors, and researchers.
+Personal/team motivation:
+
+We share a strong academic interest in exploring the world of financial
+analysis and were motivated by the opportunity to apply our skills to a
+real-world scenario with practical relevance in the Swiss context. This
+project also aligns with our professional aspirations, for example,
+finance, market research, and trading. That makes the project both
+intellectually engaging and career-relevant.
+
+Real-world relevance: In today’s volatile economic landscape, it is
+beneficial for individuals and institutions to understand inflation
+dynamics. Such insights can contribute to better financial or policy
+decisions. It is relevant for policymakers, investors, researchers and
+private individuals.
 
 ## Research Questions
 
-For example: Does SNB policy rate significantly influence core
-inflation? Is there evidence of bidirectional causality between policy
-rates and core inflation? How quickly and how strongly do core inflation
-rates respond to policy changes?
+-   Does SNB policy rate significantly influence core inflation, Or vice
+    versa?
+
+-   For policy rate and core inflation, can changes in one predict the
+    other?.
+
+-   How quickly and how strongly do core inflation rates respond to
+    policy changes?
+
+-   Exploring any extra findings In the relationship between inflation
+    rates and the SNB's policy Interest rates, during the project
+    implementation.
 
 # Theory, literature and methodology,
 
@@ -57,38 +79,42 @@ Then for the analysis, we have adopted the theory and practice what we
 have learned in TSA classes. For example, VAR modeling, stationarity
 testing, Granger causality, lag-lead effect, and ARIMA.
 
-# Data selection
+# Data selection process
 
 First, after some research, we started the analysis with a dataset from
 SNB, “Interest rates and threshold factor” \[Inte00a\], afterwards is
-called Dataset 1. It includes policy rate, interest rate on sight
-deposits above threshold, special rate, SARON fix etc. For inflation
-data, we have used core inflation, trimmed mean from “Consumer prices –
-SNB and SFSO core inflation rates” \[Cons00b\]. In Dataset 1, the
-threshold is optimal to be used as the interest rate policy target, and
-because before 2009 there is no threshold data in Dataset 1, we have
-used the special rate. From 13 June 2019, the special rate was based on
-the current SNB policy rate plus a surcharge of 50 basis points. The
-special rate always amounted to at least 0.5 percent”\[Inte00\].
-Additionally, we determined that the SARON fix rate is the market
-reaction to the policy target, so it shouldn’t be used as the policy
-rate to be analyzed.
+called Dataset 1. It includes policy rate (for a short period), interest
+rate on sight deposits above threshold, special rate, SARON fix etc. For
+inflation data, we used core inflation, trimmed mean from “Consumer
+prices – SNB and SFSO core inflation rates” \[Cons00b\]. In Dataset 1,
+the threshold is optimal to be used as the interest rate policy target,
+and before 2009 there is no threshold data in Dataset 1, we have used
+the special rate. From 13 June 2019, the special rate was based on the
+current SNB policy rate plus a surcharge of 50 basis points. The special
+rate always amounted to at least 0.5 percent”\[Inte00\]. Additionally,
+we determined that the SARON fix rate is the market reaction to the
+policy target, so it shouldn’t be used as the policy rate to be
+analyzed.
 
 The trial analysis has been successful; we could give certain findings
 and conclusions applying ARIMA, VAR, and linear regression. However, we
 were not satisfied with the different rate types; it seemed puzzling
 that we had to convert and “compromise” to the seemingly complicated
-data. So, we researched more, and we did find a second dataset
-(afterwards called Dataset 2). It only contains 2 types of data to be
+data. So, we researched more, and we did find a second data set
+(afterwards called data set 2). It only contains 2 types of data to be
 considered official interest rate, which is more consistent and more
 appropriate to take as the policy rate. “From 13 June 2019, the SNB
 policy rate is applied. From 3 January 2000 until 13 June 2019, the SNB
 set a target range for the three-month Swiss franc Libor” \[Snbd00\].
-With the second dataset, we’ve also done a VAR to evaluate if there is
+With the second data set, we’ve also done a VAR to evaluate if there is
 causality between policy rate/target to inflation, or inflation to the
-policy decisions, which with both datasets, no causality was proven.
-This also gives us more confidence that both datasets represent the
-reality well, even though the dataset 2 seemed more consistent.
+policy decisions, which with both data sets, no causality was proven.
+This also gives us more confidence that both data sets represent the
+reality well, even though the data set 2 seemed more consistent.
+
+After trying, we've chosen data set 2 and applied all analysis to it as
+the final result. However the data selection process was a valuable
+experience to share with readers.
 
 # Team collaboration and tool set
 
@@ -98,9 +124,9 @@ Team structure: For our team of 2, we both shared responsibility for all
 aspects of the project; however, with a focus on different aspects. For
 example, Daniel presented the initial idea, Dongyuan focused more on
 methodology and research, Daniel focused more on coding diverse models,
-and Dongyuan delved into finding more data options during the project.
-We reached team consensus through weekly meetings and follow-ups. The
-tasks were also interest-based according to both team members. Meeting
+and Dongyuan dived into finding more data options during the project. We
+reached team consensus through weekly meetings and follow-ups. The tasks
+were also interest-based according to both team members. Meeting
 schedule: weekly meetings were set up on Monday/Tuesday at 14:00, and
 frequent follow-ups took place.
 
@@ -108,20 +134,20 @@ frequent follow-ups took place.
 
 ### Brainstorming and ideation:
 
-Miro Board - Initial concept visualization - Real-time collaboration on
-ideas and analysis structure - Organizing literature and conceptual
+Miro Board - Initial concept visualization, real-time collaboration on
+ideas and analysis structure, organizing literature and conceptual
 mapping
 
 ### Task Distribution and Project Management
 
-Excel - Task assignment tracking - Deadlines and progress monitoring -
-Visualization of milestones and status
+Excel - Task assignment tracking, deadlines and progress monitoring,
+visualization of milestones and status
 
-### Coding and Version Control
+### Coding, Version Control
 
-RStudio GitHub - coding environment - collaborative script development -
-version control - merging and conflict resolution workflow -
-documentation of code changes and version tracking
+RStudio GitHub - coding environment, collaborative script development,
+version control, merging and conflict resolution workflow, documentation
+of code changes and version tracking.
 
 ### Documentation and Presentation
 
@@ -138,8 +164,8 @@ presentation) - Consistent style and format across deliverables.
     commit, pull and push. But in the end, after getting used to it, we
     think it is a great tool for R collaboration in team. Although it
     does not allow to work at the same document at the same time.
--   Recommendations for future projects: collaboration tool set and team
-    structure take time to form. For short projects, it takes time to
-    getting used to them. However, we are happy that we tried out these
-    tools: It gave us a chance to learn some essential and popular
-    options in the data science world.
+-   Recommendations for future projects: collaboration tool like
+    rstudio-git and team structure take time to form. For short
+    projects, it takes time to getting used to them. However, we are
+    happy that we tried out these tools: It gave us a chance to learn
+    some essential and popular options in the data science world.
