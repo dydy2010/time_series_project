@@ -6,9 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Daniel Huber / Dongyuan Gao">
 
-<title>3&nbsp; SNB_policy_rate_and_inflation – SNB_policy_rate_and_inflation</title>
+<title>3&nbsp; Analysis of SNB policy rates and Swiss inflation rates – TsA in Finance: group project</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -77,7 +76,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-c27fdc8e5b00b532d2d5a75ada188648.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -118,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../sections/R_analysis.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SNB_policy_rate_and_inflation</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../sections/R_analysis.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Analysis of SNB policy rates and Swiss inflation rates</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -133,7 +132,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">SNB_policy_rate_and_inflation</a> 
+      <a href="../">TsA in Finance: group project</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -146,19 +145,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project: Time series analysis in Finance</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../sections/Chapter_1_to_5.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Motivation and Objective</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../sections/R_analysis.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SNB_policy_rate_and_inflation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Analysis of SNB policy rates and Swiss inflation rates</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -177,40 +176,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#analysis-of-snb-policy-rates-and-swiss-inflation-rates" id="toc-analysis-of-snb-policy-rates-and-swiss-inflation-rates" class="nav-link active" data-scroll-target="#analysis-of-snb-policy-rates-and-swiss-inflation-rates"><span class="header-section-number">4</span> Analysis of SNB policy rates and Swiss inflation rates</a>
+  <li><a href="#data-evaluation-preparation" id="toc-data-evaluation-preparation" class="nav-link active" data-scroll-target="#data-evaluation-preparation"><span class="header-section-number">3.1</span> Data evaluation &amp; preparation</a>
   <ul class="collapse">
-  <li><a href="#data-evaluation-preparation" id="toc-data-evaluation-preparation" class="nav-link" data-scroll-target="#data-evaluation-preparation"><span class="header-section-number">4.1</span> Data evaluation &amp; preparation</a>
-  <ul class="collapse">
-  <li><a href="#libraries" id="toc-libraries" class="nav-link" data-scroll-target="#libraries"><span class="header-section-number">4.1.1</span> libraries</a></li>
-  <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data"><span class="header-section-number">4.1.2</span> Load data</a></li>
-  <li><a href="#evaluation-of-appropriate-policy-rate-data" id="toc-evaluation-of-appropriate-policy-rate-data" class="nav-link" data-scroll-target="#evaluation-of-appropriate-policy-rate-data"><span class="header-section-number">4.1.3</span> Evaluation of appropriate policy rate data</a></li>
-  <li><a href="#average-of-3-month-libor-upperlower-limits-as-proxy-for-missing-snb-policy-rate-data-before-2020." id="toc-average-of-3-month-libor-upperlower-limits-as-proxy-for-missing-snb-policy-rate-data-before-2020." class="nav-link" data-scroll-target="#average-of-3-month-libor-upperlower-limits-as-proxy-for-missing-snb-policy-rate-data-before-2020."><span class="header-section-number">4.1.4</span> Average of 3 month Libor upper/lower limits as proxy for missing SNB policy rate data before 2020.</a></li>
-  <li><a href="#further-data-preparation-data-merge-and-timeseries-object" id="toc-further-data-preparation-data-merge-and-timeseries-object" class="nav-link" data-scroll-target="#further-data-preparation-data-merge-and-timeseries-object"><span class="header-section-number">4.1.5</span> Further data preparation, data merge and timeseries object</a></li>
-  <li><a href="#final-look-at-the-data-we-use-for-analysis" id="toc-final-look-at-the-data-we-use-for-analysis" class="nav-link" data-scroll-target="#final-look-at-the-data-we-use-for-analysis"><span class="header-section-number">4.1.6</span> Final look at the data we use for analysis</a></li>
+  <li><a href="#libraries" id="toc-libraries" class="nav-link" data-scroll-target="#libraries"><span class="header-section-number">3.1.1</span> libraries</a></li>
+  <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data"><span class="header-section-number">3.1.2</span> Load data</a></li>
+  <li><a href="#evaluation-of-appropriate-policy-rate-data" id="toc-evaluation-of-appropriate-policy-rate-data" class="nav-link" data-scroll-target="#evaluation-of-appropriate-policy-rate-data"><span class="header-section-number">3.1.3</span> Evaluation of appropriate policy rate data</a></li>
+  <li><a href="#average-of-3-month-libor-upperlower-limits-as-proxy-for-missing-snb-policy-rate-data-before-2020." id="toc-average-of-3-month-libor-upperlower-limits-as-proxy-for-missing-snb-policy-rate-data-before-2020." class="nav-link" data-scroll-target="#average-of-3-month-libor-upperlower-limits-as-proxy-for-missing-snb-policy-rate-data-before-2020."><span class="header-section-number">3.1.4</span> Average of 3 month Libor upper/lower limits as proxy for missing SNB policy rate data before 2020.</a></li>
+  <li><a href="#further-data-preparation-data-merge-and-timeseries-object" id="toc-further-data-preparation-data-merge-and-timeseries-object" class="nav-link" data-scroll-target="#further-data-preparation-data-merge-and-timeseries-object"><span class="header-section-number">3.1.5</span> Further data preparation, data merge and timeseries object</a></li>
+  <li><a href="#final-look-at-the-data-we-use-for-analysis" id="toc-final-look-at-the-data-we-use-for-analysis" class="nav-link" data-scroll-target="#final-look-at-the-data-we-use-for-analysis"><span class="header-section-number">3.1.6</span> Final look at the data we use for analysis</a></li>
   </ul></li>
-  <li><a href="#stationarity-linear-regression-models" id="toc-stationarity-linear-regression-models" class="nav-link" data-scroll-target="#stationarity-linear-regression-models"><span class="header-section-number">4.2</span> Stationarity &amp; linear regression models</a>
+  <li><a href="#stationarity-linear-regression-models" id="toc-stationarity-linear-regression-models" class="nav-link" data-scroll-target="#stationarity-linear-regression-models"><span class="header-section-number">3.2</span> Stationarity &amp; linear regression models</a>
   <ul class="collapse">
-  <li><a href="#stationarity" id="toc-stationarity" class="nav-link" data-scroll-target="#stationarity"><span class="header-section-number">4.2.1</span> Stationarity</a></li>
-  <li><a href="#correlations" id="toc-correlations" class="nav-link" data-scroll-target="#correlations"><span class="header-section-number">4.2.2</span> Correlations</a></li>
-  <li><a href="#basic-linear-regression-model" id="toc-basic-linear-regression-model" class="nav-link" data-scroll-target="#basic-linear-regression-model"><span class="header-section-number">4.2.3</span> Basic Linear regression model</a></li>
-  <li><a href="#residual-analysis" id="toc-residual-analysis" class="nav-link" data-scroll-target="#residual-analysis"><span class="header-section-number">4.2.4</span> Residual analysis</a></li>
-  <li><a href="#alternatives-to-the-basic-linear-model" id="toc-alternatives-to-the-basic-linear-model" class="nav-link" data-scroll-target="#alternatives-to-the-basic-linear-model"><span class="header-section-number">4.2.5</span> Alternatives to the basic linear model</a></li>
+  <li><a href="#stationarity" id="toc-stationarity" class="nav-link" data-scroll-target="#stationarity"><span class="header-section-number">3.2.1</span> Stationarity</a></li>
+  <li><a href="#correlations" id="toc-correlations" class="nav-link" data-scroll-target="#correlations"><span class="header-section-number">3.2.2</span> Correlations</a></li>
+  <li><a href="#basic-linear-regression-model" id="toc-basic-linear-regression-model" class="nav-link" data-scroll-target="#basic-linear-regression-model"><span class="header-section-number">3.2.3</span> Basic Linear regression model</a></li>
+  <li><a href="#residual-analysis" id="toc-residual-analysis" class="nav-link" data-scroll-target="#residual-analysis"><span class="header-section-number">3.2.4</span> Residual analysis</a></li>
+  <li><a href="#alternatives-to-the-basic-linear-model" id="toc-alternatives-to-the-basic-linear-model" class="nav-link" data-scroll-target="#alternatives-to-the-basic-linear-model"><span class="header-section-number">3.2.5</span> Alternatives to the basic linear model</a></li>
   </ul></li>
-  <li><a href="#excursus-closer-look-at-inflation-only-autodirect-correlations-and-an-arima-model" id="toc-excursus-closer-look-at-inflation-only-autodirect-correlations-and-an-arima-model" class="nav-link" data-scroll-target="#excursus-closer-look-at-inflation-only-autodirect-correlations-and-an-arima-model"><span class="header-section-number">4.3</span> Excursus: Closer look at inflation only (auto/direct correlations and an ARIMA model)</a>
+  <li><a href="#excursus-closer-look-at-inflation-only-autodirect-correlations-and-an-arima-model" id="toc-excursus-closer-look-at-inflation-only-autodirect-correlations-and-an-arima-model" class="nav-link" data-scroll-target="#excursus-closer-look-at-inflation-only-autodirect-correlations-and-an-arima-model"><span class="header-section-number">3.3</span> Excursus: Closer look at inflation only (auto/direct correlations and an ARIMA model)</a>
   <ul class="collapse">
-  <li><a href="#correlations-1" id="toc-correlations-1" class="nav-link" data-scroll-target="#correlations-1"><span class="header-section-number">4.3.1</span> Correlations</a></li>
+  <li><a href="#correlations-1" id="toc-correlations-1" class="nav-link" data-scroll-target="#correlations-1"><span class="header-section-number">3.3.1</span> Correlations</a></li>
   </ul></li>
-  <li><a href="#akaike-information-criterion-aic" id="toc-akaike-information-criterion-aic" class="nav-link" data-scroll-target="#akaike-information-criterion-aic"><span class="header-section-number">4.4</span> Akaike information criterion: AIC</a></li>
-  <li><a href="#arima-model" id="toc-arima-model" class="nav-link" data-scroll-target="#arima-model"><span class="header-section-number">4.5</span> ARIMA model</a>
+  <li><a href="#akaike-information-criterion-aic" id="toc-akaike-information-criterion-aic" class="nav-link" data-scroll-target="#akaike-information-criterion-aic"><span class="header-section-number">3.4</span> Akaike information criterion: AIC</a></li>
+  <li><a href="#arima-model" id="toc-arima-model" class="nav-link" data-scroll-target="#arima-model"><span class="header-section-number">3.5</span> ARIMA model</a>
   <ul class="collapse">
-  <li><a href="#forecast-the-next-12-months-of-inflation" id="toc-forecast-the-next-12-months-of-inflation" class="nav-link" data-scroll-target="#forecast-the-next-12-months-of-inflation"><span class="header-section-number">4.5.1</span> Forecast the next 12 months of inflation</a></li>
+  <li><a href="#forecast-the-next-12-months-of-inflation" id="toc-forecast-the-next-12-months-of-inflation" class="nav-link" data-scroll-target="#forecast-the-next-12-months-of-inflation"><span class="header-section-number">3.5.1</span> Forecast the next 12 months of inflation</a></li>
   </ul></li>
-  <li><a href="#vector-autoregression-and-granger-causality" id="toc-vector-autoregression-and-granger-causality" class="nav-link" data-scroll-target="#vector-autoregression-and-granger-causality"><span class="header-section-number">4.6</span> Vector autoregression and Granger causality</a>
+  <li><a href="#vector-autoregression-and-granger-causality" id="toc-vector-autoregression-and-granger-causality" class="nav-link" data-scroll-target="#vector-autoregression-and-granger-causality"><span class="header-section-number">3.6</span> Vector autoregression and Granger causality</a>
   <ul class="collapse">
-  <li><a href="#do-policy-rates-explain-inflation-rates" id="toc-do-policy-rates-explain-inflation-rates" class="nav-link" data-scroll-target="#do-policy-rates-explain-inflation-rates"><span class="header-section-number">4.6.1</span> Do policy rates explain inflation rates?</a></li>
-  <li><a href="#do-inflation-rates-explain-policy-rates" id="toc-do-inflation-rates-explain-policy-rates" class="nav-link" data-scroll-target="#do-inflation-rates-explain-policy-rates"><span class="header-section-number">4.6.2</span> Do inflation rates explain policy rates?</a></li>
-  <li><a href="#does-the-snb-event-in-september-2022-explain-inflation-rates." id="toc-does-the-snb-event-in-september-2022-explain-inflation-rates." class="nav-link" data-scroll-target="#does-the-snb-event-in-september-2022-explain-inflation-rates."><span class="header-section-number">4.6.3</span> Does the “SNB event in September 2022” explain inflation rates.</a></li>
-  </ul></li>
+  <li><a href="#do-policy-rates-explain-inflation-rates" id="toc-do-policy-rates-explain-inflation-rates" class="nav-link" data-scroll-target="#do-policy-rates-explain-inflation-rates"><span class="header-section-number">3.6.1</span> Do policy rates explain inflation rates?</a></li>
+  <li><a href="#do-inflation-rates-explain-policy-rates" id="toc-do-inflation-rates-explain-policy-rates" class="nav-link" data-scroll-target="#do-inflation-rates-explain-policy-rates"><span class="header-section-number">3.6.2</span> Do inflation rates explain policy rates?</a></li>
+  <li><a href="#does-the-snb-event-in-september-2022-explain-inflation-rates." id="toc-does-the-snb-event-in-september-2022-explain-inflation-rates." class="nav-link" data-scroll-target="#does-the-snb-event-in-september-2022-explain-inflation-rates."><span class="header-section-number">3.6.3</span> Does the “SNB event in September 2022” explain inflation rates.</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -220,19 +216,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SNB_policy_rate_and_inflation</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Analysis of SNB policy rates and Swiss inflation rates</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta column-body">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Daniel Huber / Dongyuan Gao </p>
-          </div>
-  </div>
     
   
     
@@ -243,12 +233,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="analysis-of-snb-policy-rates-and-swiss-inflation-rates" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Analysis of SNB policy rates and Swiss inflation rates</h1>
-<section id="data-evaluation-preparation" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="data-evaluation-preparation"><span class="header-section-number">4.1</span> Data evaluation &amp; preparation</h2>
-<section id="libraries" class="level3" data-number="4.1.1">
-<h3 data-number="4.1.1" class="anchored" data-anchor-id="libraries"><span class="header-section-number">4.1.1</span> libraries</h3>
+<section id="data-evaluation-preparation" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="data-evaluation-preparation"><span class="header-section-number">3.1</span> Data evaluation &amp; preparation</h2>
+<section id="libraries" class="level3" data-number="3.1.1">
+<h3 data-number="3.1.1" class="anchored" data-anchor-id="libraries"><span class="header-section-number">3.1.1</span> libraries</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
@@ -263,8 +251,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="load-data" class="level3" data-number="4.1.2">
-<h3 data-number="4.1.2" class="anchored" data-anchor-id="load-data"><span class="header-section-number">4.1.2</span> Load data</h3>
+<section id="load-data" class="level3" data-number="3.1.2">
+<h3 data-number="3.1.2" class="anchored" data-anchor-id="load-data"><span class="header-section-number">3.1.2</span> Load data</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>policy_rate_data <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"../data/snb-data-snbgwdzid-en-all-20250414_1000.xlsx"</span>,</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                               <span class="at">col_types =</span> <span class="fu">c</span>(<span class="st">"text"</span>, <span class="st">"numeric"</span>, <span class="st">"numeric"</span>, <span class="st">"numeric"</span>, <span class="st">"numeric"</span>, <span class="st">"numeric"</span>, <span class="st">"numeric"</span>, <span class="st">"numeric"</span>),</span>
@@ -274,8 +262,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                             <span class="at">skip =</span> <span class="dv">14</span>) <span class="co">#skipping the first 14 rows</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="evaluation-of-appropriate-policy-rate-data" class="level3" data-number="4.1.3">
-<h3 data-number="4.1.3" class="anchored" data-anchor-id="evaluation-of-appropriate-policy-rate-data"><span class="header-section-number">4.1.3</span> Evaluation of appropriate policy rate data</h3>
+<section id="evaluation-of-appropriate-policy-rate-data" class="level3" data-number="3.1.3">
+<h3 data-number="3.1.3" class="anchored" data-anchor-id="evaluation-of-appropriate-policy-rate-data"><span class="header-section-number">3.1.3</span> Evaluation of appropriate policy rate data</h3>
 <p>Looking at different available columns in the policy rate data from SNB website.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>pr_full <span class="ot">&lt;-</span> policy_rate_data <span class="sc">%&gt;%</span> </span>
@@ -313,8 +301,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="average-of-3-month-libor-upperlower-limits-as-proxy-for-missing-snb-policy-rate-data-before-2020." class="level3" data-number="4.1.4">
-<h3 data-number="4.1.4" class="anchored" data-anchor-id="average-of-3-month-libor-upperlower-limits-as-proxy-for-missing-snb-policy-rate-data-before-2020."><span class="header-section-number">4.1.4</span> Average of 3 month Libor upper/lower limits as proxy for missing SNB policy rate data before 2020.</h3>
+<section id="average-of-3-month-libor-upperlower-limits-as-proxy-for-missing-snb-policy-rate-data-before-2020." class="level3" data-number="3.1.4">
+<h3 data-number="3.1.4" class="anchored" data-anchor-id="average-of-3-month-libor-upperlower-limits-as-proxy-for-missing-snb-policy-rate-data-before-2020."><span class="header-section-number">3.1.4</span> Average of 3 month Libor upper/lower limits as proxy for missing SNB policy rate data before 2020.</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>libor_data <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">read_excel</span>(<span class="st">"../data/snb-target rate-policy rate-2000-2025.xlsx"</span>,</span>
@@ -351,8 +339,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="further-data-preparation-data-merge-and-timeseries-object" class="level3" data-number="4.1.5">
-<h3 data-number="4.1.5" class="anchored" data-anchor-id="further-data-preparation-data-merge-and-timeseries-object"><span class="header-section-number">4.1.5</span> Further data preparation, data merge and timeseries object</h3>
+<section id="further-data-preparation-data-merge-and-timeseries-object" class="level3" data-number="3.1.5">
+<h3 data-number="3.1.5" class="anchored" data-anchor-id="further-data-preparation-data-merge-and-timeseries-object"><span class="header-section-number">3.1.5</span> Further data preparation, data merge and timeseries object</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pr <span class="ot">&lt;-</span> libor_data <span class="sc">%&gt;%</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
@@ -383,8 +371,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="final-look-at-the-data-we-use-for-analysis" class="level3" data-number="4.1.6">
-<h3 data-number="4.1.6" class="anchored" data-anchor-id="final-look-at-the-data-we-use-for-analysis"><span class="header-section-number">4.1.6</span> Final look at the data we use for analysis</h3>
+<section id="final-look-at-the-data-we-use-for-analysis" class="level3" data-number="3.1.6">
+<h3 data-number="3.1.6" class="anchored" data-anchor-id="final-look-at-the-data-we-use-for-analysis"><span class="header-section-number">3.1.6</span> Final look at the data we use for analysis</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">x =</span> date)) <span class="sc">+</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y =</span> policy_rate, <span class="at">color =</span> <span class="st">"SNB Policy Rate"</span>)) <span class="sc">+</span></span>
@@ -406,10 +394,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="stationarity-linear-regression-models" class="level2" data-number="4.2">
-<h2 data-number="4.2" class="anchored" data-anchor-id="stationarity-linear-regression-models"><span class="header-section-number">4.2</span> Stationarity &amp; linear regression models</h2>
-<section id="stationarity" class="level3" data-number="4.2.1">
-<h3 data-number="4.2.1" class="anchored" data-anchor-id="stationarity"><span class="header-section-number">4.2.1</span> Stationarity</h3>
+<section id="stationarity-linear-regression-models" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="stationarity-linear-regression-models"><span class="header-section-number">3.2</span> Stationarity &amp; linear regression models</h2>
+<section id="stationarity" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="stationarity"><span class="header-section-number">3.2.1</span> Stationarity</h3>
 <p>Both series are not stationary.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">adf.test</span>(<span class="fu">na.omit</span>(df_ts<span class="sc">$</span>policy_rate))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -455,8 +443,8 @@ alternative hypothesis: stationary</code></pre>
 </div>
 <p>Both series are stationary now.</p>
 </section>
-<section id="correlations" class="level3" data-number="4.2.2">
-<h3 data-number="4.2.2" class="anchored" data-anchor-id="correlations"><span class="header-section-number">4.2.2</span> Correlations</h3>
+<section id="correlations" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="correlations"><span class="header-section-number">3.2.2</span> Correlations</h3>
 <p>Very week positive correlation.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor</span>(df_differenced<span class="sc">$</span>policy_rate, df_differenced<span class="sc">$</span>infl, <span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -465,8 +453,8 @@ alternative hypothesis: stationary</code></pre>
 </div>
 </div>
 </section>
-<section id="basic-linear-regression-model" class="level3" data-number="4.2.3">
-<h3 data-number="4.2.3" class="anchored" data-anchor-id="basic-linear-regression-model"><span class="header-section-number">4.2.3</span> Basic Linear regression model</h3>
+<section id="basic-linear-regression-model" class="level3" data-number="3.2.3">
+<h3 data-number="3.2.3" class="anchored" data-anchor-id="basic-linear-regression-model"><span class="header-section-number">3.2.3</span> Basic Linear regression model</h3>
 <p>Linear regression of policy_rate on inflation shows no significant coefficients and R squared is very low.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>lin_reg <span class="ot">&lt;-</span> <span class="fu">lm</span>(infl <span class="sc">~</span> policy_rate, <span class="at">data =</span> df_differenced)</span>
@@ -491,10 +479,10 @@ F-statistic: 1.215 on 1 and 300 DF,  p-value: 0.2712</code></pre>
 </div>
 </div>
 </section>
-<section id="residual-analysis" class="level3" data-number="4.2.4">
-<h3 data-number="4.2.4" class="anchored" data-anchor-id="residual-analysis"><span class="header-section-number">4.2.4</span> Residual analysis</h3>
-<section id="residual-plot" class="level4" data-number="4.2.4.1">
-<h4 data-number="4.2.4.1" class="anchored" data-anchor-id="residual-plot"><span class="header-section-number">4.2.4.1</span> Residual plot</h4>
+<section id="residual-analysis" class="level3" data-number="3.2.4">
+<h3 data-number="3.2.4" class="anchored" data-anchor-id="residual-analysis"><span class="header-section-number">3.2.4</span> Residual analysis</h3>
+<section id="residual-plot" class="level4" data-number="3.2.4.1">
+<h4 data-number="3.2.4.1" class="anchored" data-anchor-id="residual-plot"><span class="header-section-number">3.2.4.1</span> Residual plot</h4>
 <p>The plot shows large residuals, confirming the low R squared.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>resid <span class="ot">&lt;-</span> lin_reg<span class="sc">$</span>residuals</span>
@@ -509,8 +497,8 @@ F-statistic: 1.215 on 1 and 300 DF,  p-value: 0.2712</code></pre>
 </div>
 </div>
 </section>
-<section id="breusch-pagan-test" class="level4" data-number="4.2.4.2">
-<h4 data-number="4.2.4.2" class="anchored" data-anchor-id="breusch-pagan-test"><span class="header-section-number">4.2.4.2</span> Breusch-Pagan test</h4>
+<section id="breusch-pagan-test" class="level4" data-number="3.2.4.2">
+<h4 data-number="3.2.4.2" class="anchored" data-anchor-id="breusch-pagan-test"><span class="header-section-number">3.2.4.2</span> Breusch-Pagan test</h4>
 <p>Breusch-Pagan test for Constant variance, with null hypothesis that Residuals are homoscedastic shows, that there is no significant evidence of heteroskedasticity in the linear regression model.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bptest</span>(lin_reg)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -523,8 +511,8 @@ BP = 0.20106, df = 1, p-value = 0.6539</code></pre>
 </div>
 </div>
 </section>
-<section id="shapiro-test-for-normality" class="level4" data-number="4.2.4.3">
-<h4 data-number="4.2.4.3" class="anchored" data-anchor-id="shapiro-test-for-normality"><span class="header-section-number">4.2.4.3</span> Shapiro test for normality</h4>
+<section id="shapiro-test-for-normality" class="level4" data-number="3.2.4.3">
+<h4 data-number="3.2.4.3" class="anchored" data-anchor-id="shapiro-test-for-normality"><span class="header-section-number">3.2.4.3</span> Shapiro test for normality</h4>
 <p>Shapiro test for normality with null hypothesis that Residuals are normally distributed shows a strong rejection of the null hypothesis: The residuals of the model are NOT normally distributed. With n = 302 we might disregard non-normality.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(resid)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -537,8 +525,8 @@ W = 0.93868, p-value = 7.332e-10</code></pre>
 </div>
 </div>
 </section>
-<section id="visual-check-for-outliers-and-influencial-points" class="level4" data-number="4.2.4.4">
-<h4 data-number="4.2.4.4" class="anchored" data-anchor-id="visual-check-for-outliers-and-influencial-points"><span class="header-section-number">4.2.4.4</span> Visual check for outliers and influencial points</h4>
+<section id="visual-check-for-outliers-and-influencial-points" class="level4" data-number="3.2.4.4">
+<h4 data-number="3.2.4.4" class="anchored" data-anchor-id="visual-check-for-outliers-and-influencial-points"><span class="header-section-number">3.2.4.4</span> Visual check for outliers and influencial points</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lin_reg, <span class="at">which =</span> <span class="dv">1</span>)  <span class="co"># Residuals vs Fitted</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -566,8 +554,8 @@ W = 0.93868, p-value = 7.332e-10</code></pre>
 </div>
 </div>
 </section>
-<section id="durbin-watson-test-for-serial-correlation" class="level4" data-number="4.2.4.5">
-<h4 data-number="4.2.4.5" class="anchored" data-anchor-id="durbin-watson-test-for-serial-correlation"><span class="header-section-number">4.2.4.5</span> Durbin-Watson test for serial correlation</h4>
+<section id="durbin-watson-test-for-serial-correlation" class="level4" data-number="3.2.4.5">
+<h4 data-number="3.2.4.5" class="anchored" data-anchor-id="durbin-watson-test-for-serial-correlation"><span class="header-section-number">3.2.4.5</span> Durbin-Watson test for serial correlation</h4>
 <p>Durbin-Watson test for serial correlation with null hypothesis that Residuals are not autocorrelated results in a test statistic that is very close to 2, which is the expected value under the null hypothesis of no autocorrelation: p &gt; 0.05: There is no statistically significant evidence of positive autocorrelation in the residuals.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">dwtest</span>(lin_reg) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -582,10 +570,10 @@ alternative hypothesis: true autocorrelation is greater than 0</code></pre>
 </div>
 </section>
 </section>
-<section id="alternatives-to-the-basic-linear-model" class="level3" data-number="4.2.5">
-<h3 data-number="4.2.5" class="anchored" data-anchor-id="alternatives-to-the-basic-linear-model"><span class="header-section-number">4.2.5</span> Alternatives to the basic linear model</h3>
-<section id="alternative-1-lead-lag-relation-inflt-a-b-policy_ratet-1-et" class="level4" data-number="4.2.5.1">
-<h4 data-number="4.2.5.1" class="anchored" data-anchor-id="alternative-1-lead-lag-relation-inflt-a-b-policy_ratet-1-et"><span class="header-section-number">4.2.5.1</span> Alternative 1: Lead-lag relation: infl(t) = a + b * policy_rate(t-1) + e(t)</h4>
+<section id="alternatives-to-the-basic-linear-model" class="level3" data-number="3.2.5">
+<h3 data-number="3.2.5" class="anchored" data-anchor-id="alternatives-to-the-basic-linear-model"><span class="header-section-number">3.2.5</span> Alternatives to the basic linear model</h3>
+<section id="alternative-1-lead-lag-relation-inflt-a-b-policy_ratet-1-et" class="level4" data-number="3.2.5.1">
+<h4 data-number="3.2.5.1" class="anchored" data-anchor-id="alternative-1-lead-lag-relation-inflt-a-b-policy_ratet-1-et"><span class="header-section-number">3.2.5.1</span> Alternative 1: Lead-lag relation: infl(t) = a + b * policy_rate(t-1) + e(t)</h4>
 <p>Create lagged variables</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>policy_rate_lag1 <span class="ot">&lt;-</span> stats<span class="sc">::</span><span class="fu">lag</span>(df_differenced<span class="sc">$</span>policy_rate, <span class="at">k =</span> <span class="dv">1</span>)</span>
@@ -651,8 +639,8 @@ F-statistic: 1.539 on 12 and 277 DF,  p-value: 0.11</code></pre>
 <p>But the direction of lag 1 is not as expected: higher policy rate goes with higher inflation.</p>
 <p>Overall we are not convinced by this model.</p>
 </section>
-<section id="alternative-2-treat-snb-actions-as-events" class="level4" data-number="4.2.5.2">
-<h4 data-number="4.2.5.2" class="anchored" data-anchor-id="alternative-2-treat-snb-actions-as-events"><span class="header-section-number">4.2.5.2</span> Alternative 2: Treat SNB actions as events</h4>
+<section id="alternative-2-treat-snb-actions-as-events" class="level4" data-number="3.2.5.2">
+<h4 data-number="3.2.5.2" class="anchored" data-anchor-id="alternative-2-treat-snb-actions-as-events"><span class="header-section-number">3.2.5.2</span> Alternative 2: Treat SNB actions as events</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>event_2008_10 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">index</span>(df_differenced) <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2008-10-01"</span>), <span class="dv">1</span>, <span class="dv">0</span>)</span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>df_differenced<span class="sc">$</span>event_2014_11 <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">index</span>(df_differenced) <span class="sc">&gt;=</span> <span class="fu">as.Date</span>(<span class="st">"2014-11-01"</span>), <span class="dv">1</span>, <span class="dv">0</span>)</span>
@@ -692,12 +680,12 @@ F-statistic: 2.675 on 5 and 284 DF,  p-value: 0.02213</code></pre>
 </section>
 </section>
 </section>
-<section id="excursus-closer-look-at-inflation-only-autodirect-correlations-and-an-arima-model" class="level2" data-number="4.3">
-<h2 data-number="4.3" class="anchored" data-anchor-id="excursus-closer-look-at-inflation-only-autodirect-correlations-and-an-arima-model"><span class="header-section-number">4.3</span> Excursus: Closer look at inflation only (auto/direct correlations and an ARIMA model)</h2>
-<section id="correlations-1" class="level3" data-number="4.3.1">
-<h3 data-number="4.3.1" class="anchored" data-anchor-id="correlations-1"><span class="header-section-number">4.3.1</span> Correlations</h3>
-<section id="autocorrelations" class="level4" data-number="4.3.1.1">
-<h4 data-number="4.3.1.1" class="anchored" data-anchor-id="autocorrelations"><span class="header-section-number">4.3.1.1</span> Autocorrelations</h4>
+<section id="excursus-closer-look-at-inflation-only-autodirect-correlations-and-an-arima-model" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="excursus-closer-look-at-inflation-only-autodirect-correlations-and-an-arima-model"><span class="header-section-number">3.3</span> Excursus: Closer look at inflation only (auto/direct correlations and an ARIMA model)</h2>
+<section id="correlations-1" class="level3" data-number="3.3.1">
+<h3 data-number="3.3.1" class="anchored" data-anchor-id="correlations-1"><span class="header-section-number">3.3.1</span> Correlations</h3>
+<section id="autocorrelations" class="level4" data-number="3.3.1.1">
+<h4 data-number="3.3.1.1" class="anchored" data-anchor-id="autocorrelations"><span class="header-section-number">3.3.1.1</span> Autocorrelations</h4>
 <p>The series shows weak to moderate positive autocorrelation at lags 4 and 6, and a negative autocorrelation at lag 12. The inflation changes (infl) today are somewhat positively related to those 4, and 6 months ago. But inflation 12 months ago tends to move in the opposite direction from today’s.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">acf</span>(<span class="fu">coredata</span>(<span class="fu">na.omit</span>(df_differenced<span class="sc">$</span>infl)), <span class="at">lag.max =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -710,8 +698,8 @@ F-statistic: 2.675 on 5 and 284 DF,  p-value: 0.02213</code></pre>
 </div>
 </div>
 </section>
-<section id="direct-correlations" class="level4" data-number="4.3.1.2">
-<h4 data-number="4.3.1.2" class="anchored" data-anchor-id="direct-correlations"><span class="header-section-number">4.3.1.2</span> Direct correlations</h4>
+<section id="direct-correlations" class="level4" data-number="3.3.1.2">
+<h4 data-number="3.3.1.2" class="anchored" data-anchor-id="direct-correlations"><span class="header-section-number">3.3.1.2</span> Direct correlations</h4>
 <p>Direct correlation between a time series and lag k, controlling for all shorter lags (1 to k−1).</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pacf</span>(<span class="fu">coredata</span>(<span class="fu">na.omit</span>(df_differenced<span class="sc">$</span>infl)), <span class="at">lag.max =</span> <span class="dv">12</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -724,15 +712,15 @@ F-statistic: 2.675 on 5 and 284 DF,  p-value: 0.02213</code></pre>
 </div>
 </div>
 </section>
-<section id="rule-of-thumb-regarding-arima-parameters-q-and-p" class="level4" data-number="4.3.1.3">
-<h4 data-number="4.3.1.3" class="anchored" data-anchor-id="rule-of-thumb-regarding-arima-parameters-q-and-p"><span class="header-section-number">4.3.1.3</span> Rule of thumb regarding ARIMA parameters q and p</h4>
+<section id="rule-of-thumb-regarding-arima-parameters-q-and-p" class="level4" data-number="3.3.1.3">
+<h4 data-number="3.3.1.3" class="anchored" data-anchor-id="rule-of-thumb-regarding-arima-parameters-q-and-p"><span class="header-section-number">3.3.1.3</span> Rule of thumb regarding ARIMA parameters q and p</h4>
 <p>Use acf() to choose the q in MA(q) models. -&gt; q = 4 or 6 Use pacf() to choose the p in AR(p) models. -&gt; p = 4 or 6</p>
 <p>The ACF and PACF plots suggest that the series may be modeled as an ARMA(4,4) or AR(6,6).</p>
 </section>
 </section>
 </section>
-<section id="akaike-information-criterion-aic" class="level2" data-number="4.4">
-<h2 data-number="4.4" class="anchored" data-anchor-id="akaike-information-criterion-aic"><span class="header-section-number">4.4</span> Akaike information criterion: AIC</h2>
+<section id="akaike-information-criterion-aic" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="akaike-information-criterion-aic"><span class="header-section-number">3.4</span> Akaike information criterion: AIC</h2>
 <p>Identifying the orders p and q of the ARIMA(p,1,q)-model by testing different model specifications. We only allow a maximum of six AR- and MA-terms and set the order of integration d to 1.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>max.order <span class="ot">&lt;-</span> <span class="dv">6</span></span>
@@ -774,8 +762,8 @@ F-statistic: 2.675 on 5 and 284 DF,  p-value: 0.02213</code></pre>
 </div>
 <p><strong>Interpretation</strong>: The optimal ARMA-model is ARMA(6,0) with an AIC of -398.5921. (d according to order of integration.</p>
 </section>
-<section id="arima-model" class="level2" data-number="4.5">
-<h2 data-number="4.5" class="anchored" data-anchor-id="arima-model"><span class="header-section-number">4.5</span> ARIMA model</h2>
+<section id="arima-model" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="arima-model"><span class="header-section-number">3.5</span> ARIMA model</h2>
 <p>Convert to ts object from zoo and estimate the optimal ARIMA-model (incl.&nbsp;testing for significance of the coefficients)</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>infl_diff_ts <span class="ot">&lt;-</span> <span class="fu">ts</span>(<span class="fu">coredata</span>(df_differenced<span class="sc">$</span>infl), <span class="at">frequency =</span> <span class="dv">12</span>)</span>
@@ -842,8 +830,8 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 <p>The <strong>ARIMA(5,1,0)</strong> is superior with one coefficient less. So we proceed with this.</p>
 <p>As this is just an Excursus, not helping to identify the relations between policy rates and inflation, we skip here the evaluation of residuals. But we do a forecasting of inflation just based on this ARIMA model anyway.</p>
-<section id="forecast-the-next-12-months-of-inflation" class="level3" data-number="4.5.1">
-<h3 data-number="4.5.1" class="anchored" data-anchor-id="forecast-the-next-12-months-of-inflation"><span class="header-section-number">4.5.1</span> Forecast the next 12 months of inflation</h3>
+<section id="forecast-the-next-12-months-of-inflation" class="level3" data-number="3.5.1">
+<h3 data-number="3.5.1" class="anchored" data-anchor-id="forecast-the-next-12-months-of-inflation"><span class="header-section-number">3.5.1</span> Forecast the next 12 months of inflation</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb51"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>forecast_arima <span class="ot">&lt;-</span> <span class="fu">forecast</span>(arima_5_1_0, <span class="at">h =</span> <span class="dv">12</span>)</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(forecast_arima)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -917,8 +905,8 @@ Feb 27 0.19291293 0.3081359</code></pre>
 </div>
 </div>
 </div>
-<section id="last-known-and-forecasted-inflation-levels" class="level4" data-number="4.5.1.1">
-<h4 data-number="4.5.1.1" class="anchored" data-anchor-id="last-known-and-forecasted-inflation-levels"><span class="header-section-number">4.5.1.1</span> Last known and forecasted inflation levels</h4>
+<section id="last-known-and-forecasted-inflation-levels" class="level4" data-number="3.5.1.1">
+<h4 data-number="3.5.1.1" class="anchored" data-anchor-id="last-known-and-forecasted-inflation-levels"><span class="header-section-number">3.5.1.1</span> Last known and forecasted inflation levels</h4>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>last_infl <span class="ot">&lt;-</span> <span class="fu">tail</span>(<span class="fu">na.omit</span>(df<span class="sc">$</span>infl), <span class="dv">1</span>)</span>
 <span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>forecast_changes <span class="ot">&lt;-</span> forecast_arima<span class="sc">$</span>mean</span>
@@ -978,10 +966,10 @@ Feb 27 0.19291293 0.3081359</code></pre>
 </section>
 </section>
 </section>
-<section id="vector-autoregression-and-granger-causality" class="level2" data-number="4.6">
-<h2 data-number="4.6" class="anchored" data-anchor-id="vector-autoregression-and-granger-causality"><span class="header-section-number">4.6</span> Vector autoregression and Granger causality</h2>
-<section id="do-policy-rates-explain-inflation-rates" class="level3" data-number="4.6.1">
-<h3 data-number="4.6.1" class="anchored" data-anchor-id="do-policy-rates-explain-inflation-rates"><span class="header-section-number">4.6.1</span> Do policy rates explain inflation rates?</h3>
+<section id="vector-autoregression-and-granger-causality" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="vector-autoregression-and-granger-causality"><span class="header-section-number">3.6</span> Vector autoregression and Granger causality</h2>
+<section id="do-policy-rates-explain-inflation-rates" class="level3" data-number="3.6.1">
+<h3 data-number="3.6.1" class="anchored" data-anchor-id="do-policy-rates-explain-inflation-rates"><span class="header-section-number">3.6.1</span> Do policy rates explain inflation rates?</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>VAR_model <span class="ot">&lt;-</span> <span class="fu">VAR</span>(<span class="fu">cbind</span>(df_differenced<span class="sc">$</span>policy_rate, df_differenced<span class="sc">$</span>infl) , <span class="at">ic=</span><span class="st">"AIC"</span>, <span class="at">lag.max =</span> <span class="dv">12</span>)</span>
 <span id="cb65-2"><a href="#cb65-2" aria-hidden="true" tabindex="-1"></a><span class="co"># coeftest(VAR_model)</span></span>
@@ -1000,8 +988,8 @@ F-Test = 2.8265, df1 = 4, df2 = 578, p-value = 0.02424</code></pre>
 <p>The Granger Causality Test (VAR) examines whether past policy rates help predict current values of inflation beyond what’s already explained by past values of inflation itself.</p>
 <p>There is <strong>statistically significant evidence that past policy rates Granger-cause inflation</strong>, i.e., policy rates have predictive power for inflation in our model. But remember: Granger causality is not proof of true causation, it only indicates predictive ability.</p>
 </section>
-<section id="do-inflation-rates-explain-policy-rates" class="level3" data-number="4.6.2">
-<h3 data-number="4.6.2" class="anchored" data-anchor-id="do-inflation-rates-explain-policy-rates"><span class="header-section-number">4.6.2</span> Do inflation rates explain policy rates?</h3>
+<section id="do-inflation-rates-explain-policy-rates" class="level3" data-number="3.6.2">
+<h3 data-number="3.6.2" class="anchored" data-anchor-id="do-inflation-rates-explain-policy-rates"><span class="header-section-number">3.6.2</span> Do inflation rates explain policy rates?</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a><span class="fu">causality</span>(VAR_model, <span class="at">cause=</span><span class="st">"df_differenced.infl"</span>)[<span class="st">"Granger"</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -1016,8 +1004,8 @@ F-Test = 1.2403, df1 = 4, df2 = 578, p-value = 0.2926</code></pre>
 </div>
 <p><strong>No: Inflation rates do not Granger-cause the policy rates.</strong></p>
 </section>
-<section id="does-the-snb-event-in-september-2022-explain-inflation-rates." class="level3" data-number="4.6.3">
-<h3 data-number="4.6.3" class="anchored" data-anchor-id="does-the-snb-event-in-september-2022-explain-inflation-rates."><span class="header-section-number">4.6.3</span> Does the “SNB event in September 2022” explain inflation rates.</h3>
+<section id="does-the-snb-event-in-september-2022-explain-inflation-rates." class="level3" data-number="3.6.3">
+<h3 data-number="3.6.3" class="anchored" data-anchor-id="does-the-snb-event-in-september-2022-explain-inflation-rates."><span class="header-section-number">3.6.3</span> Does the “SNB event in September 2022” explain inflation rates.</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb69"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>VAR_df <span class="ot">&lt;-</span> <span class="fu">na.omit</span>(<span class="fu">cbind</span>(df_differenced<span class="sc">$</span>event_2022_10, df_differenced<span class="sc">$</span>infl))</span>
 <span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(VAR_df) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"event_2022_10"</span>, <span class="st">"infl"</span>)</span>
@@ -1167,7 +1155,6 @@ Chi-squared = 30.849, df = 40, p-value = 0.8502</code></pre>
 <p>The <strong>peak of the residuals</strong> around (see plot above) is another issue, that needs to be further investigated. Is it related to the significant Granger-causality of the event_2022_10 on inflation?</p>
 
 
-</section>
 </section>
 </section>
 
@@ -1573,8 +1560,8 @@ Chi-squared = 30.849, df = 40, p-value = 0.8502</code></pre>
   </script>
 <nav class="page-navigation column-body">
   <div class="nav-page nav-page-previous">
-      <a href="../sections/Chapter_1_to_5.html" class="pagination-link" aria-label="Introduction">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></span>
+      <a href="../sections/Chapter_1_to_5.html" class="pagination-link" aria-label="Motivation and Objective">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Motivation and Objective</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

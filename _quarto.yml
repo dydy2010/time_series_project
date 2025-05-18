@@ -2,8 +2,10 @@ project:
   type: book
 
 book:
-  title: "SNB_policy_rate_and_inflation"
+  title: "TsA in Finance: group project"
+  subtitle: "Swiss National Bank Policy Rates and Inflation"
   author: "Daniel Huber / Dongyuan Gao"
+  date: "Spring 2025"
   chapters:
     - index.qmd
     - sections/Chapter_1_to_5.qmd
@@ -16,10 +18,11 @@ format:
     theme: flatly
     page-layout: full
   pdf:
+    toc: true
+    number-sections: true
     documentclass: report
-    geometry: top=1.5cm, bottom=1.5cm, left=1.5cm, right=2cm
-    mainfont: Helvetica
-
+    geometry: top=2.5cm, bottom=1.5cm, left=2cm, right=2cm
+    mainfont: TeX Gyre Heros
 
 execute:
   echo: true

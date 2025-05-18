@@ -1,11 +1,7 @@
 ---
-title: "SNB_policy_rate_and_inflation"
-author: "Daniel Huber / Dongyuan Gao"
-format:
-  html:
-    page-layout: full
-    self-contained: false
-editor: visual
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 # Analysis of SNB policy rates and Swiss inflation rates
@@ -42,7 +38,8 @@ inflation_data <- read_excel("../data/snb-data-plkoprinfla-en-all-20250422_0900.
 
 ### Evaluation of appropriate policy rate data
 
-Looking at different available columns in the policy rate data from SNB website.
+Looking at different available columns in the policy rate data from SNB
+website.
 
 ```{r}
 pr_full <- policy_rate_data %>% 
@@ -185,7 +182,8 @@ cor(df_differenced$policy_rate, df_differenced$infl, use = "pairwise.complete.ob
 
 ### Basic Linear regression model
 
-Linear regression of policy_rate on inflation shows no significant coefficients and R squared is very low.
+Linear regression of policy_rate on inflation shows no significant
+coefficients and R squared is very low.
 
 ```{r}
 lin_reg <- lm(infl ~ policy_rate, data = df_differenced)
@@ -206,7 +204,9 @@ grid()
 
 #### Breusch-Pagan test
 
-Breusch-Pagan test for Constant variance, with null hypothesis that Residuals are homoscedastic shows, that there is no significant evidence of heteroskedasticity in the linear regression model.
+Breusch-Pagan test for Constant variance, with null hypothesis that
+Residuals are homoscedastic shows, that there is no significant evidence
+of heteroskedasticity in the linear regression model.
 
 ```{r}
 bptest(lin_reg)
@@ -214,7 +214,10 @@ bptest(lin_reg)
 
 #### Shapiro test for normality
 
-Shapiro test for normality with null hypothesis that Residuals are normally distributed shows a strong rejection of the null hypothesis: The residuals of the model are NOT normally distributed. With n = 302 we might disregard non-normality.
+Shapiro test for normality with null hypothesis that Residuals are
+normally distributed shows a strong rejection of the null hypothesis:
+The residuals of the model are NOT normally distributed. With n = 302 we
+might disregard non-normality.
 
 ```{r}
 shapiro.test(resid)
@@ -230,7 +233,11 @@ plot(lin_reg, which = 4)  # Cook's distance
 
 #### Durbin-Watson test for serial correlation
 
-Durbin-Watson test for serial correlation with null hypothesis that Residuals are not autocorrelated results in a test statistic that is very close to 2, which is the expected value under the null hypothesis of no autocorrelation: p \> 0.05: There is no statistically significant evidence of positive autocorrelation in the residuals.
+Durbin-Watson test for serial correlation with null hypothesis that
+Residuals are not autocorrelated results in a test statistic that is
+very close to 2, which is the expected value under the null hypothesis
+of no autocorrelation: p \> 0.05: There is no statistically significant
+evidence of positive autocorrelation in the residuals.
 
 ```{r}
 dwtest(lin_reg) 
@@ -268,13 +275,17 @@ lin_reg_lagged <- lm(infl ~ policy_rate_lag1 + policy_rate_lag2 + policy_rate_la
 summary(lin_reg_lagged)
 ```
 
-Lag 1 and lag 10 are significant (p-value \< 0.05), but R squared (0.06249, adjusted 002187) is very low.
+Lag 1 and lag 10 are significant (p-value \< 0.05), but R squared
+(0.06249, adjusted 002187) is very low.
 
-We are not sure if a lag of 10 months makes sense from a logical point of view.
+We are not sure if a lag of 10 months makes sense from a logical point
+of view.
 
-Lag 1 would make sense and the model shows that it is statistically significant.
+Lag 1 would make sense and the model shows that it is statistically
+significant.
 
-But the direction of lag 1 is not as expected: higher policy rate goes with higher inflation.
+But the direction of lag 1 is not as expected: higher policy rate goes
+with higher inflation.
 
 Overall we are not convinced by this model.
 
@@ -291,7 +302,9 @@ lin_reg_events <- lm(infl ~ event_2008_10 + event_2014_11 + event_2020_01 + even
 summary(lin_reg_events)
 ```
 
-The last event 2022_10 is significant. This was a month after the SNB had increased their policy rate from negative (-0.25) to positive (+0.50). But R squared is very low.
+The last event 2022_10 is significant. This was a month after the SNB
+had increased their policy rate from negative (-0.25) to positive
+(+0.50). But R squared is very low.
 
 ## Excursus: Closer look at inflation only (auto/direct correlations and an ARIMA model)
 
@@ -299,7 +312,11 @@ The last event 2022_10 is significant. This was a month after the SNB had increa
 
 #### Autocorrelations
 
-The series shows weak to moderate positive autocorrelation at lags 4 and 6, and a negative autocorrelation at lag 12. The inflation changes (infl) today are somewhat positively related to those 4, and 6 months ago. But inflation 12 months ago tends to move in the opposite direction from today’s.
+The series shows weak to moderate positive autocorrelation at lags 4 and
+6, and a negative autocorrelation at lag 12. The inflation changes
+(infl) today are somewhat positively related to those 4, and 6 months
+ago. But inflation 12 months ago tends to move in the opposite direction
+from today’s.
 
 ```{r}
 acf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
@@ -307,7 +324,8 @@ acf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
 
 #### Direct correlations
 
-Direct correlation between a time series and lag k, controlling for all shorter lags (1 to k−1).
+Direct correlation between a time series and lag k, controlling for all
+shorter lags (1 to k−1).
 
 ```{r}
 pacf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
@@ -315,20 +333,26 @@ pacf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
 
 #### Rule of thumb regarding ARIMA parameters q and p
 
-Use acf() to choose the q in MA(q) models. -\> q = 4 or 6 Use pacf() to choose the p in AR(p) models. -\> p = 4 or 6
+Use acf() to choose the q in MA(q) models. -\> q = 4 or 6 Use pacf() to
+choose the p in AR(p) models. -\> p = 4 or 6
 
-The ACF and PACF plots suggest that the series may be modeled as an ARMA(4,4) or AR(6,6).
+The ACF and PACF plots suggest that the series may be modeled as an
+ARMA(4,4) or AR(6,6).
 
 ## Akaike information criterion: AIC
 
-Identifying the orders p and q of the ARIMA(p,1,q)-model by testing different model specifications. We only allow a maximum of six AR- and MA-terms and set the order of integration d to 1.
+Identifying the orders p and q of the ARIMA(p,1,q)-model by testing
+different model specifications. We only allow a maximum of six AR- and
+MA-terms and set the order of integration d to 1.
 
 ```{r}
 max.order <- 6
 d <- 1
 ```
 
-Defining the matrix in which the values of the AICs for different model specifications are stored. Then calculating and storing the AICs for different model specifications.
+Defining the matrix in which the values of the AICs for different model
+specifications are stored. Then calculating and storing the AICs for
+different model specifications.
 
 ```{r}
 arima_aic <- matrix(NA, ncol=max.order+1, nrow=max.order+1)
@@ -348,11 +372,13 @@ c(ar, ma)
 arima_aic[ar+1, ma+1]
 ```
 
-**Interpretation**: The optimal ARMA-model is ARMA(6,0) with an AIC of -398.5921. (d according to order of integration.
+**Interpretation**: The optimal ARMA-model is ARMA(6,0) with an AIC of
+-398.5921. (d according to order of integration.
 
 ## ARIMA model
 
-Convert to ts object from zoo and estimate the optimal ARIMA-model (incl. testing for significance of the coefficients)
+Convert to ts object from zoo and estimate the optimal ARIMA-model
+(incl. testing for significance of the coefficients)
 
 ```{r}
 infl_diff_ts <- ts(coredata(df_differenced$infl), frequency = 12)
@@ -361,7 +387,10 @@ print(arima)
 coeftest(arima)
 ```
 
-Interpretation: ar1 to ar5 are highly significant at the 95% confidence interval. The negative values of the coefficients reveals that a positive change in the time series in the previous period leads to a negative change in the subsequent period.
+Interpretation: ar1 to ar5 are highly significant at the 95% confidence
+interval. The negative values of the coefficients reveals that a
+positive change in the time series in the previous period leads to a
+negative change in the subsequent period.
 
 ```{r}
 arima_5_1_0 <- Arima(infl_diff_ts, order=c(5,1,0))
@@ -369,9 +398,13 @@ print(arima_5_1_0)
 coeftest(arima_5_1_0)
 ```
 
-The **ARIMA(5,1,0)** is superior with one coefficient less. So we proceed with this.
+The **ARIMA(5,1,0)** is superior with one coefficient less. So we
+proceed with this.
 
-As this is just an Excursus, not helping to identify the relations between policy rates and inflation, we skip here the evaluation of residuals. But we do a forecasting of inflation just based on this ARIMA model anyway.
+As this is just an Excursus, not helping to identify the relations
+between policy rates and inflation, we skip here the evaluation of
+residuals. But we do a forecasting of inflation just based on this ARIMA
+model anyway.
 
 ### Forecast the next 12 months of inflation
 
@@ -398,7 +431,8 @@ forecast_upper <- cumsum(forecast_arima$upper[,2]) + last_infl
 forecast_lower <- cumsum(forecast_arima$lower[,2]) + last_infl
 ```
 
-Get the last date from indexed too object and generate 12 monthly forecast dates
+Get the last date from indexed too object and generate 12 monthly
+forecast dates
 
 ```{r}
 last_date <- tail(index(df_differenced), 1)
@@ -430,7 +464,9 @@ ggplot(forecast_table, aes(x = Date, y = Forecast_Inflation)) +
 
 ```
 
-After this extensive **Excursus** we now go **back our main topic**, explaining interactions between SNB policy rates and inflation rates in Switzerland.
+After this extensive **Excursus** we now go **back our main topic**,
+explaining interactions between SNB policy rates and inflation rates in
+Switzerland.
 
 ## Vector autoregression and Granger causality
 
@@ -443,9 +479,14 @@ VAR_model <- VAR(cbind(df_differenced$policy_rate, df_differenced$infl) , ic="AI
 causality(VAR_model, cause="df_differenced.policy_rate")["Granger"]
 ```
 
-The Granger Causality Test (VAR) examines whether past policy rates help predict current values of inflation beyond what's already explained by past values of inflation itself.
+The Granger Causality Test (VAR) examines whether past policy rates help
+predict current values of inflation beyond what's already explained by
+past values of inflation itself.
 
-There is **statistically significant evidence that past policy rates Granger-cause inflation**, i.e., policy rates have predictive power for inflation in our model. But remember: Granger causality is not proof of true causation, it only indicates predictive ability.
+There is **statistically significant evidence that past policy rates
+Granger-cause inflation**, i.e., policy rates have predictive power for
+inflation in our model. But remember: Granger causality is not proof of
+true causation, it only indicates predictive ability.
 
 ### Do inflation rates explain policy rates?
 
@@ -465,9 +506,12 @@ coeftest(VAR_model)
 causality(VAR_model, cause="event_2022_10")["Granger"]
 ```
 
-There is **strong evidence** **that event_2022_10 Granger-cause inflation** (at lag 5 and lag6). This means, that the SNB policy rate change in autumn 2022 influenced the Swiss inflation rates.
+There is **strong evidence** **that event_2022_10 Granger-cause
+inflation** (at lag 5 and lag6). This means, that the SNB policy rate
+change in autumn 2022 influenced the Swiss inflation rates.
 
-We now do a **residual analysis** based on the last VAR model with Event_2022_10 to check the quality of the model.
+We now do a **residual analysis** based on the last VAR model with
+Event_2022_10 to check the quality of the model.
 
 ```{r}
 Resid_VAR <- resid(VAR_model)
@@ -498,14 +542,23 @@ serial.test(VAR_model) # Portmanteau test (default) for serial correlation, null
 
 ```
 
-The ARCH-LM test for constant variance with the null hypothesis that residuals are homoscedastic shows with a p-value of 0.1685, that **residuals** **are homoscedastic**.
+The ARCH-LM test for constant variance with the null hypothesis that
+residuals are homoscedastic shows with a p-value of 0.1685, that
+**residuals** **are homoscedastic**.
 
-The Jarque-Bera test for normality with the null hypothesis that residuals are normally distributed shows with a p-value close to zero, that **residuals are not normally distributed**.
+The Jarque-Bera test for normality with the null hypothesis that
+residuals are normally distributed shows with a p-value close to zero,
+that **residuals are not normally distributed**.
 
-The Portmanteau test for serial correlation with the null hypothesis that residuals are not autocorrelated shows with a p-value of 0.8502, that the **residuals are not autocorrelated**.
+The Portmanteau test for serial correlation with the null hypothesis
+that residuals are not autocorrelated shows with a p-value of 0.8502,
+that the **residuals are not autocorrelated**.
 
 **Overall interpretation of residual analysis**:
 
-The non-normality remains an issue. It **might** be neglected as we have 302 observations (large n tends towards normality).
+The non-normality remains an issue. It **might** be neglected as we have
+302 observations (large n tends towards normality).
 
-The **peak of the residuals** around (see plot above) is another issue, that needs to be further investigated. Is it related to the significant Granger-causality of the event_2022_10 on inflation?
+The **peak of the residuals** around (see plot above) is another issue,
+that needs to be further investigated. Is it related to the significant
+Granger-causality of the event_2022_10 on inflation?
