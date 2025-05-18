@@ -121,7 +121,6 @@ In the end, we chose Dataset 2 for the final analysis. Still, the data
 selection process was an important learning experience and worth sharing
 with readers.
 
-
 # Team collaboration and tool set
 
 ## Team organization and meetings
