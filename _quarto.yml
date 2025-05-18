@@ -13,9 +13,13 @@ book:
 format:
   html:
     toc: true
-    theme: cosmo
+    theme: flatly
+    page-layout: full
   pdf:
     documentclass: report
+    geometry: top=1.5cm, bottom=1.5cm, left=1.5cm, right=2cm
+    mainfont: Helvetica
+
 
 execute:
   echo: true

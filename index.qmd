@@ -1,7 +1,14 @@
 ---
-title: "Project: Time series analysis in Finance"
+title: "Project: Time Series Analysis in Finance"
+subtitle: "Swiss National Bank Policy Rates and Inflation"
+author: "Dongyuan Gao & Daniel Huber"
+date: "Spring 2025"
+format:
+  html:
+    toc: true
 ---
 
-# How do the policy rates of the Swiss National Bank and the Swiss inflation rates interact?
+# Introduction
 
 This is the project report by Dongyuan Gao and Daniel Huber, master students at the HSLU University, in the module "Time Series Analysis in Finance" in spring 2025.
+
