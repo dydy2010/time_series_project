@@ -36,10 +36,11 @@ inflation_data <- read_excel("../data/snb-data-plkoprinfla-en-all-20250422_0900.
 
 ```
 
-### Evaluation of appropriate policy rate data
+### First trial analysis using dataset 1
 
-Looking at different available columns in the policy rate data from SNB
-website. 
+various data types are available in several time windows, initial
+analysis using dataset 1, as described in section 4. Data selection
+process
 
 ```{r}
 pr_full <- policy_rate_data %>% 
@@ -174,7 +175,8 @@ Both series are stationary now.
 
 ### Correlations
 
-Very week positive correlation.
+p value is merely bigger than 0.05, it shows very week positive
+correlation.
 
 ```{r}
 cor(df_differenced$policy_rate, df_differenced$infl, use = "pairwise.complete.obs")
@@ -192,9 +194,22 @@ summary(lin_reg)
 
 ### Residual analysis
 
-#### Residual plot
+#### **Range of Residuals**
 
-The plot shows large residuals, confirming the low R squared.
+-   Most residuals are between **-0.2 and 0.2** → This suggests
+    **moderate prediction error**.
+
+-   **2 outliers** (±0.5) are present → These are **not necessarily
+    problematic** unless they’re influential (we check later for Cook's
+    distance).
+
+#### **Wavelike Pattern**
+
+-   the residual plot shows a **wave or sinusoidal pattern**, that
+    suggests **non-linearity** or **autocorrelation** in the data.
+
+-   In a good linear model, residuals should be **randomly scattered**
+    around zero (no pattern).
 
 ```{r}
 resid <- lin_reg$residuals
@@ -204,9 +219,16 @@ grid()
 
 #### Breusch-Pagan test
 
-Breusch-Pagan test for Constant variance, with null hypothesis that
-Residuals are homoscedastic shows, that there is no significant evidence
-of heteroskedasticity in the linear regression model.
+-   Tests for: Heteroskedasticity (i.e., changing variance of
+    residuals).
+
+-   Null hypothesis: Residuals have constant variance.
+
+-   Interpretation: If p \> 0.05, fails to reject the null → residuals
+    are homoscedastic → Good. This **does not mean** the linear model is
+    good. It simply means the **residuals are homoscedastic.**
+
+    If p\<0.05, rejects the null→ residuals are heteroskedastic → Bad.
 
 ```{r}
 bptest(lin_reg)
@@ -275,11 +297,11 @@ lin_reg_lagged <- lm(infl ~ policy_rate_lag1 + policy_rate_lag2 + policy_rate_la
 summary(lin_reg_lagged)
 ```
 
-Lag 1 and lag 10 are significant (p-value \< 0.05), but R squared
-(0.06249, adjusted 002187) is very low.
-
-We are not sure if a lag of 10 months makes sense from a logical point
-of view.
+Lag 1 and lag 10 are significant (p-value \< 0.05), this could imply
+**some short- and delayed reaction** of inflation to past policy
+decisions. But R squared (0.06249, adjusted 002187) is very low, **only
+6% of the variance(fluctuations)** in inflation can be accounted to the
+model.
 
 Lag 1 would make sense and the model shows that it is statistically
 significant.
@@ -287,7 +309,14 @@ significant.
 But the direction of lag 1 is not as expected: higher policy rate goes
 with higher inflation.
 
-Overall we are not convinced by this model.
+As interest rate would normally between 10-18 months to have a
+noticeable impact on inflation, and the coefficient for
+policy_rate_lag_10 is negative, we can say an increase in the policy
+rate 10 months ago is maybe associated with lower inflation today. But
+as only 6% is explained by the model,
+
+Overall we are not convinced by this model, there is no strong
+predictive power.
 
 #### Alternative 2: Treat SNB actions as events
 
@@ -304,7 +333,7 @@ summary(lin_reg_events)
 
 The last event 2022_10 is significant. This was a month after the SNB
 had increased their policy rate from negative (-0.25) to positive
-(+0.50). But R squared is very low.
+(+0.50). But again R squared is very low.
 
 ## Excursus: Closer look at inflation only (auto/direct correlations and an ARIMA model)
 
@@ -387,10 +416,17 @@ print(arima)
 coeftest(arima)
 ```
 
-Interpretation: ar1 to ar5 are highly significant at the 95% confidence
-interval. The negative values of the coefficients reveals that a
-positive change in the time series in the previous period leads to a
-negative change in the subsequent period.
+Interpretation:
+
+**ARIMA(6,1,0)**: This means the model includes: 6 autoregressive (AR)
+terms, 1 difference (change in inflation), 0 moving average (MA) terms.
+
+All AR coefficients (ar1 to ar6) are **negative**, meaning **reverting
+behavior** (past increases in inflation are followed by decreases).
+
+**ar1 to ar5** are **significant** (p-values almost 0), indicating
+strong predictive power. Inflation show **strong autoregressive
+behavior** and **tendency to revert.**
 
 ```{r}
 arima_5_1_0 <- Arima(infl_diff_ts, order=c(5,1,0))
@@ -485,8 +521,8 @@ past values of inflation itself.
 
 There is **statistically significant evidence that past policy rates
 Granger-cause inflation**, i.e., policy rates have predictive power for
-inflation in our model. But remember: Granger causality is not proof of
-true causation, it only indicates predictive ability.
+inflation in our model. But **remember: Granger causality** is **not
+proof** of true causation, it **only indicates predictive** helpfulness.
 
 ### Do inflation rates explain policy rates?
 

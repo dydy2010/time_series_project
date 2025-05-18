@@ -53,7 +53,7 @@ private individuals.
     rates and the SNB's policy Interest rates, during the project
     implementation.
 
-# Theory, literature and methodology,
+# Theory, literature and methodology
 
 To answer our research questions, we first needed to clarify what the
 basis for modern monetary policy is. Why do central banks raise and
