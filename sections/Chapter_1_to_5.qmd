@@ -53,7 +53,7 @@ private individuals.
     rates and the SNB's policy Interest rates, during the project
     implementation.
 
-# Theory, literature and methodology,
+# Theory, literature and methodology
 
 To answer our research questions, we first needed to clarify what the
 basis for modern monetary policy is. Why do central banks raise and
@@ -107,15 +107,14 @@ Dataset (referred to as Dataset 2), which contains only two types of
 official interest rate data. This made it more consistent and more
 suitable to use as the policy rate.
 
-In this Dataset, “From 13 June 2019, the SNB policy rate is applied.
+In this Dataset 2, “From 13 June 2019, the SNB policy rate is applied.
 From 3 January 2000 until 13 June 2019, the SNB set a target range for
 the three-month Swiss franc Libor” \[Snbd00\].
 
 With it, we’ve also done a VAR to check causality between policy
 rate/target to inflation, or vice versa. As with Dataset 1, no causality
-was proven. The result also gives us more confidence that both Datasets
-reflect the economic reality, although Dataset 2 appeared more
-consistent overall.
+was proven, and in Dataset 2, one direction causality was proven,
+it shows that the dats sets actually produced different results.
 
 In the end, we chose Dataset 2 for the final analysis. Still, the data
 selection process was an important learning experience and worth sharing
