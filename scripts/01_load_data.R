@@ -125,3 +125,4 @@ ggplot(df, aes(x = date)) +
   theme_minimal() +
   theme(legend.position = "bottom", legend.direction = "horizontal")
 
+

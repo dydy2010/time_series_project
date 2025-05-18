@@ -371,6 +371,8 @@ coeftest(arima_5_1_0)
 
 The **ARIMA(5,1,0)** is superior with one coefficient less. So we proceed with this.
 
+As this is just an Excursus, not helping to identify the relations between policy rates and inflation, we skip here the evaluation of residuals. But we do a forecasting of inflation just based on this ARIMA model anyway.
+
 ### Forecast the next 12 months of inflation
 
 ```{r}
@@ -428,6 +430,8 @@ ggplot(forecast_table, aes(x = Date, y = Forecast_Inflation)) +
 
 ```
 
+After this extensive **Excursus** we now go **back our main topic**, explaining interactions between SNB policy rates and inflation rates in Switzerland.
+
 ## Vector autoregression and Granger causality
 
 ### Do policy rates explain inflation rates?
@@ -441,9 +445,7 @@ causality(VAR_model, cause="df_differenced.policy_rate")["Granger"]
 
 The Granger Causality Test (VAR) examines whether past policy rates help predict current values of inflation beyond what's already explained by past values of inflation itself.
 
-There is statistically significant evidence that past policy rates Granger-cause inflation, i.e., policy rates have predictive power for inflation in our model.
-
-But: Granger causality is not proof of true causation, it only indicates predictive ability.
+There is **statistically significant evidence that past policy rates Granger-cause inflation**, i.e., policy rates have predictive power for inflation in our model. But remember: Granger causality is not proof of true causation, it only indicates predictive ability.
 
 ### Do inflation rates explain policy rates?
 
@@ -451,7 +453,7 @@ But: Granger causality is not proof of true causation, it only indicates predict
 causality(VAR_model, cause="df_differenced.infl")["Granger"]
 ```
 
-No: Inflation rates do not Granger-cause the policy rates.
+**No: Inflation rates do not Granger-cause the policy rates.**
 
 ### Does the "SNB event in September 2022" explain inflation rates.
 
@@ -463,4 +465,47 @@ coeftest(VAR_model)
 causality(VAR_model, cause="event_2022_10")["Granger"]
 ```
 
-There is strong evidence that event_2020_01 and event_2022_10 Granger-cause infl (at lag 5 and lag6).
+There is **strong evidence** **that event_2022_10 Granger-cause inflation** (at lag 5 and lag6). This means, that the SNB policy rate change in autumn 2022 influenced the Swiss inflation rates.
+
+We now do a **residual analysis** based on the last VAR model with Event_2022_10 to check the quality of the model.
+
+```{r}
+Resid_VAR <- resid(VAR_model)
+p <- VAR_model$p
+residual_dates <- tail(index(df_differenced), -p) # Remove first p dates
+plot(x = residual_dates,
+     y = Resid_VAR[,1],  # First equation's residuals
+     type = "l",
+     ylab = "VAR residuals diff log inflation",
+     xlab = "Year")
+
+# Plotting ACF, histogram, and Q-Q-plot of residuals
+acf(data.frame(Resid_VAR), main="VAR residuals diff log inflation") # ACF of residuals
+hist(Resid_VAR, breaks=25, main="Histogram of residuals", xlab="VAR residuals diff log inflation") # Histogram of residuals
+
+# For a single equation's residuals (e.g., first variable)
+residuals_to_plot <- Resid_VAR[,1]  # Select first column
+
+# 1. Q-Q plot with grid
+qqnorm(residuals_to_plot, main = "Q-Q Plot of VAR Residuals")
+qqline(residuals_to_plot, col = "red")
+grid()
+
+# Residual tests
+arch.test(VAR_model) # ARCH-LM test for constant variance, null hypothesis = Residuals are homoscedastic
+normality.test(VAR_model) # Jarque-Bera test for normality, null hypothesis = Residuals are normally distributed
+serial.test(VAR_model) # Portmanteau test (default) for serial correlation, null hypothesis = Residuals are not autocorrelated
+
+```
+
+The ARCH-LM test for constant variance with the null hypothesis that residuals are homoscedastic shows with a p-value of 0.1685, that **residuals** **are homoscedastic**.
+
+The Jarque-Bera test for normality with the null hypothesis that residuals are normally distributed shows with a p-value close to zero, that **residuals are not normally distributed**.
+
+The Portmanteau test for serial correlation with the null hypothesis that residuals are not autocorrelated shows with a p-value of 0.8502, that the **residuals are not autocorrelated**.
+
+**Overall interpretation of residual analysis**:
+
+The non-normality remains an issue. It **might** be neglected as we have 302 observations (large n tends towards normality).
+
+The **peak of the residuals** around (see plot above) is another issue, that needs to be further investigated. Is it related to the significant Granger-causality of the event_2022_10 on inflation?
