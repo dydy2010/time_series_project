@@ -63,6 +63,11 @@ coeftest(arima)
 # series in the previous period leads to a negative change in the subsequent period.
 
 
+# Estimating the optimal ARIMA-model based on the Akaike Information Criterion (AIC)
+# arima<-auto.arima(df$infl, ic="aic")
+# coeftest(arima)
+
+
 # Forecast the next 12 periods (e.g., months)
 
 forecast_arima <- forecast(arima, h = 12)
