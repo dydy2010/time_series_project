@@ -4,21 +4,6 @@ editor:
     wrap: 72
 ---
 
-# Introduction
-
-## Contextual Background
-
-Brief overview of monetary policy and inflation dynamics in Switzerland.
-Importance of understanding policy rate interactions with core
-inflation. Brief introduction to the role of the Swiss National Bank
-(SNB).
-
-## Problem Statement
-
-Explanation of the specific problem: understanding how SNB policy rates
-and Swiss core inflation rates interact dynamically. Brief justifiction
-why this relationship is economically relevant or timely.
-
 # Motivation and Objective
 
 ## Project Objectives

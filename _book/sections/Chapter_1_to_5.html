@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>2&nbsp; Introduction – SNB_policy_rate_and_inflation</title>
+<title>2&nbsp; Motivation and Objective – TsA in Finance: group project</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -41,7 +41,7 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-de070a7b0ab54f8780927367ac907214.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-364982630eef5352dd1537128a8ed5cb.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-c27fdc8e5b00b532d2d5a75ada188648.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -82,7 +82,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../sections/Chapter_1_to_5.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../sections/Chapter_1_to_5.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Motivation and Objective</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -92,12 +92,12 @@ ul.task-list li input[type="checkbox"] {
   </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
     <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="../">SNB_policy_rate_and_inflation</a> 
+      <a href="../">TsA in Finance: group project</a> 
     </div>
       </div>
         <div class="mt-2 flex-shrink-0 align-items-center">
@@ -110,19 +110,19 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project: Time series analysis in Finance</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../sections/Chapter_1_to_5.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Motivation and Objective</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../sections/R_analysis.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SNB_policy_rate_and_inflation</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Analysis of SNB policy rates and Swiss inflation rates</span></span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -141,42 +141,37 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#contextual-background" id="toc-contextual-background" class="nav-link active" data-scroll-target="#contextual-background"><span class="header-section-number">2.1</span> Contextual Background</a></li>
-  <li><a href="#problem-statement" id="toc-problem-statement" class="nav-link" data-scroll-target="#problem-statement"><span class="header-section-number">2.2</span> Problem Statement</a></li>
-  <li><a href="#motivation-and-objective" id="toc-motivation-and-objective" class="nav-link" data-scroll-target="#motivation-and-objective"><span class="header-section-number">3</span> Motivation and Objective</a>
+  <li><a href="#project-objectives" id="toc-project-objectives" class="nav-link active" data-scroll-target="#project-objectives"><span class="header-section-number">2.1</span> Project Objectives</a></li>
+  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation"><span class="header-section-number">2.2</span> Motivation</a></li>
+  <li><a href="#research-questions" id="toc-research-questions" class="nav-link" data-scroll-target="#research-questions"><span class="header-section-number">2.3</span> Research Questions</a></li>
+  <li><a href="#theory-literature-and-methodology" id="toc-theory-literature-and-methodology" class="nav-link" data-scroll-target="#theory-literature-and-methodology"><span class="header-section-number">3</span> Theory, literature and methodology,</a></li>
+  <li><a href="#data-selection" id="toc-data-selection" class="nav-link" data-scroll-target="#data-selection"><span class="header-section-number">4</span> Data selection</a></li>
+  <li><a href="#team-collaboration-and-tool-set" id="toc-team-collaboration-and-tool-set" class="nav-link" data-scroll-target="#team-collaboration-and-tool-set"><span class="header-section-number">5</span> Team collaboration and tool set</a>
   <ul class="collapse">
-  <li><a href="#project-objectives" id="toc-project-objectives" class="nav-link" data-scroll-target="#project-objectives"><span class="header-section-number">3.1</span> Project Objectives</a></li>
-  <li><a href="#motivation" id="toc-motivation" class="nav-link" data-scroll-target="#motivation"><span class="header-section-number">3.2</span> Motivation</a></li>
-  <li><a href="#research-questions" id="toc-research-questions" class="nav-link" data-scroll-target="#research-questions"><span class="header-section-number">3.3</span> Research Questions</a></li>
+  <li><a href="#team-organization-and-meetings" id="toc-team-organization-and-meetings" class="nav-link" data-scroll-target="#team-organization-and-meetings"><span class="header-section-number">5.1</span> Team organization and meetings</a></li>
+  <li><a href="#collaborative-tools" id="toc-collaborative-tools" class="nav-link" data-scroll-target="#collaborative-tools"><span class="header-section-number">5.2</span> Collaborative tools</a>
+  <ul class="collapse">
+  <li><a href="#brainstorming-and-ideation" id="toc-brainstorming-and-ideation" class="nav-link" data-scroll-target="#brainstorming-and-ideation"><span class="header-section-number">5.2.1</span> Brainstorming and ideation:</a></li>
+  <li><a href="#task-distribution-and-project-management" id="toc-task-distribution-and-project-management" class="nav-link" data-scroll-target="#task-distribution-and-project-management"><span class="header-section-number">5.2.2</span> Task Distribution and Project Management</a></li>
+  <li><a href="#coding-and-version-control" id="toc-coding-and-version-control" class="nav-link" data-scroll-target="#coding-and-version-control"><span class="header-section-number">5.2.3</span> Coding and Version Control</a></li>
+  <li><a href="#documentation-and-presentation" id="toc-documentation-and-presentation" class="nav-link" data-scroll-target="#documentation-and-presentation"><span class="header-section-number">5.2.4</span> Documentation and Presentation</a></li>
   </ul></li>
-  <li><a href="#theory-literature-and-methodology" id="toc-theory-literature-and-methodology" class="nav-link" data-scroll-target="#theory-literature-and-methodology"><span class="header-section-number">4</span> Theory, literature and methodology,</a></li>
-  <li><a href="#data-selection" id="toc-data-selection" class="nav-link" data-scroll-target="#data-selection"><span class="header-section-number">5</span> Data selection</a></li>
-  <li><a href="#team-collaboration-and-tool-set" id="toc-team-collaboration-and-tool-set" class="nav-link" data-scroll-target="#team-collaboration-and-tool-set"><span class="header-section-number">6</span> Team collaboration and tool set</a>
-  <ul class="collapse">
-  <li><a href="#team-organization-and-meetings" id="toc-team-organization-and-meetings" class="nav-link" data-scroll-target="#team-organization-and-meetings"><span class="header-section-number">6.1</span> Team organization and meetings</a></li>
-  <li><a href="#collaborative-tools" id="toc-collaborative-tools" class="nav-link" data-scroll-target="#collaborative-tools"><span class="header-section-number">6.2</span> Collaborative tools</a>
-  <ul class="collapse">
-  <li><a href="#brainstorming-and-ideation" id="toc-brainstorming-and-ideation" class="nav-link" data-scroll-target="#brainstorming-and-ideation"><span class="header-section-number">6.2.1</span> Brainstorming and ideation:</a></li>
-  <li><a href="#task-distribution-and-project-management" id="toc-task-distribution-and-project-management" class="nav-link" data-scroll-target="#task-distribution-and-project-management"><span class="header-section-number">6.2.2</span> Task Distribution and Project Management</a></li>
-  <li><a href="#coding-and-version-control" id="toc-coding-and-version-control" class="nav-link" data-scroll-target="#coding-and-version-control"><span class="header-section-number">6.2.3</span> Coding and Version Control</a></li>
-  <li><a href="#documentation-and-presentation" id="toc-documentation-and-presentation" class="nav-link" data-scroll-target="#documentation-and-presentation"><span class="header-section-number">6.2.4</span> Documentation and Presentation</a></li>
-  </ul></li>
-  <li><a href="#reflection-on-tool-set-effectiveness" id="toc-reflection-on-tool-set-effectiveness" class="nav-link" data-scroll-target="#reflection-on-tool-set-effectiveness"><span class="header-section-number">6.3</span> Reflection on tool set effectiveness</a></li>
+  <li><a href="#reflection-on-tool-set-effectiveness" id="toc-reflection-on-tool-set-effectiveness" class="nav-link" data-scroll-target="#reflection-on-tool-set-effectiveness"><span class="header-section-number">5.3</span> Reflection on tool set effectiveness</a></li>
   </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content column-body" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Introduction</span></h1>
+<h1 class="title"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Motivation and Objective</span></h1>
 </div>
 
 
 
-<div class="quarto-title-meta">
+<div class="quarto-title-meta column-body">
 
     
   
@@ -188,67 +183,56 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="contextual-background" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="contextual-background"><span class="header-section-number">2.1</span> Contextual Background</h2>
-<p>Brief overview of monetary policy and inflation dynamics in Switzerland. Importance of understanding policy rate interactions with core inflation. Brief introduction to the role of the Swiss National Bank (SNB).</p>
-</section>
-<section id="problem-statement" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="problem-statement"><span class="header-section-number">2.2</span> Problem Statement</h2>
-<p>Explanation of the specific problem: understanding how SNB policy rates and Swiss core inflation rates interact dynamically. Brief justifiction why this relationship is economically relevant or timely.</p>
-</section>
-<section id="motivation-and-objective" class="level1" data-number="3">
-<h1 data-number="3"><span class="header-section-number">3</span> Motivation and Objective</h1>
-<section id="project-objectives" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="project-objectives"><span class="header-section-number">3.1</span> Project Objectives</h2>
+<section id="project-objectives" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="project-objectives"><span class="header-section-number">2.1</span> Project Objectives</h2>
 <p>For example: Investigate the dynamic relationship between SNB’s policy interest rates and Swiss core inflation. Determine directional causality between these two variables. Analyze the impact and timing of policy rate adjustments on inflation.</p>
 </section>
-<section id="motivation" class="level2" data-number="3.2">
-<h2 data-number="3.2" class="anchored" data-anchor-id="motivation"><span class="header-section-number">3.2</span> Motivation</h2>
+<section id="motivation" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="motivation"><span class="header-section-number">2.2</span> Motivation</h2>
 <p>Personal/team motivation: We share an academic interest in exploring the world of financial analysis, and it is also great that we can add practical relevance in a Swiss context. Additionally, it is applicable to career interests (finance/trading). Real-world relevance: In today’s volatile economic landscape, it is beneficial for individuals and institutions to understand inflation dynamics. Such insights can contribute to better financial or policy decisions. It is relevant for policymakers, investors, and researchers.</p>
 </section>
-<section id="research-questions" class="level2" data-number="3.3">
-<h2 data-number="3.3" class="anchored" data-anchor-id="research-questions"><span class="header-section-number">3.3</span> Research Questions</h2>
+<section id="research-questions" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="research-questions"><span class="header-section-number">2.3</span> Research Questions</h2>
 <p>For example: Does SNB policy rate significantly influence core inflation? Is there evidence of bidirectional causality between policy rates and core inflation? How quickly and how strongly do core inflation rates respond to policy changes?</p>
 </section>
-</section>
-<section id="theory-literature-and-methodology" class="level1" data-number="4">
-<h1 data-number="4"><span class="header-section-number">4</span> Theory, literature and methodology,</h1>
+<section id="theory-literature-and-methodology" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> Theory, literature and methodology,</h1>
 <p>To answer our research questions, we first needed to clarify what the basis for modern monetary policy is. Why do central banks raise and lower interest rates according to inflation? For that, a benchmark for monetary policy theory is Taylor’s rule, in which he defined the formula for the targeted rate of central banks. “Put simply, the Taylor rule says that the Federal Reserve should raise the interest rate when inflation increases and lower the interest rate when gross domestic product (GDP) declines. The desired interest rate is one-and-a-half times the inflation rate, plus one-half times the gap between GDP and its potential, plus one.” [Mark23]</p>
 <p>Then the next clarification is: how does Switzerland evaluate and implement monetary policy to foster economic prosperity? After trying out some datasets, we discovered the following statements: “Since the beginning of 2000, the Swiss National Bank (SNB) has used a range for the three-month Swiss franc Libor as its announced target for monetary policy.” “Before 2000, the Swiss National Bank officially targeted monetary aggregates, using a medium-term target for the seasonally-adjusted monetary base.”[Schi00]</p>
 <p>Then for the analysis, we have adopted the theory and practice what we have learned in TSA classes. For example, VAR modeling, stationarity testing, Granger causality, lag-lead effect, and ARIMA.</p>
 </section>
-<section id="data-selection" class="level1" data-number="5">
-<h1 data-number="5"><span class="header-section-number">5</span> Data selection</h1>
+<section id="data-selection" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Data selection</h1>
 <p>First, after some research, we started the analysis with a dataset from SNB, “Interest rates and threshold factor” [Inte00a], afterwards is called Dataset 1. It includes policy rate, interest rate on sight deposits above threshold, special rate, SARON fix etc. For inflation data, we have used core inflation, trimmed mean from “Consumer prices – SNB and SFSO core inflation rates” [Cons00b]. In Dataset 1, the threshold is optimal to be used as the interest rate policy target, and because before 2009 there is no threshold data in Dataset 1, we have used the special rate. From 13 June 2019, the special rate was based on the current SNB policy rate plus a surcharge of 50 basis points. The special rate always amounted to at least 0.5 percent”[Inte00]. Additionally, we determined that the SARON fix rate is the market reaction to the policy target, so it shouldn’t be used as the policy rate to be analyzed.</p>
 <p>The trial analysis has been successful; we could give certain findings and conclusions applying ARIMA, VAR, and linear regression. However, we were not satisfied with the different rate types; it seemed puzzling that we had to convert and “compromise” to the seemingly complicated data. So, we researched more, and we did find a second dataset (afterwards called Dataset 2). It only contains 2 types of data to be considered official interest rate, which is more consistent and more appropriate to take as the policy rate. “From 13 June 2019, the SNB policy rate is applied. From 3 January 2000 until 13 June 2019, the SNB set a target range for the three-month Swiss franc Libor” [Snbd00]. With the second dataset, we’ve also done a VAR to evaluate if there is causality between policy rate/target to inflation, or inflation to the policy decisions, which with both datasets, no causality was proven. This also gives us more confidence that both datasets represent the reality well, even though the dataset 2 seemed more consistent.</p>
 </section>
-<section id="team-collaboration-and-tool-set" class="level1" data-number="6">
-<h1 data-number="6"><span class="header-section-number">6</span> Team collaboration and tool set</h1>
-<section id="team-organization-and-meetings" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="team-organization-and-meetings"><span class="header-section-number">6.1</span> Team organization and meetings</h2>
+<section id="team-collaboration-and-tool-set" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> Team collaboration and tool set</h1>
+<section id="team-organization-and-meetings" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="team-organization-and-meetings"><span class="header-section-number">5.1</span> Team organization and meetings</h2>
 <p>Team structure: For our team of 2, we both shared responsibility for all aspects of the project; however, with a focus on different aspects. For example, Daniel presented the initial idea, Dongyuan focused more on methodology and research, Daniel focused more on coding diverse models, and Dongyuan delved into finding more data options during the project. We reached team consensus through weekly meetings and follow-ups. The tasks were also interest-based according to both team members. Meeting schedule: weekly meetings were set up on Monday/Tuesday at 14:00, and frequent follow-ups took place.</p>
 </section>
-<section id="collaborative-tools" class="level2" data-number="6.2">
-<h2 data-number="6.2" class="anchored" data-anchor-id="collaborative-tools"><span class="header-section-number">6.2</span> Collaborative tools</h2>
-<section id="brainstorming-and-ideation" class="level3" data-number="6.2.1">
-<h3 data-number="6.2.1" class="anchored" data-anchor-id="brainstorming-and-ideation"><span class="header-section-number">6.2.1</span> Brainstorming and ideation:</h3>
+<section id="collaborative-tools" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="collaborative-tools"><span class="header-section-number">5.2</span> Collaborative tools</h2>
+<section id="brainstorming-and-ideation" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="brainstorming-and-ideation"><span class="header-section-number">5.2.1</span> Brainstorming and ideation:</h3>
 <p>Miro Board - Initial concept visualization - Real-time collaboration on ideas and analysis structure - Organizing literature and conceptual mapping</p>
 </section>
-<section id="task-distribution-and-project-management" class="level3" data-number="6.2.2">
-<h3 data-number="6.2.2" class="anchored" data-anchor-id="task-distribution-and-project-management"><span class="header-section-number">6.2.2</span> Task Distribution and Project Management</h3>
+<section id="task-distribution-and-project-management" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="task-distribution-and-project-management"><span class="header-section-number">5.2.2</span> Task Distribution and Project Management</h3>
 <p>Excel - Task assignment tracking - Deadlines and progress monitoring - Visualization of milestones and status</p>
 </section>
-<section id="coding-and-version-control" class="level3" data-number="6.2.3">
-<h3 data-number="6.2.3" class="anchored" data-anchor-id="coding-and-version-control"><span class="header-section-number">6.2.3</span> Coding and Version Control</h3>
+<section id="coding-and-version-control" class="level3" data-number="5.2.3">
+<h3 data-number="5.2.3" class="anchored" data-anchor-id="coding-and-version-control"><span class="header-section-number">5.2.3</span> Coding and Version Control</h3>
 <p>RStudio GitHub - coding environment - collaborative script development - version control - merging and conflict resolution workflow - documentation of code changes and version tracking</p>
 </section>
-<section id="documentation-and-presentation" class="level3" data-number="6.2.4">
-<h3 data-number="6.2.4" class="anchored" data-anchor-id="documentation-and-presentation"><span class="header-section-number">6.2.4</span> Documentation and Presentation</h3>
+<section id="documentation-and-presentation" class="level3" data-number="5.2.4">
+<h3 data-number="5.2.4" class="anchored" data-anchor-id="documentation-and-presentation"><span class="header-section-number">5.2.4</span> Documentation and Presentation</h3>
 <p>Quarto - Unified document format (code, analysis, interpretation) - Integration of R code and results - Final report preparation (paper and presentation) - Consistent style and format across deliverables.</p>
 </section>
 </section>
-<section id="reflection-on-tool-set-effectiveness" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="reflection-on-tool-set-effectiveness"><span class="header-section-number">6.3</span> Reflection on tool set effectiveness</h2>
+<section id="reflection-on-tool-set-effectiveness" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="reflection-on-tool-set-effectiveness"><span class="header-section-number">5.3</span> Reflection on tool set effectiveness</h2>
 <ul>
 <li>Miro is a great tool for visualization and brainstorming. With downside that it can be information-intensive for new users.</li>
 <li>RStudio code collaboration has its learning curve. It was challenging for the first 2 weeks for us to get used to save, commit, pull and push. But in the end, after getting used to it, we think it is a great tool for R collaboration in team. Although it does not allow to work at the same document at the same time.</li>
@@ -659,15 +643,15 @@ ul.task-list li input[type="checkbox"] {
     }
   });
   </script>
-<nav class="page-navigation">
+<nav class="page-navigation column-body">
   <div class="nav-page nav-page-previous">
-      <a href="../index.html" class="pagination-link" aria-label="Project: Time series analysis in Finance">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project: Time series analysis in Finance</span></span>
+      <a href="../index.html" class="pagination-link" aria-label="Introduction">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Introduction</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../sections/R_analysis.html" class="pagination-link" aria-label="SNB_policy_rate_and_inflation">
-        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">SNB_policy_rate_and_inflation</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../sections/R_analysis.html" class="pagination-link" aria-label="Analysis of SNB policy rates and Swiss inflation rates">
+        <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Analysis of SNB policy rates and Swiss inflation rates</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

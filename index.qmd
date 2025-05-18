@@ -1,13 +1,25 @@
 ---
-title: "Project: Time Series Analysis in Finance"
-subtitle: "Swiss National Bank Policy Rates and Inflation"
-author: "Dongyuan Gao & Daniel Huber"
-date: "Spring 2025"
-format:
-  html:
-    toc: true
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 # Introduction
 
+## About the authors
+
 This is the project report by Dongyuan Gao and Daniel Huber, master students at the HSLU University, in the module "Time Series Analysis in Finance" in spring 2025.
+
+
+## Contextual Background
+
+Brief overview of monetary policy and inflation dynamics in Switzerland.
+Importance of understanding policy rate interactions with core
+inflation. Brief introduction to the role of the Swiss National Bank
+(SNB).
+
+## Problem Statement
+
+Explanation of the specific problem: understanding how SNB policy rates
+and Swiss core inflation rates interact dynamically. Brief justifiction
+why this relationship is economically relevant or timely.
