@@ -52,11 +52,19 @@ c(ar, ma)
 arima_aic[ar+1, ma+1]
 ## Interpretation: The optimal ARIMA-model is ARIMA(6,0,0) with an AIC of -398.5921. (d=0 as we have diff(infl))
 
+
 # Convert to ts object from zoo and estimate the optimal ARIMA-model (incl. testing for significance of the coefficients)
 infl_diff_ts <- ts(coredata(df_differenced$infl), frequency = 12)
 # Estimating the optimal ARIMA-model and testing for significance of the coefficients
 arima <- Arima(y=infl_diff_ts, order=c(ar,d,ma), include.constant = FALSE)
+print(arima)
 coeftest(arima)
+arima_5_1_0 <- Arima(infl_diff_ts, order=c(5,1,0))
+print(arima_5_1_0)
+coeftest(arima_5_1_0)
+arima_4_1_0 <- Arima(infl_diff_ts, order=c(4,1,0))
+print(arima_4_1_0)
+coeftest(arima_4_1_0)
 
 # Interpretation: ar1 to ar5 are highly significant at the 95% confidence interval.
 # The negative values of the coefficients reveals that a positive change in the time
@@ -64,8 +72,10 @@ coeftest(arima)
 
 
 # Estimating the optimal ARIMA-model based on the Akaike Information Criterion (AIC)
-# arima<-auto.arima(df$infl, ic="aic")
-# coeftest(arima)
+arima_auto<-auto.arima(infl_diff_ts, ic="aic")
+print(arima_auto)
+coeftest(arima_auto)
+# More complex but not better. We stick to ARIMA(5,1,0)
 
 
 # Forecast the next 12 periods (e.g., months)

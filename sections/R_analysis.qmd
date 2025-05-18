@@ -357,15 +357,24 @@ Convert to ts object from zoo and estimate the optimal ARIMA-model (incl. testin
 ```{r}
 infl_diff_ts <- ts(coredata(df_differenced$infl), frequency = 12)
 arima <- Arima(y=infl_diff_ts, order=c(ar,d,ma), include.constant = FALSE)
+print(arima)
 coeftest(arima)
 ```
 
 Interpretation: ar1 to ar5 are highly significant at the 95% confidence interval. The negative values of the coefficients reveals that a positive change in the time series in the previous period leads to a negative change in the subsequent period.
 
+```{r}
+arima_5_1_0 <- Arima(infl_diff_ts, order=c(5,1,0))
+print(arima_5_1_0)
+coeftest(arima_5_1_0)
+```
+
+The **ARIMA(5,1,0)** is superior with one coefficient less. So we proceed with this.
+
 ### Forecast the next 12 months of inflation
 
 ```{r}
-forecast_arima <- forecast(arima, h = 12)
+forecast_arima <- forecast(arima_5_1_0, h = 12)
 print(forecast_arima)
 
 forecast_arima$mean        # Point forecasts
