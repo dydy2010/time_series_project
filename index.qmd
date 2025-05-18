@@ -11,4 +11,3 @@ format:
 # Introduction
 
 This is the project report by Dongyuan Gao and Daniel Huber, master students at the HSLU University, in the module "Time Series Analysis in Finance" in spring 2025.
-
