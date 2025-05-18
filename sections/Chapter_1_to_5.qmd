@@ -86,6 +86,7 @@ SNB, “Interest rates and threshold factor” \[Inte00a\], afterwards is
 called Dataset 1. It includes policy rate (for a short period), interest
 rate on sight deposits above threshold, special rate, SARON fix etc. For
 inflation data, we used core inflation, trimmed mean from “Consumer
+<<<<<<< HEAD
 prices – SNB and SFSO core inflation rates” \[Cons00b\].
 
 In Dataset 1, the threshold is more suitable to use as the interest rate
@@ -120,6 +121,37 @@ consistent overall.
 In the end, we chose Dataset 2 for the final analysis. Still, the data
 selection process was an important learning experience and worth sharing
 with readers.
+=======
+prices – SNB and SFSO core inflation rates” \[Cons00b\]. In Dataset 1,
+the threshold is optimal to be used as the interest rate policy target,
+and before 2009 there is no threshold data in Dataset 1, we have used
+the special rate. From 13 June 2019, the special rate was based on the
+current SNB policy rate plus a surcharge of 50 basis points. The special
+rate always amounted to at least 0.5 percent”\[Inte00\]. Additionally,
+we determined that the SARON fix rate is the market reaction to the
+policy target, so it shouldn’t be used as the policy rate to be
+analyzed.
+
+The trial analysis has been successful; we could give certain findings
+and conclusions applying ARIMA, VAR, and linear regression. However, we
+were not satisfied with the different rate types; it seemed puzzling
+that we had to convert and “compromise” to the seemingly complicated
+data. So, we researched more, and we did find a second data set
+(afterwards called data set 2). It only contains 2 types of data to be
+considered official interest rate, which is more consistent and more
+appropriate to take as the policy rate. “From 13 June 2019, the SNB
+policy rate is applied. From 3 January 2000 until 13 June 2019, the SNB
+set a target range for the three-month Swiss franc Libor” \[Snbd00\].
+With the second data set, we’ve also done a VAR to evaluate if there is
+causality between policy rate/target to inflation, or inflation to the
+policy decisions, which with both data sets, no causality was proven.
+This also gives us more confidence that both data sets represent the
+reality well, even though the data set 2 seemed more consistent.
+
+After trying, we've chosen data set 2 and applied all analysis to it as
+the final result. However the data selection process was a valuable
+experience to share with readers.
+>>>>>>> 0394fe200960f39456567a3f89057d8bc1700799
 
 # Team collaboration and tool set
 
