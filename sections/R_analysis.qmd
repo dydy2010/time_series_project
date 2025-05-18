@@ -39,7 +39,7 @@ inflation_data <- read_excel("../data/snb-data-plkoprinfla-en-all-20250422_0900.
 ### Evaluation of appropriate policy rate data
 
 Looking at different available columns in the policy rate data from SNB
-website.
+website. 
 
 ```{r}
 pr_full <- policy_rate_data %>% 
