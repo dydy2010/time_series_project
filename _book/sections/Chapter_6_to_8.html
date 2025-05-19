@@ -174,16 +174,14 @@ ul.task-list li input[type="checkbox"] {
 <section id="key-findings" class="level2" data-number="4.1">
 <h2 data-number="4.1" class="anchored" data-anchor-id="key-findings"><span class="header-section-number">4.1</span> Key findings</h2>
 <ol type="1">
-<li><p><strong>Stationarity and Correlation</strong><br>
-Both the policy rate and core inflation series were non-stationary but became stationary after differencing. After differencing, the correlation between the two was very weak (≈ 0.06).</p></li>
-<li><p><strong>Linear Regression and Lag Effects</strong><br>
+<li><p><strong>Weak Linear Regression and Lag Effects</strong><br>
 A basic linear regression showed no significant relationship between policy rates and inflation (p &gt; 0.05; R² ≈ 0.004). Even when including lags of up to 12 months, only lag 1 and lag 10 were statistically significant. Overall explainability was low (adjusted R² ≈ 0.02). It suggests weak evidence of delayed effects.</p></li>
-<li><p><strong>Event-based Models</strong><br>
+<li><p><strong>Low evidence of event effect</strong><br>
 After treating major SNB policy changes as events, October 2022 had a statistically significant effect on inflation (p almost 0). This suggests a large policy major change (from negative to positive rates in 2022) could have delayed effect on inflation. However, overall explainability was still low (R² ≈ 0.04).</p></li>
-<li><p><strong>Granger Causality (VAR Model)</strong><br>
-The Granger causality test showed that policy rates Granger-cause inflation (p ≈ 0.024). It suggested that past policy rate changes help predict inflation, but remember, no causality can be determined. On the other hand, inflation did not Granger-cause policy rates (p ≈0.29). This suggests that the SNB reacts independently of recent inflation trends, which is conterintuitive, but the data suggests such story might be the reality .</p></li>
-<li><p><strong>ARIMA Forecasting</strong><br>
-The ARIMA(5,1,0) model was selected as optimal for inflation. Most AR were statistically significant. Forecasts suggest a auto-reverting inflation trend that once it rises, autoregression tend to happen. We have done a forecast, no significant changes of inflation was predicted.</p></li>
+<li><p><strong>Granger Causality (VAR Model) but not dterministic</strong><br>
+The Granger causality test showed that policy rates Granger-cause inflation (p ≈ 0.024). It suggested that past policy rate changes help predict inflation, but remember, no causality can be determined. On the other hand, inflation did not Granger-cause policy rates (p ≈0.29). This suggests that the SNB reacts independently of recent inflation trends, which is conter-intuitive, but the data suggests such story might be the reality .</p></li>
+<li><p><strong>ARIMA Forecastin suggests reverting behavior</strong><br>
+Forecasts suggest a auto-reverting inflation trend that once it rises, autoregression tend to happen. We have also done forecast, no significant changes of inflation was predicted.</p></li>
 </ol>
 </section>
 <section id="limitations" class="level2" data-number="4.2">
@@ -196,15 +194,22 @@ The ARIMA(5,1,0) model was selected as optimal for inflation. Most AR were stati
 </section>
 <section id="discussion" class="level1" data-number="5">
 <h1 data-number="5"><span class="header-section-number">5</span> Discussion</h1>
-<p>Why combining ARIMA and Granger causality test is more comprehensive : <strong>ARIMA</strong>: Univariate model: It uses only past values of inflation to forecast future inflation. It does not include other variables (e.g., policy events).</p>
+<p>Why combining ARIMA and Granger causality test: <strong>ARIMA</strong>: Univariate model: It uses only past values of inflation to forecast future inflation. It does not include other variables (e.g., policy events).</p>
 <p><strong>Granger Causality Test</strong>: Multivariate test: It checks if a variable (like our events or interest rate change) helps predict inflation.</p>
 <p>Are the results consistent?</p>
 <p><strong>The results are actually consistent, without contradiction</strong>:</p>
-<p>Granger shows: policy interest rate dosen’t help predict inflation. ARIMA shows inflation doesn’t change much, its own past doesn’t predict much either.</p>
-<p>So, both point to a weakly moving inflation series, not driven by recent shocks or clear autocorrelation.</p>
+<p>Granger shows: policy interest rate dosen’t help predict inflation. ARIMA shows inflation doesn’t change much, its own past doesn’t predict much either. And we have found reverting behavior of inflation rate itself, and some major policy event’s effect on inflation.</p>
+<p>So, most models point to weak relationships, not showing clear autocorrelation, with some insights of event and autoregression. The results were consistent withouth contradiction.</p>
 <section id="conclusion" class="level2" data-number="5.1">
 <h2 data-number="5.1" class="anchored" data-anchor-id="conclusion"><span class="header-section-number">5.1</span> Conclusion</h2>
-<p>Our team analyzed the relationship between SNB policy rates and inflation rate in Switzerland. We applied time series models for the analysis. Weak connections between the two variables were found, lacking strong correlation or deterministic evidence. Even though Granger causality indicates that past policy rate changes have some predictive value for inflation, and event-based analysis suggest a connection between higher policy rate and lower inflation with delayed effect, the overall predictive power of models is still low.</p>
+<p>Our team analyzed the relationship between SNB policy rates and inflation rate in Switzerland. We applied time series models for the analysis.</p>
+<p>Weak connections between the two variables were found, lacking strong correlation or deterministic evidence.</p>
+<p>However, some non-deterministic effects were also observed:</p>
+<ul>
+<li><p>Granger causality indicates that past policy rate changes have some predictive value for inflation.</p></li>
+<li><p>event-based regression suggest a mild connection between higher policy rate and lower inflation with delayed effect.</p></li>
+<li><p>Arima suggests autoregression and reverting behavior on inflation rate.</p></li>
+</ul>
 <p>The findings suggest that inflation in Switzerland could be influenced by a broader set of factors, including monetary policy, but not limited to it.</p>
 <p>Future research could expand on this work by including more variables, testing other models, analyzing specific events’ effect on inflation rate, and their relationship with policy decisions.</p>
 </section>

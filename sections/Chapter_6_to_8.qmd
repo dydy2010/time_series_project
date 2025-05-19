@@ -8,6 +8,7 @@ editor:
 
 ## Key findings
 
+
 1.  **Weak Linear Regression and Lag Effects**\
     A basic linear regression showed no significant relationship between
     policy rates and inflation (p \> 0.05; R² ≈ 0.004). Even when
@@ -50,7 +51,7 @@ Despite these limitations, the analysis contributes to understanding how
 SNB policy rates and inflation interact. It offers a foundation for more
 complex modeling in future studies.
 
-# Discussion
+## Discussion
 
 Why combining ARIMA and Granger causality test: **ARIMA**: Univariate
 model: It uses only past values of inflation to forecast future
@@ -72,7 +73,7 @@ So, most models point to weak relationships, not showing clear
 autocorrelation, with some insights of event and autoregression. The
 results were consistent withouth contradiction.
 
-## Conclusion
+# Conclusion
 
 Our team analyzed the relationship between SNB policy rates and
 inflation rate in Switzerland. We applied time series models for the
