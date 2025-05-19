@@ -38,9 +38,11 @@ inflation_data <- read_excel("../data/snb-data-plkoprinfla-en-all-20250422_0900.
 
 ### First trial analysis using dataset 1
 
-various data types are available in several time windows, initial
-analysis using dataset 1, as described in section 4. Data selection
-process
+Our first dataset (Dataset 1) for the SNB policy rates provides several
+columns that could be used as '**the** SNB policy rate'. But they are
+all only available for specific time windows, in particular the column
+labeled 'SNB policy rate' is only available since June 2019. So we have
+to decide which (or which combination) would be best for our analysis.
 
 ```{r}
 pr_full <- policy_rate_data %>% 
@@ -71,7 +73,13 @@ ggplot(pr_full, aes(x = date)) +
   theme(legend.position = "bottom", legend.direction = "horizontal") 
 ```
 
-### Average of 3 month Libor upper/lower limits as proxy for missing SNB policy rate data before 2020.
+### Average of 3 months Libor upper/lower limits as proxy for missing SNB policy rate data before 2020.
+
+After we have learned that the SNB's policy rate before 2020 was
+actually a range, namely the upper and lower limits of the 3 months
+Libor, we found another dataset (Dataset 2) with this data. Visual
+inspection shows that the average of the upper and lower limits indeed
+fits perfectly well to the policy rates afterwards.
 
 ```{r}
 libor_data <- suppressWarnings(
@@ -104,6 +112,10 @@ ggplot(libor_data, aes(x = date)) +
 ```
 
 ### Further data preparation, data merge and timeseries object
+
+We calculated the average of the limits of the 3 months Libor and used
+it as policy rate until June 2019 and switch to the official SNB policy
+rate after June 2019.
 
 ```{r}
 pr <- libor_data %>%
@@ -138,6 +150,13 @@ df_ts <- zoo(
 
 ### Final look at the data we use for analysis
 
+A look at the data we use for our time series analysis suggests that
+there is a relation between SNB policy rates and Swiss inflation rates,
+although it is not obvious which one is triggering the other.
+Furthermore it shows very different behaviour regarding fluctuation:
+Inflation rates change monthly (actually daily), whereas policy rates
+are constant for longer time periods.
+
 ```{r}
 ggplot(df, aes(x = date)) +
   geom_line(aes(y = policy_rate, color = "SNB Policy Rate")) +
@@ -156,27 +175,24 @@ ggplot(df, aes(x = date)) +
 
 ### Stationarity
 
-Both series are not stationary.
+Initially both data series are not stationary (p-values \> 0.05). After
+calculating the differences from one month to the next, the Augmented
+Dickey-Fuller Test shows that both series are stationary now with
+p-values = 0.01 each.
 
 ```{r}
 adf.test(na.omit(df_ts$policy_rate))
 adf.test(na.omit(df_ts$infl))
-```
 
-Take first differences of the series and check again
-
-```{r}
 df_differenced <- diff(df_ts)
 adf.test(na.omit(df_differenced$policy_rate))
 adf.test(na.omit(df_differenced$infl))
 ```
 
-Both series are stationary now.
-
 ### Correlations
 
-p value is merely bigger than 0.05, it shows very week positive
-correlation.
+The p-value is 0.06. It shows a very week positive correlation between
+policy rates and inflation rates.
 
 ```{r}
 cor(df_differenced$policy_rate, df_differenced$infl, use = "pairwise.complete.obs")
@@ -184,30 +200,31 @@ cor(df_differenced$policy_rate, df_differenced$infl, use = "pairwise.complete.ob
 
 ### Basic Linear regression model
 
-Linear regression of policy_rate on inflation shows no significant
-coefficients and R squared is very low.
+A linear regression model of policy_rate and inflation rates shows no
+significant coefficients and R squared is very low.
 
 ```{r}
 lin_reg <- lm(infl ~ policy_rate, data = df_differenced)
 summary(lin_reg)
 ```
 
-### Residual analysis
+### Residual analysis (as an exercise)
 
-#### **Range of Residuals**
+####Visual inspection
 
--   Most residuals are between **-0.2 and 0.2** → This suggests
-    **moderate prediction error**.
+**Range of Residuals**
 
+-   Most residuals are between **-0.2 and 0.2** → This suggests a
+    **moderate prediction error**. There is information left that is not
+    used in the current model.
 -   **2 outliers** (±0.5) are present → These are **not necessarily
     problematic** unless they’re influential (we check later for Cook's
     distance).
 
-#### **Wavelike Pattern**
+**Wavelike Pattern**
 
--   the residual plot shows a **wave or sinusoidal pattern**, that
+-   The residual plot shows a **wave or sinusoidal pattern**, that
     suggests **non-linearity** or **autocorrelation** in the data.
-
 -   In a good linear model, residuals should be **randomly scattered**
     around zero (no pattern).
 
@@ -219,47 +236,52 @@ grid()
 
 #### Breusch-Pagan test
 
--   Tests for: Heteroskedasticity (i.e., changing variance of
-    residuals).
-
+-   Test for heteroskedasticity (i.e., changing variance of residuals).
 -   Null hypothesis: Residuals have constant variance.
-
 -   Interpretation: If p \> 0.05, fails to reject the null → residuals
-    are homoscedastic → Good. This **does not mean** the linear model is
-    good. It simply means the **residuals are homoscedastic.**
-
-    If p\<0.05, rejects the null→ residuals are heteroskedastic → Bad.
+    are homoscedastic → Good, the **residuals are homoscedastic.**
+-   p\<0.05 rejects the null hypothesis → residuals would be
+    heteroskedastic
 
 ```{r}
 bptest(lin_reg)
 ```
 
-#### Shapiro test for normality
+#### Shapiro test
 
-Shapiro test for normality with null hypothesis that Residuals are
-normally distributed shows a strong rejection of the null hypothesis:
-The residuals of the model are NOT normally distributed. With n = 302 we
-might disregard non-normality.
+-   Test for normality
+-   Null hypothesis that residuals are normally distributed.
+-   Test shows a strong rejection of the null hypothesis: The residuals
+    of the model are **not normally** distributed.
+-   With n = 302 we might disregard non-normality.
 
 ```{r}
 shapiro.test(resid)
 ```
 
-#### Visual check for outliers and influencial points
+#### Outliers and influencial points
+
+There are two large values of Cook's distance on **2008-11-01** and
+2023-03-01. The first with Cook's distance \>0.6 is **highly
+influential**, the other with Cook's distance around 0.3 is moderately
+influential. The first would definitely require **further inspection**
+(e.g. is it an outlier or a data error) and a decision on how this data
+point should be treated (transformed or removed).
 
 ```{r}
-plot(lin_reg, which = 1)  # Residuals vs Fitted
-plot(lin_reg, which = 2)  # Q-Q plot
+# plot(lin_reg, which = 1)  # Residuals vs Fitted
+# plot(lin_reg, which = 2)  # Q-Q plot
 plot(lin_reg, which = 4)  # Cook's distance
 ```
 
-#### Durbin-Watson test for serial correlation
+#### Durbin-Watson test
 
-Durbin-Watson test for serial correlation with null hypothesis that
-Residuals are not autocorrelated results in a test statistic that is
-very close to 2, which is the expected value under the null hypothesis
-of no autocorrelation: p \> 0.05: There is no statistically significant
-evidence of positive autocorrelation in the residuals.
+-   Test for serial correlation
+-   Null hypothesis that residuals are not autocorrelated
+-   Test statistic is very close to 2, which is the expected value under
+    the null hypothesis of no autocorrelation (p \> 0.05). There is no
+    statistically significant evidence of positive autocorrelation in
+    the residuals.
 
 ```{r}
 dwtest(lin_reg) 
@@ -269,7 +291,8 @@ dwtest(lin_reg)
 
 #### Alternative 1: Lead-lag relation: infl(t) = a + b \* policy_rate(t-1) + e(t)
 
-Create lagged variables
+Create lagged variables and fit the linear model, removing rows with NA
+due to lagging.
 
 ```{r}
 df_differenced$policy_rate_lag1 <- stats::lag(df_differenced$policy_rate, k = 1)
@@ -284,11 +307,7 @@ df_differenced$policy_rate_lag9 <- stats::lag(df_differenced$policy_rate, k = 9)
 df_differenced$policy_rate_lag10 <- stats::lag(df_differenced$policy_rate, k = 10)
 df_differenced$policy_rate_lag11 <- stats::lag(df_differenced$policy_rate, k = 11)
 df_differenced$policy_rate_lag12 <- stats::lag(df_differenced$policy_rate, k = 12)
-```
 
-Fit the linear model, removing rows with NA due to lagging.
-
-```{r}
 lin_reg_lagged <- lm(infl ~ policy_rate_lag1 + policy_rate_lag2 + policy_rate_lag3 +
                        policy_rate_lag4 + policy_rate_lag5 + policy_rate_lag6 +
                        policy_rate_lag7 + policy_rate_lag8 + policy_rate_lag9 +
@@ -297,26 +316,25 @@ lin_reg_lagged <- lm(infl ~ policy_rate_lag1 + policy_rate_lag2 + policy_rate_la
 summary(lin_reg_lagged)
 ```
 
-Lag 1 and lag 10 are significant (p-value \< 0.05), this could imply
+**Interpretation:**
+
+Lag 1 and lag 10 are significant (p-value \< 0.05). This could imply
 **some short- and delayed reaction** of inflation to past policy
 decisions. But R squared (0.06249, adjusted 002187) is very low, **only
-6% of the variance(fluctuations)** in inflation can be accounted to the
+6% of the variance(fluctuations)** in inflation can be explained by the
 model.
 
-Lag 1 would make sense and the model shows that it is statistically
-significant.
+Lag 1 could make sense regarding the time frame and the model shows that
+it is statistically significant. But the direction of lag 1 is not as
+expected: a higher policy rate goes with higher inflation.
 
-But the direction of lag 1 is not as expected: higher policy rate goes
-with higher inflation.
+Lag_10 could make sense as the estimate is negative. But we think it is
+not plausible that a change in the policy rate has an effect on
+inflation rates 10 months later.
 
-As interest rate would normally between 10-18 months to have a
-noticeable impact on inflation, and the coefficient for
-policy_rate_lag_10 is negative, we can say an increase in the policy
-rate 10 months ago is maybe associated with lower inflation today. But
-as only 6% is explained by the model,
-
-Overall we are not convinced by this model, there is no strong
-predictive power.
+**Our conclusion**: As only 6% of variation is explained by the model
+and the two significant lags are against theory, we are not convinced by
+this model.
 
 #### Alternative 2: Treat SNB actions as events
 
@@ -331,17 +349,18 @@ lin_reg_events <- lm(infl ~ event_2008_10 + event_2014_11 + event_2020_01 + even
 summary(lin_reg_events)
 ```
 
-The last event 2022_10 is significant. This was a month after the SNB
-had increased their policy rate from negative (-0.25) to positive
-(+0.50). But again R squared is very low.
+**Our conclusion**: The last event 2022_10 is significant. This was a
+month after the SNB had increased their policy rate from negative
+(-0.25) to positive (+0.50). This is plausible. But again R squared is
+very low.
 
 ## Excursus: Closer look at inflation only (auto/direct correlations and an ARIMA model)
 
 ### Correlations
 
-#### Autocorrelations
+**Autocorrelations**
 
-The series shows weak to moderate positive autocorrelation at lags 4 and
+The series show weak to moderate positive autocorrelation at lags 4 and
 6, and a negative autocorrelation at lag 12. The inflation changes
 (infl) today are somewhat positively related to those 4, and 6 months
 ago. But inflation 12 months ago tends to move in the opposite direction
@@ -351,7 +370,7 @@ from today’s.
 acf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
 ```
 
-#### Direct correlations
+**Direct correlations**
 
 Direct correlation between a time series and lag k, controlling for all
 shorter lags (1 to k−1).
@@ -360,10 +379,11 @@ shorter lags (1 to k−1).
 pacf(coredata(na.omit(df_differenced$infl)), lag.max = 12)
 ```
 
-#### Rule of thumb regarding ARIMA parameters q and p
+**Rule of thumb regarding ARIMA parameters q and p**
 
-Use acf() to choose the q in MA(q) models. -\> q = 4 or 6 Use pacf() to
-choose the p in AR(p) models. -\> p = 4 or 6
+-   Use acf() to choose the q in MA(q) models. -\> q = 4 or 6
+
+-   Use pacf() to choose the p in AR(p) models. -\> p = 4 or 6
 
 The ACF and PACF plots suggest that the series may be modeled as an
 ARMA(4,4) or AR(6,6).
@@ -402,12 +422,12 @@ arima_aic[ar+1, ma+1]
 ```
 
 **Interpretation**: The optimal ARMA-model is ARMA(6,0) with an AIC of
--398.5921. (d according to order of integration.
+-398.5921. (d according to order of integration).
 
 ## ARIMA model
 
-Convert to ts object from zoo and estimate the optimal ARIMA-model
-(incl. testing for significance of the coefficients)
+We convert data to a ts object from zoo and estimate the optimal
+ARIMA-model (incl. testing for significance of the coefficients)
 
 ```{r}
 infl_diff_ts <- ts(coredata(df_differenced$infl), frequency = 12)
@@ -416,7 +436,7 @@ print(arima)
 coeftest(arima)
 ```
 
-Interpretation:
+**Interpretation**:
 
 **ARIMA(6,1,0)**: This means the model includes: 6 autoregressive (AR)
 terms, 1 difference (change in inflation), 0 moving average (MA) terms.
@@ -437,10 +457,10 @@ coeftest(arima_5_1_0)
 The **ARIMA(5,1,0)** is superior with one coefficient less. So we
 proceed with this.
 
-As this is just an Excursus, not helping to identify the relations
+As this is just an Excursus, not much helping to identify the relations
 between policy rates and inflation, we skip here the evaluation of
-residuals. But we do a forecasting of inflation just based on this ARIMA
-model anyway.
+residuals. But - as another exercise - we do a forecasting of inflation
+based on this ARIMA model.
 
 ### Forecast the next 12 months of inflation
 
@@ -457,7 +477,10 @@ autoplot(forecast_arima) +
   xlab("Time") + ylab("Inflation Change")
 ```
 
-#### Last known and forecasted inflation levels
+**Last known and forecasted inflation levels**
+
+We get the last date from indexed too object, generate 12 monthly
+forecast dates and produce forecast table and plot.
 
 ```{r}
 last_infl <- tail(na.omit(df$infl), 1)
@@ -465,19 +488,10 @@ forecast_changes <- forecast_arima$mean
 forecast_inflation <- cumsum(forecast_changes) + last_infl
 forecast_upper <- cumsum(forecast_arima$upper[,2]) + last_infl
 forecast_lower <- cumsum(forecast_arima$lower[,2]) + last_infl
-```
 
-Get the last date from indexed too object and generate 12 monthly
-forecast dates
-
-```{r}
 last_date <- tail(index(df_differenced), 1)
 forecast_dates <- seq(from = as.Date(last_date) %m+% months(1), by = "month", length.out = 12)
-```
 
-Forecast table and plot.
-
-```{r}
 forecast_table <- data.frame(
   Date = forecast_dates,
   Forecast_Inflation = round(as.numeric(forecast_inflation), 3),
@@ -497,10 +511,9 @@ ggplot(forecast_table, aes(x = Date, y = Forecast_Inflation)) +
     y = "Inflation Rate (%)"
   ) +
   theme_minimal()
-
 ```
 
-After this extensive **Excursus** we now go **back our main topic**,
+After this extensive **Excursus** we now go **back to our main topic**,
 explaining interactions between SNB policy rates and inflation rates in
 Switzerland.
 
@@ -517,22 +530,27 @@ causality(VAR_model, cause="df_differenced.policy_rate")["Granger"]
 
 The Granger Causality Test (VAR) examines whether past policy rates help
 predict current values of inflation beyond what's already explained by
-past values of inflation itself.
+past values of inflation.
 
 There is **statistically significant evidence that past policy rates
 Granger-cause inflation**, i.e., policy rates have predictive power for
-inflation in our model. But **remember: Granger causality** is **not
-proof** of true causation, it **only indicates predictive** helpfulness.
+inflation in our model. **But remember:** Granger causality is not proof
+of true causation, it **only indicates predictive** helpfulness.
 
 ### Do inflation rates explain policy rates?
+
+**No**: Inflation rates do not Granger-cause the policy rates.
 
 ```{r}
 causality(VAR_model, cause="df_differenced.infl")["Granger"]
 ```
 
-**No: Inflation rates do not Granger-cause the policy rates.**
+### Do major SNB changes in policy rates ('events') explain inflation rates.
 
-### Does the "SNB event in September 2022" explain inflation rates.
+There is **strong evidence that event_2022_10 Granger-causes
+inflation** (at lag 5 and lag6). This means, that the SNB policy rate
+change in autumn 2022 influenced the Swiss inflation rates.
+
 
 ```{r}
 VAR_df <- na.omit(cbind(df_differenced$event_2022_10, df_differenced$infl))
@@ -542,12 +560,9 @@ coeftest(VAR_model)
 causality(VAR_model, cause="event_2022_10")["Granger"]
 ```
 
-There is **strong evidence** **that event_2022_10 Granger-cause
-inflation** (at lag 5 and lag6). This means, that the SNB policy rate
-change in autumn 2022 influenced the Swiss inflation rates.
 
-We now do a **residual analysis** based on the last VAR model with
-Event_2022_10 to check the quality of the model.
+**Residual analysis**
+We now do a residual analysis based on the last VAR model with Event_2022_10 to check the quality of the model.
 
 ```{r}
 Resid_VAR <- resid(VAR_model)
@@ -580,21 +595,19 @@ serial.test(VAR_model) # Portmanteau test (default) for serial correlation, null
 
 The ARCH-LM test for constant variance with the null hypothesis that
 residuals are homoscedastic shows with a p-value of 0.1685, that
-**residuals** **are homoscedastic**.
+**residuals are homoscedastic**.
 
 The Jarque-Bera test for normality with the null hypothesis that
 residuals are normally distributed shows with a p-value close to zero,
 that **residuals are not normally distributed**.
 
 The Portmanteau test for serial correlation with the null hypothesis
-that residuals are not autocorrelated shows with a p-value of 0.8502,
-that the **residuals are not autocorrelated**.
+that residuals are not auto-correlated shows with a p-value of 0.8502,
+that the **residuals are not auto-correlated**.
+
 
 **Overall interpretation of residual analysis**:
 
-The non-normality remains an issue. It **might** be neglected as we have
-302 observations (large n tends towards normality).
+The non-normality remains an issue. It **might** be neglected as we have 302 observations (large n tends towards normality).
 
-The **peak of the residuals** around (see plot above) is another issue,
-that needs to be further investigated. Is it related to the significant
-Granger-causality of the event_2022_10 on inflation?
+The **peak of the residuals** around (see plot above) is another issue, that needs to be further investigated: Is it related to the significant Granger-causality of the event_2022_10 on inflation?
