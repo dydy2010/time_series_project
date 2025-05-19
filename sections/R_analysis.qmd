@@ -328,6 +328,14 @@ model is wrong, the **reasons** could be that:
 -   Linear relationship is **weak but statistically significant** and
     economically justifiable.
 
+::: {.content-visible format-pdf}
+\newpage
+:::
+
+::: {.content-visible format-html}
+<div style="page-break-after: always;"></div>
+:::
+
 ### Alternatives to the basic linear model
 
 #### Alternative 1: Lead-lag relation: infl(t) = a + b \* policy_rate(t-1) + e(t)
@@ -396,6 +404,14 @@ summary(lin_reg_events)
 month after the SNB had increased their policy rate from negative
 (-0.25) to positive (+0.50). This is plausible. But again R squared is
 very low.
+
+::: {.content-visible format-pdf}
+\newpage
+:::
+
+::: {.content-visible format-html}
+<div style="page-break-after: always;"></div>
+:::
 
 ## Excursus:
 
