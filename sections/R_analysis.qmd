@@ -272,15 +272,18 @@ on the model's coefficient, but it requires **further inspections**
 (e.g. is it an outlier or a data error), then a decision on how this
 data point should be treated (transformed or removed) should be made.
 
-After checking the dates in data, we did find major policy rate changes:
+After checking the dates in the data, we did find major policy rate
+changes:
 
-For example, policy rate was low, i.e. from 3.25 to 2.25, in 2001-09-01,
-in 2008_11-01 lowered from 2.5 to 1 and continuously lowered in the
-following months, and in 2023-03-01 the interest rate was increased from
-1 to 1.5, which is part of a continous interest rate hike for months.
+-   2001_09_01 was a full 1% step down from 2.75% to 1.25%, starting a
+    continuous decrease to 0%.
+-   2008_11-01 was the last 0.5% step of a continuous decrease of the
+    policy rate from 2.25 to 0.
+-   2023-03-01 the policy rate was the last 0.5% step in a continuous
+    interest rate hike from -0.75%.
 
-These 3 events are reflection of substantial economic interventions, so
-they are not errors.
+These 3 events are reflection of substantial economic interventions by
+the SNB, so we tend towards **accepting these residuals as facts**.
 
 ```{r}
 # plot(lin_reg, which = 1)  # Residuals vs Fitted
@@ -301,34 +304,28 @@ plot(lin_reg, which = 4)  # Cook's distance
 dwtest(lin_reg) 
 ```
 
-**Summary and Interpretation of our residual tests:**
+#### Summary and Interpretation of our residual tests:
 
-**Breusch-pagan Test for Heteroskedasticity:** showed residual with
-constant variance (homoskedasticity)
+-   **Breusch-pagan** test for Heteroskedasticity: showed residual with
+    constant variance (**homoskedasticity**)
+-   **Shapiro** test: **rejects** the null hypothesis of **normally**
+    distributed residuals, however with sample size n=302, the
+    non-normality may **not have great impact**.
+-   **Cook's distance**: several events that had great influence on the
+    coefficient are **in fact** **substantial events**, so they are not
+    errors.
+-   **Durbin Watson** test: **no significant autocorrelation** in
+    residuals.
 
-**shapiro-wilk Test: rejects** the null hypothesis of **normally
-distributed residuals**, however with sample size n=302, the non
-nomrality may **not have great impact**.
+All residual tests prove that our linear model is valid and has no data
+quality issues.
 
-**Cook's distance:** several events had great influence on the
-coefficient, they are **structural events in reality**, so they are
-**not errors**.
+So **why** the small R-squared? It doesn't necessarily mean that the
+model is wrong, the **reasons** could be that:
 
-**Durbin Watson Test:** **no significant autocorrelation** in residuals.
-
-All residual tests proves that our linear model is valid and has noo
-data quality issues.
-
-So **why** the small R-squared?
-
-It doesn't necessarily mean that the model is poor, the **reasons**
-could be that:
-
--   inflation is affected by **many factors**.
-
--   time series data , in economic events and shocks can be **noisy.**
-
--   linear relationship is w**eak but statistically significant** and
+-   Inflation is affected by **many more factors**.
+-   Time series data in economic events and shocks can be **noisy.**
+-   Linear relationship is **weak but statistically significant** and
     economically justifiable.
 
 ### Alternatives to the basic linear model
@@ -364,8 +361,8 @@ summary(lin_reg_lagged)
 
 Lag 1 and lag 10 are significant (p-value \< 0.05). This could imply
 **some short- and delayed reaction** of inflation to past policy
-decisions. But R squared (0.06249, adjusted 002187) is very low, **only
-6% of the variance(fluctuations)** in inflation can be explained by the
+decisions. But R squared (0.06249, adjusted 0.02187) is very low, **only
+6% of the variance (fluctuations)** in inflation can be explained by the
 model.
 
 Lag 1 could make sense regarding the time frame and the model shows that
@@ -373,14 +370,14 @@ it is statistically significant. But the direction of lag 1 is not as
 expected: a higher policy rate goes with higher inflation.
 
 Lag_10 could make sense as the estimate is negative. Though it is
-**common** that a change in the policy rate has effect on inflation
-rates **10 months later**, but we wonder **why only Lag_1**0 has this
-effect and nearby months don't? The overall credibiity of the lag effect
-is **questionable**.
+**common** that a change in the policy rate has a **quite delayed
+effect** on inflation rates, but we wonder **why only Lag_10** shows
+this effect and nearby months don't? The overall credibility of the lag
+effect is **questionable**.
 
 **Our conclusion**: As only 6% of variation is explained by the model
-and the two significant lags are against theory, we are **not
-convinced** by this model.
+and the two significant lags are against theory or questionable, we are
+**not convinced** by this model.
 
 #### Alternative 2: Treat SNB actions as events
 
@@ -400,7 +397,10 @@ month after the SNB had increased their policy rate from negative
 (-0.25) to positive (+0.50). This is plausible. But again R squared is
 very low.
 
-## Excursus: Closer look at inflation only (auto/direct correlations and an ARIMA model)
+## Excursus:
+
+Closer look at inflation only (auto/direct correlations and an ARIMA
+model)
 
 ### Correlations
 
@@ -594,8 +594,8 @@ causality(VAR_model, cause="df_differenced.infl")["Granger"]
 ### Do major SNB changes in policy rates ('events') explain inflation rates.
 
 There is **strong evidence that event_2022_10 Granger-causes inflation**
-(at lag 5 and lag6). This means, that the SNB **policy rate change in
-autumn 2022** **influenced** the Swiss inflation rates.
+(at lag 5 and lag6). This means, that the change in the **SNB policy
+rate in autumn 2022 influenced** the Swiss inflation rates.
 
 ```{r}
 VAR_df <- na.omit(cbind(df_differenced$event_2022_10, df_differenced$infl))
@@ -615,11 +615,11 @@ residual_dates <- tail(index(df_differenced), -p) # Remove first p dates
 plot(x = residual_dates,
      y = Resid_VAR[,1],  # First equation's residuals
      type = "l",
-     ylab = "VAR residuals diff log inflation",
+     ylab = "VAR residuals diff inflation",
      xlab = "Year")
 
 # Plotting ACF, histogram, and Q-Q-plot of residuals
-acf(data.frame(Resid_VAR), main="VAR residuals diff log inflation") # ACF of residuals
+acf(data.frame(Resid_VAR), main="VAR residuals diff inflation") # ACF of residuals
 hist(Resid_VAR, breaks=25, main="Histogram of residuals", xlab="VAR residuals diff log inflation") # Histogram of residuals
 
 # For a single equation's residuals (e.g., first variable)
@@ -639,11 +639,11 @@ serial.test(VAR_model) # Portmanteau test (default) for serial correlation, null
 
 Summary of residual tests:
 
-The ARCH-LM test: for constant variance with the null hypothesis that
-residuals are homoscedastic shows with a p-value of 0.1685, that
+The **ARCH-LM** test: for constant variance with the null hypothesis
+that residuals are homoscedastic shows with a p-value of 0.1685, that
 **residuals are homoscedastic**.
 
-The Jarque-Bera test: for normality with the null hypothesis that
+The **Jarque-Bera** test: for normality with the null hypothesis that
 residuals are normally distributed shows with a p-value close to zero,
 that **residuals are not normally distributed**.
 
@@ -655,7 +655,7 @@ The peak in residuals around the **October 2022** event: may reflect the
 **impact of a major policy intervention**, aligning with the significant
 Granger causality result. After checking the dates, 2022 October was
 exactly where SNB was continuously **lowering rates** for months, due to
-economic slow down in Europe, global e**nergy crisis**, and a **25% draw
+economic slow down in Europe, global **energy crisis**, and a **25% draw
 back** of global **stock markets**.
 
 **Overall interpretation of residual analysis**:
@@ -664,4 +664,4 @@ Residuals are not **heteroskedastic or auto_correlated,** but the
 non-normality remains an issue. It **might** be neglected as we have 302
 observations (large n tends towards normality). The model is overall
 valid, though incorporating other factors or considering nonlinear
-models in futures studies could be good.
+models in futures studies could be beneficial.
