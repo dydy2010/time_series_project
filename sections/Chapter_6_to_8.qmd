@@ -56,6 +56,10 @@ Despite these limitations, the analysis contributes to understanding how
 SNB policy rates and inflation interact. It offers a foundation for more
 complex modeling in future studies.
 
+```{=latex}
+\newpage
+```
+
 ## Discussion
 
 Are the results from linear regression (SNB event), ARIMA (5,1,0) and
