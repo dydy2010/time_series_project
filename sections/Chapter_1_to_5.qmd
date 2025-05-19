@@ -113,8 +113,8 @@ the three-month Swiss franc Libor” \[Snbd00\].
 
 With it, we’ve also done a VAR to check causality between policy
 rate/target to inflation, or vice versa. As with Dataset 1, no causality
-was proven, and in Dataset 2, one direction causality was proven,
-it shows that the dats sets actually produced different results.
+was proven, and in Dataset 2, one direction causality was proven, it
+shows that the dats sets actually produced different results.
 
 In the end, we chose Dataset 2 for the final analysis. Still, the data
 selection process was an important learning experience and worth sharing
@@ -163,13 +163,14 @@ presentation) - Consistent style and format across deliverables.
 
 -   Miro is a great tool for visualization and brainstorming. With
     downside that it can be information-intensive for new users.
--   RStudio code collaboration has its learning curve. It was
-    challenging for the first 2 weeks for us to get used to save,
-    commit, pull and push. But in the end, after getting used to it, we
-    think it is a great tool for R collaboration in team. Although it
-    does not allow to work at the same document at the same time.
+-   RStudio code collaboration with a GitHub repository has its learning
+    curve. It was challenging for the first 2 weeks for us to get used
+    to save, commit, push and pull. But in the end, after getting used
+    to it, we think it is a great tool for R collaboration in team.
+    Although it does not allow to work at the same document at the same
+    time.
 -   Recommendations for future projects: collaboration tool like
-    rstudio-git and team structure take time to form. For short
+    Rstudio-Git and team structure take time to form. For short
     projects, it takes time to getting used to them. However, we are
     happy that we tried out these tools: It gave us a chance to learn
     some essential and popular options in the data science world.
