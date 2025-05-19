@@ -2,11 +2,11 @@ project:
   type: book
 
 book:
-  title: "TsA in Finance: group project"
-  subtitle: "Swiss National Bank Policy Rates and Inflation"
+  title: "TsA in Finance - Group project"
+  subtitle: "Swiss National Bank Policy Rates and Inflation Dynamics"
   author: "Daniel Huber / Dongyuan Gao"
-  date: "Spring 2025"
-  chapters:
+  date: today
+  chapters:ke
     - index.qmd
     - sections/Chapter_1_to_5.qmd
     - sections/R_analysis.qmd
