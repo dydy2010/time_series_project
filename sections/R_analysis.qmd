@@ -36,13 +36,13 @@ inflation_data <- read_excel("../data/snb-data-plkoprinfla-en-all-20250422_0900.
 
 ```
 
-### First trial analysis using dataset 1
+### First trial analysis using Dataset 1
 
 Our first dataset (Dataset 1) for the SNB policy rates provides several
-columns that could be used as 'the **SNB policy rate'**. But they are
-all **only available for specific time windows**, in particular the
-column labeled 'SNB policy rate' is only **available since June 2019**.
-So we have to decide which (or which combination) would be best for our
+columns that could be used as **SNB policy rate**. But they are all
+**only available for specific time windows**, in particular the column
+labeled 'SNB policy rate' is only **available since June 2019**. So we
+have to decide which (or which combination) would be best for our
 analysis.
 
 ```{r}
@@ -154,7 +154,7 @@ df_ts <- zoo(
 A look at the data we use for our time series analysis suggests that
 there is a **relation** between SNB **policy rates** and Swiss
 **inflation rates**, although it is not obvious which one is triggering
-the other. Furthermore it shows very different behaviour regarding
+the other. Furthermore it shows very different behavior regarding
 fluctuation: **Inflation rates change monthly** (actually daily),
 whereas **policy rates** are **sometimes constant** for longer time
 periods.
@@ -212,7 +212,7 @@ summary(lin_reg)
 
 ### Residual analysis (as an exercise)
 
-####Visual inspection
+#### Visual inspection
 
 **Range of Residuals**
 
@@ -271,13 +271,13 @@ There are two large values of Cook's distance on **2008-11-01**,
 on the model's coefficient, but it requires **further inspections**
 (e.g. is it an outlier or a data error), then a decision on how this
 data point should be treated (transformed or removed) should be made.
-After checking the dates in data, we did find major policy rate changes.
 
-For example, interste rate target average was lower from 3.25 to 2.25 in
-2001-09-01, in 2008_11-01 lowered from 2.5 to 1 and continuously lowered
-in the following months, and in 2023-03-01 the interest rate was rised
-from 1 to 1.5, which is part of a continous interest rate hike for
-months.
+After checking the dates in data, we did find major policy rate changes:
+
+For example, policy rate was low, i.e. from 3.25 to 2.25, in 2001-09-01,
+in 2008_11-01 lowered from 2.5 to 1 and continuously lowered in the
+following months, and in 2023-03-01 the interest rate was increased from
+1 to 1.5, which is part of a continous interest rate hike for months.
 
 These 3 events are reflection of substantial economic interventions, so
 they are not errors.
