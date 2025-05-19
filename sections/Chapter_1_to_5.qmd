@@ -12,18 +12,13 @@ The project aims to
 
 -   investigate the dynamic relationship between SNB’s policy interest
     rates and Swiss core inflation.
-
 -   determine if there is causality between these two variables.
-
 -   analyze the impact and timing of policy rate adjustments on
     inflation.
-
 -   help team members learn about Time Series Analysis by doing,
     including models, theory, tools that we explored in class
 
 ## Motivation
-
-Personal/team motivation:
 
 We share a strong academic interest in exploring the world of financial
 analysis and were motivated by the opportunity to apply our skills to a
@@ -32,25 +27,21 @@ project also aligns with our professional aspirations, for example,
 finance, market research, and trading. That makes the project both
 intellectually engaging and career-relevant.
 
-Real-world relevance: In today’s volatile economic landscape, it is
-beneficial for individuals and institutions to understand inflation
-dynamics. Such insights can contribute to better financial or policy
-decisions. It is relevant for policymakers, investors, researchers and
-private individuals.
+In today’s volatile economic landscape, it is beneficial for individuals
+and institutions to understand inflation dynamics. Such insights can
+contribute to better financial or policy decisions. It is relevant for
+policymakers, investors, researchers and private individuals.
 
 ## Research Questions
 
 -   Does SNB policy rate significantly influence core inflation, Or vice
     versa?
-
 -   For policy rate and core inflation, can changes in one predict the
-    other?.
-
+    other?
 -   How quickly and how strongly do core inflation rates respond to
     policy changes?
-
--   Exploring any extra findings In the relationship between inflation
-    rates and the SNB's policy Interest rates, during the project
+-   Exploring any extra findings in the relationship between inflation
+    rates and the SNB's policy interest rates, during the project
     implementation.
 
 # Theory, literature and methodology
@@ -77,12 +68,12 @@ seasonally-adjusted monetary base.”\[Schi00\]
 
 Then for the analysis, we have adopted the theory and practice what we
 have learned in TSA classes. For example, VAR modeling, stationarity
-testing, Granger causality, lag-lead effect, and ARIMA.
+testing, Granger causality, lead-lag effects, and ARIMA.
 
 # Data selection process
 
 First, after some research, we started the analysis with a dataset from
-SNB, “Interest rates and threshold factor” \[Inte00a\], afterwards is
+SNB, “Interest rates and threshold factor” \[Inte00a\], afterwards
 called Dataset 1. It includes policy rate (for a short period), interest
 rate on sight deposits above threshold, special rate, SARON fix etc. For
 inflation data, we used core inflation, trimmed mean from “Consumer
