@@ -328,13 +328,9 @@ model is wrong, the **reasons** could be that:
 -   Linear relationship is **weak but statistically significant** and
     economically justifiable.
 
-::: {.content-visible format-pdf}
+```{=latex}
 \newpage
-:::
-
-::: {.content-visible format-html}
-<div style="page-break-after: always;"></div>
-:::
+```
 
 ### Alternatives to the basic linear model
 
@@ -405,13 +401,9 @@ month after the SNB had increased their policy rate from negative
 (-0.25) to positive (+0.50). This is plausible. But again R squared is
 very low.
 
-::: {.content-visible format-pdf}
+```{=latex}
 \newpage
-:::
-
-::: {.content-visible format-html}
-<div style="page-break-after: always;"></div>
-:::
+```
 
 ## Excursus:
 
