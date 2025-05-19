@@ -12,9 +12,10 @@ editor:
     A basic linear regression showed no significant relationship between
     policy rates and inflation (p \> 0.05; R² ≈ 0.004). When including
     lags of up to 12 months, lag 1 and lag 10 were statistically
-    significant, whereas in this context a lag of 10 months seems not to
-    feasible. Overall explainability was low (adjusted R² ≈ 0.02). It
-    suggests only weak evidence of delayed effects.
+    significant. While in this context a lag of 10 months might be
+    feasible, we still have doubts. Overall explanatory power was low
+    (adjusted R² ≈ 0.02). It suggests only weak evidence of delayed
+    effects.
 
 2.  **Linear Regression model with SNB events shows evidence of one
     event in 2022**\
@@ -22,24 +23,24 @@ editor:
     a statistically significant effect on inflation (p close to 0). This
     suggests that a major policy change (from negative to positive rates
     in 2022) might have had an effect on inflation. However, overall
-    explainability was still very low (R² ≈ 0.04).
+    explanatory power was still very low (R² ≈ 0.04).
 
 3.  **Granger Causality (VAR Model) but not deterministic**\
     The Granger causality test showed that policy rates Granger-cause
     inflation (p ≈ 0.024). It suggested that past policy rate changes
     help predict inflation. But remember, no causality can be
     determined. On the other hand, inflation did not Granger-cause
-    policy rates (p ≈0.29). Either the SNB really reacts independently
-    of recent inflation trends, which is against theory, or we just did
-    not find an appropriate model to prove that SNB policy reacts to
+    policy rates (p ≈0.29). Either the SNB really acts independently of
+    recent inflation trends, which is against theory, or we just did not
+    find an appropriate model to prove that SNB policy reacts to
     inflation rates.
 
 4.  **ARIMA forecasting suggests reverting behavior**\
     An ARIMA(5,1,0) model on inflation rates shows significant
-    autoregressive effects of lags 1-5 on inflation rates. The negative
+    auto-regressive effects of lags 1-5 on inflation rates. The negative
     estimates in all lags suggest an auto-reverting effect: a rise in
     inflation is followed by an decrease. We have also done forecast,
-    but no significant changes of inflation was predicted.
+    but no significant changes of inflation were predicted.
 
 ## Limitations
 
@@ -47,9 +48,9 @@ editor:
     regression) show very low R² values, indicating weak predictive
     power.
 
--   **Two Variables**: The models only consider two variables: policy
-    rate and core inflation. Other factors like global energy prices,
-    pandemic and trade wars were not included.
+-   **Only two Variables**: The models only consider two variables:
+    policy rate and core inflation. Other factors like global energy
+    prices, the pandemic or global trade conflicts were not included.
 
 Despite these limitations, the analysis contributes to understanding how
 SNB policy rates and inflation interact. It offers a foundation for more
@@ -58,15 +59,15 @@ complex modeling in future studies.
 ## Discussion
 
 Are the results from linear regression (SNB event), ARIMA (5,1,0) and
-Granger causality test consistent:
+Granger causality test consistent?
 
 **Linear regression**: There is an effect of a major SNB change in
 policy rate, but the model only explains a small portion of variance in
 inflation rates.
 
-**ARIMA**: It uses only past values of inflation to forecast future
-inflation so it is a uni-variate model, not taking into account other
-variables (e.g., policy events).
+**ARIMA**: It uses past values of inflation to forecast future inflation
+so it is a univariate model, not taking into account other variables
+(e.g., policy events).
 
 **Granger Causality Test**: Multivariate test: It checks if variables
 (like our events or interest rate changes) help to explain each other
@@ -75,19 +76,19 @@ better then they are explained by themselves.
 **The results are actually consistent, without contradiction**:
 
 Based on the linear regression model a major change in SNB policy rates
-explains inflation rates variance, although only a very small portion.
+explains inflation rates variance, but only a very small portion of it.
 ARIMA shows an auto-regressive reverting effect, inflation can be in
-parts be explained by itself. Without further checking the quality of
-the ARIMA model the respective forecast based on this model is not
+parts be explained by itself. But , without further checking the quality
+of the ARIMA model, the respective forecast based on this model was not
 convincing. Finally, the Granger causality test shows an effect of
 policy rates on inflation, suggesting that it can help explaining
 inflation. The other way round, there is no effect of inflation rates on
 policy rate.
 
-So, our analysis suggests an effect of SNB policy rates on inflation,
-which is itself auto-correlated. But all relationships and model are
-rather to very weak. Meaning our results were consistent withouth
-contradiction but only show weak effects.
+So, our analysis **suggests an effect of SNB policy rates on
+inflation**, which is itself auto-correlated. But all relationships and
+model are rather to very weak. Meaning our results were **consistent**
+without contradiction but only show **weak effects**.
 
 # Conclusion
 
@@ -98,7 +99,7 @@ the analysis.
 Weak connections between the two variables were found, lacking strong
 correlation or deterministic evidence.
 
-However, some non-deterministic effects were also observed:
+However, some non-deterministic effects were observed:
 
 -   Granger causality indicates that past policy rate changes have some
     predictive value for inflation.
