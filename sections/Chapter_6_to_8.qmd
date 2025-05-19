@@ -8,6 +8,7 @@ editor:
 
 ## Key findings
 
+
 1.  **Weak Linear Regression and Lag Effects**\
     A basic linear regression showed no significant relationship between
     policy rates and inflation (p \> 0.05; R² ≈ 0.004). Even when
