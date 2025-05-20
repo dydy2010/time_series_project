@@ -59,14 +59,14 @@ pr_full <- policy_rate_data %>%
   )
 
 ggplot(pr_full, aes(x = date)) +
-  geom_line(aes(y = policy, color = "Policy Rate")) +
   geom_line(aes(y = ir_above, color = "Interest rate above threshold")) +
   geom_line(aes(y = sar_fix, color = "SARON fixing")) +
   geom_line(aes(y = special, color = "Special rate")) +
-  scale_color_manual(values = c("Policy Rate" = "blue",
-                                "Interest rate above threshold" = "green",
+  geom_line(aes(y = policy, color = "Policy Rate")) +
+  scale_color_manual(values = c("Interest rate above threshold" = "green",
                                 "SARON fixing" = "brown",
-                                "Special rate" = "red")) +
+                                "Special rate" = "red",
+                                "Policy Rate" = "blue")) +
   labs(title = "Swiss Policy Rates: Available data",
        color = "Legend",
        y = "(Policy-Rates") +
