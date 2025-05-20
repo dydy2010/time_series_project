@@ -59,11 +59,11 @@ pr_full <- policy_rate_data %>%
   )
 
 ggplot(pr_full, aes(x = date)) +
-  geom_line(aes(y = ir_above, color = "Interest rate above threshold")) +
+  geom_line(aes(y = ir_above, color = "Rate above threshold")) +
   geom_line(aes(y = sar_fix, color = "SARON fixing")) +
   geom_line(aes(y = special, color = "Special rate")) +
   geom_line(aes(y = policy, color = "Policy Rate")) +
-  scale_color_manual(values = c("Interest rate above threshold" = "green",
+  scale_color_manual(values = c("Rate above threshold" = "green",
                                 "SARON fixing" = "brown",
                                 "Special rate" = "red",
                                 "Policy Rate" = "blue")) +
@@ -162,9 +162,9 @@ periods.
 ```{r}
 ggplot(df, aes(x = date)) +
   geom_line(aes(y = policy_rate, color = "SNB Policy Rate")) +
-  geom_line(aes(y = infl, color = "SNB - Core inflation, trimmed mean")) +
+  geom_line(aes(y = infl, color = "Core inflation, trimmed mean")) +
   scale_color_manual(values = c("SNB Policy Rate" = "blue",
-                                "SNB - Core inflation, trimmed mean" = "red")) +
+                                "Core inflation, trimmed mean" = "red")) +
   labs(title = "Swiss Policy Rates and Inflation Rates 2000-2025",
        color = "Legend",
        y = "(Inflation- / Policy-) Rates") +
