@@ -1,65 +1,71 @@
 
-## TSA_Finance Project
+# TsA in Finance: Group Project  
+## Swiss National Bank Policy Rates and Inflation
 
-### Group members
-- Daniel Huber
-- Dongyuan Gao
+###  Overview  
+This project investigates the relationship between Swiss National Bank (SNB) policy interest rates and Swiss core inflation using time series analysis techniques.
 
-### Research question
-Is the Swiss National Bank (SNB) really driving inflation rates or is it more the other way round? 
+We apply various statistical and econometric models to explore both short-term dynamics and long-term patterns between monetary policy actions and inflationary outcomes in Switzerland.
 
-### Data sources
-- policy rates since 2004
-- inflation rates (since 1983).
+---
 
-### Methods
-- data preparation
-- data visualization
-- check stationarity
-- check cross-correlations
-- causality tests (i. e. Granger tests, lagged regression)
-- maybe: ARIMA for more detailed insights.
+###  Project Structure
 
-### Options
-Add further data, e. g.:
-- Swiss economy (gross domestic product GDP)
-- Exchange rates (CHF-USD or CHF-EUR).
+- **data/**  
+  Contains all raw and processed datasets from SNB and other sources.
 
-<<<<<<< HEAD
-### Project_Structure
-time_series_project/
-│
-├── data/             # Excel files, raw
-│
-├── scripts/          # R script files
-│    ├── 01_data_import_cleaning.R
-│    ├── 02_exploratory_analysis.R
-│    ├── 03_stationarity_and_transformation.R
-│    ├── 04_modeling_VAR_analysis.R
-│    ├── 05_visualization_and_reporting.R
-│
-├── output/           # Plots, tables, model outputs
-│
-├── report/           # Final presentation or report files
-│
-└── README.md         # Text explaining our project
+- **scripts/**  
+  Contains modular R scripts for data loading, cleaning, modeling, and visualization.
+  
+- **sections/**  
+  Contains Quarto (`.qmd`) files structured into chapters of the final report.
 
-01_data_import_cleaning.R
-Import your Excel files, clean them (dates, columns), merge datasets.
+- **_book/**  
+  Output folder for the final compiled HTML and PDF reports.
 
-02_exploratory_analysis.R
-Plot inflation and policy rates separately and together. Look at summary stats.
+- **README.md**  
+  You're reading it :)
 
-03_stationarity_and_transformation.R
-Test stationarity (ADF tests), possibly differencing or transformations.
+---
 
-04_modeling_VAR_analysis.R
-Build VAR models, analyze lag structures, impulse response functions.
+###  How to Read the Report
 
-05_visualization_and_reporting.R
-Create clean final plots, tables for presentation/report.
+####  PDF Version
+- Best for printing and linear reading.
+- Found at: `_book/TsA-in-Finance---Group-project.pdf`
+- Use bookmarks or search to navigate quickly.
 
+####  HTML Version
+- Best for interactive viewing.
+- Open `_book/index.html` in a web browser.
+- Use sidebar navigation or search bar to jump to chapters.
+- Plots ready to read.
 
-=======
->>>>>>> d360e084bb52df73fc626089542d20a9dc00c87a
+---
 
+###  Models and Methods Used
+
+- Stationarity Tests (ADF)
+- Correlation Analysis
+- Linear Regression (with lag effects)
+- Event-based models (policy rate shifts)
+- Vector Autoregression (VAR)
+- Granger Causality Tests
+- ARIMA Modeling and Forecasting
+
+---
+
+###  Key Results 
+
+- Policy rates Granger-cause inflation, but inflation does not Granger-cause policy changes.
+- October 2022 SNB rate hike had a statistically significant effect on inflation.
+- Overall linear relationships are weak; inflation is only moderately autocorrelated.
+- ARIMA(5,1,0) model forecasts a slight inflation decline with moderate uncertainty.
+
+---
+
+###  Tools Used
+
+- R (RStudio)
+- Quarto for report generation
+- GitHub for version control and collaboration
